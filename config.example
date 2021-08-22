@@ -37,7 +37,7 @@ password = "your_password"
 
 [storage google]
 type = "google_contacts"
-token_file = "google"
+token_file = "/vdirsyncer/google"
 client_id = "your_client_id"
 client_secret = "your_secret"
 
