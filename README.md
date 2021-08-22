@@ -105,6 +105,9 @@ When everything is okay, you can adjust the `CRON_TIME` value to your desired ti
 
 Everything that is done by *Cron* will get written to the *log file* and to the docker logs! Run `docker logs -f vdirsyncer` or `docker-compose logs -f` to watch the logs.
 
+**Attention for Google users:** As you can read in the [Docs](http://vdirsyncer.pimutils.org/en/stable/config.html#google "Google Docs Vdirsyncer") you have to specify a path for `token_file = "PATH"`. In order to work properly, use an **absolute path!** So for the carddav storage set the `token_file` like `token_file = "/vdirsyncer/google_carddav"`and for the caldav storage like `token_file = "/vdirsyncer/google_calendar"`. The reason is, cron does not run the `vdirsyncer` command directly inside the `/vdirsyncer` folder, so if you use a relative path, `vdirsyncer` does not know where your google tokens are stored and the `AUTOSYNC` fails!
+
+
 ### Environment Variables
 
 You can set five different environment variables if you want to:
