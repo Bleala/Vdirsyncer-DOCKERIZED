@@ -9,6 +9,7 @@ RUN apk update \
         && apk add curl \
 # Install Vdirsyncer with dependencies
         && pip3 install --ignore-installed vdirsyncer \
+        && pip3 install --ignore-installed vdirsyncer[google] \
         && pip3 install requests-oauthlib
 
 # Set up Vdirsyncer
