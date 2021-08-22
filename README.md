@@ -76,7 +76,7 @@ services:
     networks:
       - default
     environment:
-      - AUODISCOVER= # set to true for automatic discover, default to false
+      - AUTODISCOVER= # set to true for automatic discover, default to false
       - AUTOSYNC= # set to true for automatic sync, default to false
       - LOG= # optional, default to /vdirsyncer/log/vdirsyncer.log
       - CRON_TIME= # adjust autosync /-discover time, default to 15 minutes - */15 * * * * 
