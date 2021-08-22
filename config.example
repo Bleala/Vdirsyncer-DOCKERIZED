@@ -1,0 +1,61 @@
+### General ###
+[general]
+status_path = "/vdirsyncer/status/"
+
+### Pairs ###
+[pair google_cloud_local]
+a = "google_local"
+b = "google"
+collections = ["from a", "from b"]
+conflict_resolution = "b wins"
+
+[pair baikal_apple]
+a = "apple"
+b = "baikal"
+#collections = ["card", "from b"]
+collections = [["all", "card", "default"]]
+conflict_resolution = "b wins"
+#collections = null
+#metadata = ["color", "displayname"]
+
+[pair nextcloud_baikal2]
+a = "nextcloud"
+b = "baikal2"
+#collections = ["from a", "from b"]
+collections = [["all", "sync", "default"]]
+conflict_resolution = "b wins"
+#collections = null
+
+
+### Storages ###
+[storage apple]
+type = "carddav"
+# We can simplify this URL here as well. In theory it shouldn't matter.
+url = "https://contacts.icloud.com/"
+username = "your_login"
+password = "your_password"
+
+[storage google]
+type = "google_contacts"
+token_file = "google"
+client_id = "your_client_id"
+client_secret = "your_secret"
+
+[storage baikal]
+type = "carddav"
+url = "baikal_url"
+username = "your_login"
+password = "your_password"
+
+[storage baikal2]
+type = "carddav"
+url = "baikal_url"
+username = "your_login"
+password = "your_password"
+read_only = true
+
+[storage nextcloud]
+type = "carddav"
+url = "nextcloud_url"
+username = "your_login"
+password = "your_password"

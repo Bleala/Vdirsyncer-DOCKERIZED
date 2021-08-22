@@ -1,0 +1,25 @@
+version: "3.9"
+
+networks:                                 
+  default:
+    driver: bridge
+
+services:
+  # Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED!
+  # https://hub.docker.com/r/bleala/vdirsyncer
+  app:
+    image: bleala/vdirsyncer:latest
+    container_name: vdirsyncer
+    restart: unless-stopped
+    networks:
+      - default
+    environment:
+      - AUODISCOVER= # set to true for automatic discover, default to false
+      - AUTOSYNC= # set to true for automatic sync, default to false
+      - LOG= # optional, default to /vdirsyncer/log/vdirsyncer.log
+      - CRON_TIME= # adjust autosync /-discover time, default to 15 minutes - */15 * * * * 
+      # Cron Time need to be set in Cron format - look here for generator https://crontab.guru/
+      # Set CRON_TIME like that --> '*/15 * * * *'
+    volumes:
+      - /path/to/folder/.docker/vdirsyncer:/vdirsyncer
+
