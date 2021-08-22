@@ -81,7 +81,7 @@ services:
       - LOG= # optional, default to /vdirsyncer/log/vdirsyncer.log
       - CRON_TIME= # adjust autosync /-discover time, default to 15 minutes - */15 * * * * 
       # Cron Time need to be set in Cron format - look here for generator https://crontab.guru/
-      # Set CRON_TIME like that --> '*/15 * * * *'
+      # Set CRON_TIME like that --> */15 * * * *
     volumes:
       - /path/to/folder:/vdirsyncer
 
@@ -101,7 +101,7 @@ After you ran `docker exec -it vdirsyncer vdirsyncer discover` you can either ru
 
 Now it will sync everything for the first time.
 
-When everything is okay, you can adjust the `CRON_TIME` value to your desired time. Check out [Crontab.guru](https://crontab.guru/ "Crontab.guru") for help. Default synctime value is 15 minutes `CRON_TIME='*/15 * * * *'`.
+When everything is okay, you can adjust the `CRON_TIME` value to your desired time. Check out [Crontab.guru](https://crontab.guru/ "Crontab.guru") for help. Default synctime value is 15 minutes `CRON_TIME=*/15 * * * *`.
 
 Everything that is done by *Cron* will get written to the *log file* and to the docker logs! Run `docker logs -f vdirsyncer` or `docker-compose logs -f` to watch the logs.
 
