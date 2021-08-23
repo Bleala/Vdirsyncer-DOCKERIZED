@@ -30,7 +30,9 @@ HEALTHCHECK --interval=1m --timeout=10s --start-period=1s --retries=3 \
 # Labeling
 LABEL maintainer="Bleala" \
         version="2.0" \
-        description="Vdirsyncer 0.18.0 on Alpine 3.14.1, Python 3.9.5, Pip 20.3.4"
+        description="Vdirsyncer 0.18.0 on Alpine 3.14.1, Python 3.9.5, Pip 20.3.4" \
+        org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
+
 
 # Start Script
 ADD scripts /scripts/
