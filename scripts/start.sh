@@ -18,6 +18,8 @@ is running as expected. :)
 Enjoy!
 
 '
+DATE=$(date +%d-%b-%y-%H_%M_%S)
+cp -rf "$LOG" "$LOG-$DATE"
 curl --create-dirs --output $LOG file:///dev/null &> /dev/null
 cp /examples/config.example /vdirsyncer
 echo 'Starting Logging...

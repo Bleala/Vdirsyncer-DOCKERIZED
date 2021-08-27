@@ -14,7 +14,8 @@ RUN apk update \
 
 # Set up Vdirsyncer
 WORKDIR /vdirsyncer
-ADD config.example /examples/
+ADD examples /examples/
+ADD examples/vdirsyncer.log /vdirsyncer/logs/
 
 # Set up Environment
 ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
