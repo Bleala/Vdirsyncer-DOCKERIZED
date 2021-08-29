@@ -1,5 +1,5 @@
 # Alpine Image
-FROM alpine:3.14.1
+FROM alpine:3.14.2
 
 # Update and install pip3
 RUN apk update \
@@ -7,6 +7,7 @@ RUN apk update \
         && apk upgrade --available \
         && apk add py3-pip \
         && apk add curl \
+        && apk add moreutils \
 # Install Vdirsyncer with dependencies
         && pip3 install --ignore-installed vdirsyncer \
         && pip3 install --ignore-installed vdirsyncer[google] \
@@ -30,8 +31,8 @@ HEALTHCHECK --interval=1m --timeout=10s --start-period=1s --retries=3 \
 
 # Labeling
 LABEL maintainer="Bleala" \
-        version="2.0" \
-        description="Vdirsyncer 0.18.0 on Alpine 3.14.1, Python 3.9.5, Pip 20.3.4" \
+        version="2.1.1" \
+        description="Vdirsyncer 0.18.0 on Alpine 3.14.2, Python 3.9.5, Pip 20.3.4" \
         org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
 
 

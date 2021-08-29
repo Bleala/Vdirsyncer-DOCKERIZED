@@ -23,6 +23,6 @@ cp -rf "$LOG" "$LOG-$DATE"
 curl --create-dirs --output $LOG file:///dev/null &> /dev/null
 cp /examples/config.example /vdirsyncer
 echo 'Starting Logging...
-' | tee -a $LOG
+' | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG
 sh /scripts/sync.sh 2>&1
 exec tail -f /dev/null

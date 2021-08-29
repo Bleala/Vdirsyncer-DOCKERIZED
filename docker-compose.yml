@@ -22,4 +22,5 @@ services:
       # Set CRON_TIME like that --> '*/15 * * * *'
     volumes:
       - /path/to/folder/.docker/vdirsyncer:/vdirsyncer
+      - /etc/localtime:/etc/localtime:ro # Pass Host time to container
 
