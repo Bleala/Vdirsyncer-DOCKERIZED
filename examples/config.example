@@ -3,9 +3,9 @@
 status_path = "/vdirsyncer/status/"
 
 ### Pairs ###
-[pair google_cloud_local]
-a = "google_local"
-b = "google"
+[pair google_local]
+a = "google"
+b = "local"
 collections = ["from a", "from b"]
 conflict_resolution = "b wins"
 
@@ -35,12 +35,6 @@ url = "https://contacts.icloud.com/"
 username = "your_login"
 password = "your_password"
 
-[storage google]
-type = "google_contacts"
-token_file = "/vdirsyncer/google"
-client_id = "your_client_id"
-client_secret = "your_secret"
-
 [storage baikal]
 type = "carddav"
 url = "baikal_url"
@@ -53,6 +47,17 @@ url = "baikal_url"
 username = "your_login"
 password = "your_password"
 read_only = true
+
+[storage google]
+type = "google_contacts"
+token_file = "/vdirsyncer/google"
+client_id = "your_client_id"
+client_secret = "your_secret"
+
+[storage local]
+type = "filesystem"
+path = "/vdirsyncer/contacts/"
+fileext = ".vcf"
 
 [storage nextcloud]
 type = "carddav"
