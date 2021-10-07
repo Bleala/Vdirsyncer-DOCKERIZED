@@ -3,11 +3,12 @@ FROM alpine:3.14.2
 
 # Update and install pip3
 RUN apk update \
-        && apk add --upgrade apk-tools \
-        && apk upgrade --available \
-        && apk add py3-pip \
-        && apk add curl \
-        && apk add moreutils \
+        && apk add --no-cache --upgrade apk-tools \
+        && apk upgrade --no-cache --available \
+        && apk add --no-cache py3-pip \
+        && apk add --no-cache curl \
+        && apk add --no-cache moreutils \
+        && apk add --no-cache tzdata \
 # Install Vdirsyncer with dependencies
         && pip3 install --ignore-installed vdirsyncer \
         && pip3 install --ignore-installed vdirsyncer[google] \
