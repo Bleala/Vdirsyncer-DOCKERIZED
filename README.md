@@ -131,6 +131,8 @@ You can set five different environment variables if you want to:
 
 ## Versions
 
+**2.1.2 - 07.10.2021:** Added tzdata for correct container time, so logs have the correct timestamp - Vdirsyncer 0.18.0, Alpine 3.14.2, Python 3.9.5, Pip 20.3.4
+
 **2.1.1 - 29.08.2021:** Added Log Timestamp and bumped Alpine to 3.14.2 - Vdirsyncer 0.18.0, Alpine 3.14.2, Python 3.9.5, Pip 20.3.4
 
 **2.1 - 27.08.2021:** Added Log Persistence and Docker Image at [Github Container Registry](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/pkgs/container/vdirsyncer "Github Container Registry") available - Vdirsyncer 0.18.0, Alpine 3.14.1, Python 3.9.5, Pip 20.3.4
