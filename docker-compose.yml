@@ -14,6 +14,7 @@ services:
     networks:
       - default
     environment:
+      - TZ= # default to `Europe/Vienna`, is used to set the correct container and log time.
       - AUTODISCOVER= # set to true for automatic discover, default to false
       - AUTOSYNC= # set to true for automatic sync, default to false
       - LOG= # optional, default to /vdirsyncer/log/vdirsyncer.log
@@ -22,5 +23,4 @@ services:
       # Set CRON_TIME like that --> '*/15 * * * *'
     volumes:
       - /path/to/folder/.docker/vdirsyncer:/vdirsyncer
-      - /etc/localtime:/etc/localtime:ro # Pass Host time to container
 

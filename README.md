@@ -76,6 +76,7 @@ services:
     networks:
       - default
     environment:
+      - TZ= # set your timezone, for correct container and log time, default to Europe/Vienna
       - AUTODISCOVER= # set to true for automatic discover, default to false
       - AUTOSYNC= # set to true for automatic sync, default to false
       - LOG= # optional, default to /vdirsyncer/log/vdirsyncer.log
@@ -113,6 +114,7 @@ Everything that is done by *Cron* will get written to the *log file* and to the 
 
 You can set five different environment variables if you want to:
 
+* `TZ` - default to `Europe/Vienna`, is used to set the correct container and log time.
 * `AUTODISCOVER` - default to false, is used to automatically run `vdirsyncer discover`.
 * `AUTOSYNC` - default to false, is used to automatically run `vdirsyncer metasync && vdirsyncer sync`
 * `CRON_TIME` - default to `*/15 * * * *` (15 minutes), you can adjust it to whatever time you want to.
@@ -130,6 +132,8 @@ You can set five different environment variables if you want to:
 ---
 
 ## Versions
+
+**2.1.3 - 23.10.2021:** Added TZ environment variable, to set correct timezone - Vdirsyncer 0.18.0, Alpine 3.14.2, Python 3.9.5, Pip 20.3.4
 
 **2.1.2 - 07.10.2021:** Added tzdata for correct container time, so logs have the correct timestamp - Vdirsyncer 0.18.0, Alpine 3.14.2, Python 3.9.5, Pip 20.3.4
 

@@ -24,7 +24,8 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
         LOG=/vdirsyncer/logs/vdirsyncer.log \
         AUTODISCOVER=false \
         AUTOSYNC=false \
-        CRON_TIME='*/15 * * * *'
+        CRON_TIME='*/15 * * * *' \
+        TZ=Europe/Vienna
 
 # Healthcheck
 HEALTHCHECK --interval=1m --timeout=10s --start-period=1s --retries=3 \
@@ -32,7 +33,7 @@ HEALTHCHECK --interval=1m --timeout=10s --start-period=1s --retries=3 \
 
 # Labeling
 LABEL maintainer="Bleala" \
-        version="2.1.1" \
+        version="2.1.3" \
         description="Vdirsyncer 0.18.0 on Alpine 3.14.2, Python 3.9.5, Pip 20.3.4" \
         org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
 
