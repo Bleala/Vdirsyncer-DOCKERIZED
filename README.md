@@ -112,7 +112,7 @@ Everything that is done by *Cron* will get written to the *log file* and to the 
 
 ### Environment Variables
 
-You can set five different environment variables if you want to:
+You can set six different environment variables if you want to:
 
 * `TZ` - default to `Europe/Vienna`, is used to set the correct container and log time.
 * `AUTODISCOVER` - default to false, is used to automatically run `vdirsyncer discover`.
@@ -132,6 +132,8 @@ You can set five different environment variables if you want to:
 ---
 
 ## Versions
+
+**2.2 - 23.11.2021:** Bumped Alpine to 3.15 and Python to 3.9.7 - Vdirsyncer 0.18.0, Alpine 3.15, Python 3.9.7, Pip 20.3.4
 
 **2.1.3 - 23.10.2021:** Added TZ environment variable, to set correct timezone - Vdirsyncer 0.18.0, Alpine 3.14.2, Python 3.9.5, Pip 20.3.4
 
