@@ -18,6 +18,7 @@ RUN apk update \
 WORKDIR /vdirsyncer
 ADD examples /examples/
 ADD examples/vdirsyncer.log /vdirsyncer/logs/
+RUN cp /etc/crontabs/root /root/crontab
 
 # Set up Environment
 ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
@@ -40,5 +41,5 @@ LABEL maintainer="Bleala" \
 
 # Start Script
 ADD scripts /scripts/
-RUN ["chmod", "+x", "/scripts/"]
-ENTRYPOINT ["/scripts/start.sh"]
+RUN ["chmod", "-R", "+x", "/scripts/"]
+ENTRYPOINT ["sh","/scripts/start.sh"]
