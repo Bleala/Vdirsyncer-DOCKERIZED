@@ -12,6 +12,7 @@ https://github.com/pimutils/vdirsyncer
 
 If there is a problem with the container,
 contact me or open an issue in my Github repo.
+https://github.com/Bleala/Vdirsyncer-DOCKERIZED
 I am trying to fix it, so that everything
 is running as expected. :)
 
@@ -39,7 +40,7 @@ echo "Set Timezone to $TZ"  | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG
 echo "Current time is $(date)"  | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG
 
 # Set up Vdirsyncer
-sh /scripts/sync.sh 2>&1
+sh /scripts/sync.sh 2>&1 | tee -a $LOG
 
 # Run Container
 exec tail -f /dev/null
