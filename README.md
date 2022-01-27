@@ -132,6 +132,7 @@ You can set six different environment variables if you want to:
 ---
 
 ## Versions
+**2.2.1 - 27.01.2022:** Fixed Crontab Bug - Vdirsyncer 0.18.0, Alpine 3.15, Python 3.9.7, Pip 20.3.4
 
 **2.2 - 23.11.2021:** Bumped Alpine to 3.15 and Python to 3.9.7 - Vdirsyncer 0.18.0, Alpine 3.15, Python 3.9.7, Pip 20.3.4
 
