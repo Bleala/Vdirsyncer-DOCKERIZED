@@ -50,7 +50,7 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
 
 # Healthcheck
 HEALTHCHECK --interval=1m --timeout=10s --start-period=1s --retries=3 \
-  CMD ping -c 3 localhost || exit 1
+  CMD sudo ping -c 3 localhost || exit 1
 
 # Labeling
 LABEL maintainer="Bleala" \
