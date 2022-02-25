@@ -6,7 +6,7 @@ Vdirsyncer - sync calendars and addressbooks between servers and the local files
 
 **Disclaimer:** I am just the maintainer of this docker container, i did not write the software. Visit the [Official Github Repository](https://github.com/pimutils/vdirsyncer "Vdirsyncer Github Repository") to thank the author(s)! :)
 
-**Note:** Version 2.0 is an almost complete rewrite, if you have used 1.0.1 or 1.0 you have to adjust some things!
+**Note:** With Version 2.3.0 the default `USER`, `UID` and `GID` changed! This should not be a problem, because the container does execute `chown` and `chmod` at startup, but if there is a problem, you have a hint where to look for problems. :)
 
 Vdirsyncer is a command-line tool for synchronizing calendars and addressbooks between a variety of servers and the local filesystem. The most popular usecase is to synchronize a server with a local folder and use a set of other programs to change the local events and contacts. Vdirsyncer can then synchronize those changes back to the server.
 
@@ -79,13 +79,14 @@ services:
       - TZ= # set your timezone, for correct container and log time, default to Europe/Vienna
       - AUTODISCOVER= # set to true for automatic discover, default to false
       - AUTOSYNC= # set to true for automatic sync, default to false
+      - UID= # optional, default to 1000
+      - GID= optional, default to 1000
       - LOG= # optional, default to /vdirsyncer/log/vdirsyncer.log
       - CRON_TIME= # adjust autosync /-discover time, default to 15 minutes - */15 * * * * 
       # Cron Time need to be set in Cron format - look here for generator https://crontab.guru/
       # Set CRON_TIME like that --> */15 * * * *
     volumes:
       - /path/to/folder:/vdirsyncer
-      - /etc/localtime:/etc/localtime:ro # Pass Host time to container, important to get the correct log timestamp
 
 ```
 
@@ -112,12 +113,14 @@ Everything that is done by *Cron* will get written to the *log file* and to the 
 
 ### Environment Variables
 
-You can set six different environment variables if you want to:
+You can set eight different environment variables if you want to:
 
 * `TZ` - default to `Europe/Vienna`, is used to set the correct container and log time.
 * `AUTODISCOVER` - default to false, is used to automatically run `vdirsyncer discover`.
 * `AUTOSYNC` - default to false, is used to automatically run `vdirsyncer metasync && vdirsyncer sync`
 * `CRON_TIME` - default to `*/15 * * * *` (15 minutes), you can adjust it to whatever time you want to.
+* `UID` - optional, default to `1000`.
+* `GID` - optional, default to `1000`.
 * `LOG` - optional, default to `/vdirsyncer/logs/vdirsyncer.log`, if you want to adjust the log file destination.
 * `VDIRSYNCER_CONFIG` - location, where *Vdirsyncer* reads the config from, default to /vdirsyncer/config **DON'T CHANGE!** 
 
@@ -132,6 +135,8 @@ You can set six different environment variables if you want to:
 ---
 
 ## Versions
+**2.3.0 - 25.02.2022:** Changed default user from `root` to `Vdirsyncer` with `UID=1000` and `GID=1000`. You can also change the `UID` and `GID` as you like with the environment variables. - Vdirsyncer 0.18.0, Alpine 3.15, Python 3.9.7, Pip 20.3.4
+
 **2.2.1 - 27.01.2022:** Fixed Crontab Bug - Vdirsyncer 0.18.0, Alpine 3.15, Python 3.9.7, Pip 20.3.4
 
 **2.2 - 23.11.2021:** Bumped Alpine to 3.15 and Python to 3.9.7 - Vdirsyncer 0.18.0, Alpine 3.15, Python 3.9.7, Pip 20.3.4
