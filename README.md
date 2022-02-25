@@ -6,7 +6,7 @@ Vdirsyncer - sync calendars and addressbooks between servers and the local files
 
 **Disclaimer:** I am just the maintainer of this docker container, i did not write the software. Visit the [Official Github Repository](https://github.com/pimutils/vdirsyncer "Vdirsyncer Github Repository") to thank the author(s)! :)
 
-**Note:** With Version 2.3.0 the default `USER`, `UID` and `GID` changed! This should not be a problem, because the container does execute `chown` and `chmod` at startup, but if there is a problem, you have a hint where to look for problems. :)
+**Note:** With Version 2.3.0 the default `USER`, `UID` and `GID` changed! This should not be a problem, because the container does execute `chown` and `chmod` at startup, but if there is a problem, you have a hint where to look for a solution. :)
 
 Vdirsyncer is a command-line tool for synchronizing calendars and addressbooks between a variety of servers and the local filesystem. The most popular usecase is to synchronize a server with a local folder and use a set of other programs to change the local events and contacts. Vdirsyncer can then synchronize those changes back to the server.
 
