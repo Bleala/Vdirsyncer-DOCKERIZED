@@ -16,7 +16,7 @@ RUN apk update \
         && apk add --no-cache sudo \                    
         # For Sudo Commands
         && apk add --no-cache shadow \                  
-        # For Usermod                 
+        # For Usermod                                
 # Install Vdirsyncer with dependencies
         && pip3 install --ignore-installed vdirsyncer \
         && pip3 install --ignore-installed vdirsyncer[google] \
