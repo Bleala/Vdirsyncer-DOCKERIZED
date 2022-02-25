@@ -41,6 +41,9 @@ echo "$TZ" > /etc/timezone
 echo "Set Timezone to $TZ"  | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG
 echo "Current time is $(date)"  | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG
 
+# Copy config.example
+cp /examples/config.example /vdirsyncer/
+
 # Change permissions
 chown -R $UID:$GID /scripts
 chown -R $UID:$GID /vdirsyncer
