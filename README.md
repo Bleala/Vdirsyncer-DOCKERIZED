@@ -80,7 +80,7 @@ services:
       - AUTODISCOVER= # set to true for automatic discover, default to false
       - AUTOSYNC= # set to true for automatic sync, default to false
       - UID= # optional, default to 1000
-      - GID= optional, default to 1000
+      - GID= # optional, default to 1000
       - LOG= # optional, default to /vdirsyncer/log/vdirsyncer.log
       - CRON_TIME= # adjust autosync /-discover time, default to 15 minutes - */15 * * * * 
       # Cron Time need to be set in Cron format - look here for generator https://crontab.guru/
