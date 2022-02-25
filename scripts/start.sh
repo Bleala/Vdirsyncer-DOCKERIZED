@@ -47,7 +47,6 @@ chown -R $UID:$GID /vdirsyncer
 chown -R $UID:$GID /examples
 chown -R $UID:$GID $LOG
 chmod -R 755 /vdirsyncer
-chmod -R 600 /vdirsyncer/status
 
 ### Set UID and GID
 # Only execute if GID changed
