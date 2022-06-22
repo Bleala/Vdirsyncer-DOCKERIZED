@@ -4,6 +4,8 @@ Vdirsyncer - sync calendars and addressbooks between servers and the local files
 
 ## About Vdirsyncer
 
+**New in `2.3.0`:** In Version `2.3.0` there are some improvements. The Container does not run as root, it has a dedicated user called *Vdirsyncer* and you are able to set your own `UID` and `GID`, so that the files are accessible to other users, if you use bind mounts instead of docker volumes.
+
 **Disclaimer:** I am just the maintainer of this docker container, i did not write the software. Visit the [Official Github Repository](https://github.com/pimutils/vdirsyncer "Vdirsyncer Github Repository") to thank the author(s)! :)
 
 **Note:** With Version 2.3.0 the default `USER`, `UID` and `GID` changed! This should not be a problem, because the container does execute `chown` and `chmod` at startup, but if there is a problem, you have a hint where to look for a solution. :)
@@ -135,6 +137,8 @@ You can set eight different environment variables if you want to:
 ---
 
 ## Versions
+**2.3.1 - 22.06.2022:** Bumped Alpine to 3.16.0, Python to 3.10.4 and Pip to 22.1.1 - Vdirsyncer 0.18.0, Alpine 3.16.0, Python 3.10.4, Pip 22.1.1
+
 **2.3.0 - 25.02.2022:** Changed default user from `root` to `Vdirsyncer` with `UID=1000` and `GID=1000`. You can also change the `UID` and `GID` as you like with the environment variables. - Vdirsyncer 0.18.0, Alpine 3.15, Python 3.9.7, Pip 20.3.4
 
 **2.2.1 - 27.01.2022:** Fixed Crontab Bug - Vdirsyncer 0.18.0, Alpine 3.15, Python 3.9.7, Pip 20.3.4

@@ -1,23 +1,23 @@
 # Alpine Image
-FROM alpine:3.15
+FROM alpine:3.16.0
 
 # Update and install pip3
 RUN apk update \
         && apk add --no-cache --upgrade apk-tools \
         && apk upgrade --no-cache --available \
-        && apk add --no-cache py3-pip \                 
         # For Vdirsyncer Dependencies
-        && apk add --no-cache curl \                    
+        && apk add --no-cache py3-pip \                 
         # For Curl Commands
-        && apk add --no-cache moreutils \               
+        && apk add --no-cache curl \                    
         # For TS
-        && apk add --no-cache tzdata \                  
+        && apk add --no-cache moreutils \               
         # For Timezone
-        && apk add --no-cache sudo \                    
+        && apk add --no-cache tzdata \                  
         # For Sudo Commands
-        && apk add --no-cache shadow \                  
+        && apk add --no-cache sudo \                    
         # For Usermod                                
-# Install Vdirsyncer with dependencies
+        && apk add --no-cache shadow \
+        # Install Vdirsyncer with dependencies
         && pip3 install --ignore-installed vdirsyncer \
         && pip3 install --ignore-installed vdirsyncer[google] \
         && pip3 install requests-oauthlib
@@ -33,15 +33,23 @@ RUN cp /etc/crontabs/root /root/crontab
 ADD scripts /scripts/
 
 # Set up Environment
+    # Set Vdirsyncer config location
 ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
+        # Set log file
         LOG=/vdirsyncer/logs/vdirsyncer.log \
+        # Set Autodiscover
         AUTODISCOVER=false \
+        # Set Autosync
         AUTOSYNC=false \
+        # Set Cron Time
         CRON_TIME='*/15 * * * *' \
+        # Set Timezone
         TZ=Europe/Vienna \
+        # Set UID
         UID=1000 \
         # For if in start.sh
         INIT_UID=1000 \
+        # Set GID
         GID=1000 \
         # For if in start.sh        
         INIT_GID=1000 \
@@ -54,37 +62,36 @@ HEALTHCHECK --interval=1m --timeout=10s --start-period=1s --retries=3 \
 
 # Labeling
 LABEL maintainer="Bleala" \
-        version="2.3.0" \
-        description="Vdirsyncer 0.18.0 on Alpine 3.15, Python 3.9.7, Pip 20.3.4" \
+        version="2.3.1" \
+        description="Vdirsyncer 0.18.0 on Alpine 3.16.0, Python 3.10.4, Pip 22.1.1" \
         org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
 
 # Set up User
-RUN addgroup -g $GID $USER \
+RUN addgroup -g ${GID} ${USER} \
         && adduser \
         -D \
-        -G $USER \
+        -G ${USER} \
         -H \
         -h "/vdirsyncer" \
-        -u $UID \
-        $USER \
+        -u ${UID} \
+        ${USER} \
         # Remove root password
         && passwd -d root
 
 # Set up Sudo User
-RUN echo 'ALL ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
-        && echo '%wheel ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers.d/wheel \
+RUN echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers.d/wheel \
         # Add Vdirsyncer User to wheel Group
-        && adduser $USER wheel
+        && adduser ${USER} wheel
 
 # Change Permissions
 RUN chmod -R +x /scripts \
-        && chown -R $UID:$GID /scripts \
-        && chown -R $UID:$GID /vdirsyncer \
-        && chown -R $UID:$GID /examples \
+        && chown -R ${UID}:${GID} /scripts \
+        && chown -R ${UID}:${GID} /vdirsyncer \
+        && chown -R ${UID}:${GID} /examples \
         && chmod -R 755 /vdirsyncer
 
 # Switch User
-USER $USER
+USER ${USER}
 
 # Entrypoint
 ENTRYPOINT ["sh","/scripts/start.sh"]
