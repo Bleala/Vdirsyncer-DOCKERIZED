@@ -1,5 +1,5 @@
 # Alpine Image
-FROM alpine:3.16.0
+FROM alpine:3.16.3
 
 # Update and install pip3
 RUN apk update \
@@ -17,6 +17,8 @@ RUN apk update \
         && apk add --no-cache sudo \                    
         # For Usermod                                
         && apk add --no-cache shadow \
+        # For Scripts
+        && apk add --no-cache bash \
         # Install Vdirsyncer with dependencies
         && pip3 install --ignore-installed vdirsyncer \
         && pip3 install --ignore-installed vdirsyncer[google] \
@@ -63,7 +65,7 @@ HEALTHCHECK --interval=1m --timeout=10s --start-period=1s --retries=3 \
 # Labeling
 LABEL maintainer="Bleala" \
         version="2.3.1" \
-        description="Vdirsyncer 0.18.0 on Alpine 3.16.0, Python 3.10.4, Pip 22.1.1" \
+        description="Vdirsyncer 0.18.0 on Alpine 3.16.3, Python 3.10.8, Pip 22.1.1" \
         org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
 
 # Set up User
@@ -94,4 +96,4 @@ RUN chmod -R +x /scripts \
 USER ${USER}
 
 # Entrypoint
-ENTRYPOINT ["sh","/scripts/start.sh"]
+ENTRYPOINT ["bash","/scripts/start.sh"]

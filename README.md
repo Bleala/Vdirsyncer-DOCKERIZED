@@ -137,6 +137,8 @@ You can set eight different environment variables if you want to:
 ---
 
 ## Versions
+**2.3.2 - 14.11.2022:** Bumped Alpine to 3.16.3 and Python to 3.10.8 - Vdirsyncer 0.18.0, Alpine 3.16.3, Python 3.10.8, Pip 22.1.1
+
 **2.3.1 - 22.06.2022:** Bumped Alpine to 3.16.0, Python to 3.10.4 and Pip to 22.1.1 - Vdirsyncer 0.18.0, Alpine 3.16.0, Python 3.10.4, Pip 22.1.1
 
 **2.3.0 - 25.02.2022:** Changed default user from `root` to `Vdirsyncer` with `UID=1000` and `GID=1000`. You can also change the `UID` and `GID` as you like with the environment variables. - Vdirsyncer 0.18.0, Alpine 3.15, Python 3.9.7, Pip 20.3.4
