@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Only execute if USER changed
 #if [[ $USER -ne $OLD_USER ]]
@@ -10,12 +10,12 @@
 
 (
 # Only execute if UID or GID changed
-if [[ $UID -ne $OLD_UID ]] || [[ $GID -ne $OLD_GID ]]
+if [[ "${UID}" -ne "${OLD_UID}" ]] || [[ "${GID}" -ne "${OLD_GID}" ]]
 then
     # Change permissions
-    sudo /bin/sh -c "chown -R $UID:$GID /scripts"
-    sudo /bin/sh -c "chown -R $UID:$GID /vdirsyncer"
-    sudo /bin/sh -c "chown -R $UID:$GID /examples"
+    sudo /bin/sh -c "chown -R ${UID}:${GID} /scripts"
+    sudo /bin/sh -c "chown -R ${UID}:${GID} /vdirsyncer"
+    sudo /bin/sh -c "chown -R ${UID}:${GID} /examples"
     sudo /bin/sh -c "chmod -R 777 /vdirsyncer/logs/vdirsyncer.log"
 fi
 )
@@ -35,10 +35,10 @@ fi
 (
 
 # Only execute if UID changed
-    if [[ $UID -ne $OLD_UID ]]
+    if [[ "${UID}" -ne "${OLD_UID}" ]]
     then
         # Change UID
-        usermod -u $UID vdirsyncer
+        usermod -u "${UID}" vdirsyncer
     fi
 # End Sub Shell
 
