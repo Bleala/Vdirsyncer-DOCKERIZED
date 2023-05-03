@@ -7,10 +7,10 @@ ARG ALPINE_VERSION="3.17.3" \
         PIP_VERSION="23.1.2" \
         PIPX_VERSION="1.2.0" \
         PYTHON_VERSION="3.10.11" \
+        VDIRSYNCER_VERSION="0.19.1" \
         VDIRSYNCER_USER="vdirsyncer" \
         UID="1000" \
-        GID="1000" \
-        VDIRSYNCER_VERSION="0.19.1"
+        GID="1000"
 
 # Set up Environment
     # Set Vdirsyncer config location
@@ -18,11 +18,13 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
         # Update Path for sh Shell (ensurepath only works for Bash Shell somehow)
         PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/vdirsyncer/.local/bin \
         # Set log file
-        LOG=/vdirsyncer/logs/vdirsyncer.log \
+        LOG=/vdirsyncer/vdirsyncer.log \
         # Set Autodiscover
         AUTODISCOVER=false \
         # Set Autosync
         AUTOSYNC=false \
+        # Set Autoupdate
+        AUTOUPDATE=false \
         # Set Cron Time
         CRON_TIME='*/15 * * * *' \
         # Set Timezone
@@ -102,6 +104,7 @@ LABEL maintainer="Bleala" \
 
 # Change Permissions
 RUN chmod -R +x /files/scripts \
+        && chmod -R +r /files \
         && chown -R "${UID}":"${GID}" /files \
         && chown -R "${UID}":"${GID}" /vdirsyncer \
         && chown -R "${UID}":"${GID}" /etc/crontabs/"${VDIRSYNCER_USER}" \
