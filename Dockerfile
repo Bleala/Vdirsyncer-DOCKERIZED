@@ -1,42 +1,22 @@
 # Alpine Image
-FROM alpine:3.16.3
+FROM alpine:3.17.3
 
-# Update and install pip3
-RUN apk update \
-        && apk add --no-cache --upgrade apk-tools \
-        && apk upgrade --no-cache --available \
-        # For Vdirsyncer Dependencies
-        && apk add --no-cache py3-pip \                 
-        # For Curl Commands
-        && apk add --no-cache curl \                    
-        # For TS
-        && apk add --no-cache moreutils \               
-        # For Timezone
-        && apk add --no-cache tzdata \                  
-        # For Sudo Commands
-        && apk add --no-cache sudo \                    
-        # For Usermod                                
-        && apk add --no-cache shadow \
-        # For Scripts
-        && apk add --no-cache bash \
-        # Install Vdirsyncer with dependencies
-        && pip3 install --ignore-installed vdirsyncer \
-        && pip3 install --ignore-installed vdirsyncer[google] \
-        && pip3 install requests-oauthlib
-
-# Set up Vdirsyncer
-WORKDIR /vdirsyncer
-ADD examples /examples/
-ADD examples/vdirsyncer.log /vdirsyncer/logs/
-ADD examples/config.example /vdirsyncer/config.example
-RUN cp /etc/crontabs/root /root/crontab
-
-# Start Script
-ADD scripts /scripts/
+# Build Arguments
+ARG ALPINE_VERSION="3.17.3" \
+        IMAGE_VERSION="2.4.0" \
+        PIP_VERSION="23.1.2" \
+        PIPX_VERSION="1.2.0" \
+        PYTHON_VERSION="3.10.11" \
+        VDIRSYNCER_USER="vdirsyncer" \
+        UID="1000" \
+        GID="1000" \
+        VDIRSYNCER_VERSION="0.19.1"
 
 # Set up Environment
     # Set Vdirsyncer config location
 ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
+        # Update Path for sh Shell (ensurepath only works for Bash Shell somehow)
+        PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/vdirsyncer/.local/bin \
         # Set log file
         LOG=/vdirsyncer/logs/vdirsyncer.log \
         # Set Autodiscover
@@ -48,15 +28,67 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
         # Set Timezone
         TZ=Europe/Vienna \
         # Set UID
-        UID=1000 \
-        # For if in start.sh
-        INIT_UID=1000 \
+        UID="${UID}" \
         # Set GID
-        GID=1000 \
-        # For if in start.sh        
-        INIT_GID=1000 \
-        # For easier maintenance
-        USER=vdirsyncer
+        GID="${GID}" \
+        # Set Vdirsyncer user again as environment variable
+        VDIRSYNCER_USER="${VDIRSYNCER_USER}"
+
+# Update and install packages
+RUN apk update \
+        && apk add --no-cache --upgrade apk-tools \
+        && apk upgrade --no-cache --available \
+        # Install Pip
+        && apk add --no-cache py3-pip \
+        # Update Pip
+        && pip install --upgrade pip \
+        # Install Pipx
+        pip install pipx \
+        # For Curl Commands
+        && apk add --no-cache curl \                    
+        # For TS
+        && apk add --no-cache moreutils \               
+        # For Timezone
+        && apk add --no-cache tzdata \                  
+        # For Sudo Commands
+        #&& apk add --no-cache sudo \                    
+        # For Usermod                                
+        #&& apk add --no-cache shadow \
+        # For Scripts and Shell
+        && apk add --no-cache bash \
+        # Nano Editor
+        && apk add --no-cache nano
+
+# Set up User
+    # Set up Group
+RUN addgroup -g "${GID}" "${VDIRSYNCER_USER}" \
+        # Set up User
+        && adduser \
+        -D \
+        # Add to Group
+        -G "${VDIRSYNCER_USER}" \
+        # Don't create home directory
+        #-H \
+        # Home directory
+        -h "/home/${VDIRSYNCER_USER}" \
+        # Set UID
+        -u "${UID}" \
+        # Set Username
+        "${VDIRSYNCER_USER}" \
+        # Remove root password
+        #&& passwd -d root \
+        # Set up Crontab file
+        && cp /etc/crontabs/root "/etc/crontabs/${VDIRSYNCER_USER}"
+
+# Set up Workdir
+WORKDIR /vdirsyncer
+
+# Add Files
+ADD files /files/
+
+# Set up Timezone
+RUN cp /usr/share/zoneinfo/"${TZ}" /etc/localtime \
+        && echo "${TZ}" > /etc/timezone
 
 # Healthcheck
 HEALTHCHECK --interval=1m --timeout=10s --start-period=1s --retries=3 \
@@ -64,36 +96,42 @@ HEALTHCHECK --interval=1m --timeout=10s --start-period=1s --retries=3 \
 
 # Labeling
 LABEL maintainer="Bleala" \
-        version="2.3.2" \
-        description="Vdirsyncer 0.18.0 on Alpine 3.16.3, Python 3.10.8, Pip 22.1.1" \
+        version="${IMAGE_VERSION}" \
+        description="Vdirsyncer ${VDIRSYNCER_VERSION} on Alpine ${ALPINE_VERSION}, Pip ${PIP_VERSION}, Pipx ${PIPX_VERSION}, Python ${PYTHON_VERSION}" \
         org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
 
-# Set up User
-RUN addgroup -g ${GID} ${USER} \
-        && adduser \
-        -D \
-        -G ${USER} \
-        -H \
-        -h "/vdirsyncer" \
-        -u ${UID} \
-        ${USER} \
-        # Remove root password
-        && passwd -d root
-
-# Set up Sudo User
-RUN echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers.d/wheel \
-        # Add Vdirsyncer User to wheel Group
-        && adduser ${USER} wheel
-
 # Change Permissions
-RUN chmod -R +x /scripts \
-        && chown -R ${UID}:${GID} /scripts \
-        && chown -R ${UID}:${GID} /vdirsyncer \
-        && chown -R ${UID}:${GID} /examples \
+RUN chmod -R +x /files/scripts \
+        && chown -R "${UID}":"${GID}" /files \
+        && chown -R "${UID}":"${GID}" /vdirsyncer \
+        && chown -R "${UID}":"${GID}" /etc/crontabs/"${VDIRSYNCER_USER}" \
         && chmod -R 755 /vdirsyncer
 
 # Switch User
-USER ${USER}
+USER "${VDIRSYNCER_USER}"
+
+# Vdirsyncer installation
+RUN pipx install "vdirsyncer==${VDIRSYNCER_VERSION}" \
+        # For Vdirsyncer 0.18.0
+        #&& pip install requests-oauthlib
+        # For Vdirsyncer 0.19.x (Pip install)
+        #&& pip install aiohttp-oauthlib \
+        #&& pip install vdirsyncer[google] \
+        # For Vdirsyncer 0.19.x (Pipx install)
+        && pipx inject vdirsyncer aiohttp-oauthlib \
+        && pipx inject vdirsyncer vdirsyncer[google] \
+        # Update Path for Pipx
+        && pipx ensurepath
+
+# Fix Google redirect uri
+# For Vdirsyncer 0.19.1 (Pip Install) 
+#RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' /home/vdirsyncer/.local/lib/python3.10/site-packages/vdirsyncer/storage/google.py
+# For Vdirsyncer 0.19.1 (Pipx Install) 
+RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' "/home/${VDIRSYNCER_USER}/.local/pipx/venvs/vdirsyncer/lib/python3.10/site-packages/vdirsyncer/storage/google.py"
+#For Vdirsyncer 0.18.0 - User install
+#RUN sed -i 's~urn:ietf:wg:oauth:2.0:oob~http://127.0.0.1:8088~g' /home/vdirsyncer/.local/lib/python3.10/site-packages/vdirsyncer/storage/google.py
+#For Vdirsyncer 0.18.0 - Root install
+#RUN sed -i 's~urn:ietf:wg:oauth:2.0:oob~http://127.0.0.1:8088~g' /usr/lib/python3.10/site-packages/vdirsyncer/storage/google.py
 
 # Entrypoint
-ENTRYPOINT ["bash","/scripts/start.sh"]
+ENTRYPOINT ["bash","/files/scripts/start.sh"]
