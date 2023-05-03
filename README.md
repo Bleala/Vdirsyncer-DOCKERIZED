@@ -3,12 +3,17 @@
 Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED! 
 
 ## About Vdirsyncer
+**New in `2.4.1`:** A Vdirsyncer autoupdate function has been added! :) If you set `AUTOUPDATE` to `true` then `Vdirsyncer` will update itself including all dependencies at container startup.
 
-**New in `2.3.0`:** In Version `2.3.0` there are some improvements. The Container does not run as root, it has a dedicated user called *Vdirsyncer* and you are able to set your own `UID` and `GID`, so that the files are accessible to other users, if you use bind mounts instead of docker volumes.
+Also you are not able to set your own `UID` and `GID` anymore and the default value for both is `1000`! I have done this, to drop the root and sudo privileges completely. You should use a docker volume and just mount the `config` file into the container, [check out the docker-compose.yml](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/main/docker-compose.yml "docker-compose.yml"), or when using bind mounts make sure that the folder is readable and writable!
+
+I will no longer push the `linux/arm/v7` docker image to the registry, because almost no one used this one.
+
+**New in `2.3.0`:** In Version `2.3.0` there are some improvements. The Container does not run as root anymore, it has a dedicated user called *Vdirsyncer*.
 
 **Disclaimer:** I am just the maintainer of this docker container, i did not write the software. Visit the [Official Github Repository](https://github.com/pimutils/vdirsyncer "Vdirsyncer Github Repository") to thank the author(s)! :)
 
-**Note:** With Version 2.3.0 the default `USER`, `UID` and `GID` changed! This should not be a problem, because the container does execute `chown` and `chmod` at startup, but if there is a problem, you have a hint where to look for a solution. :)
+**Note:** With Version 2.3.0 the default `USER`, `UID` and `GID` changed!
 
 Vdirsyncer is a command-line tool for synchronizing calendars and addressbooks between a variety of servers and the local filesystem. The most popular usecase is to synchronize a server with a local folder and use a set of other programs to change the local events and contacts. Vdirsyncer can then synchronize those changes back to the server.
 
@@ -52,6 +57,8 @@ There are also several platforms supported:
 Platform:
 * linux/amd64
 * linux/arm64 
+
+Deprecated:
 * linux/arm/v7
 
 ---
@@ -81,14 +88,14 @@ services:
       - TZ= # set your timezone, for correct container and log time, default to Europe/Vienna
       - AUTODISCOVER= # set to true for automatic discover, default to false
       - AUTOSYNC= # set to true for automatic sync, default to false
-      - UID= # optional, default to 1000
-      - GID= # optional, default to 1000
-      - LOG= # optional, default to /vdirsyncer/log/vdirsyncer.log
+      - AUTOUPDATE= # set to true for automatic Vdirsyncer and dependencies updates on container startup, default to false
+      - LOG= # optional, default to /vdirsyncer/vdirsyncer.log
       - CRON_TIME= # adjust autosync /-discover time, default to 15 minutes - */15 * * * * 
       # Cron Time need to be set in Cron format - look here for generator https://crontab.guru/
       # Set CRON_TIME like that --> */15 * * * *
     volumes:
-      - /path/to/folder:/vdirsyncer
+      - vdirsyncer:/vdirsyncer              # Docker Volume
+      - /path/to/config:/vdirsyncer/config  # Vdirsyncer Config
 
 ```
 
@@ -125,16 +132,19 @@ You can set eight different environment variables if you want to:
 
 * `TZ` - default to `Europe/Vienna`, is used to set the correct container and log time.
 * `AUTODISCOVER` - default to false, is used to automatically run `vdirsyncer discover`.
-* `AUTOSYNC` - default to false, is used to automatically run `vdirsyncer metasync && vdirsyncer sync`
+* `AUTOSYNC` - default to false, is used to automatically run `vdirsyncer metasync && vdirsyncer sync`.
+* `AUTOUPDATE` - default to false, is used to automatically update `Vdirsyncer` with all dependencies on container startup.
 * `CRON_TIME` - default to `*/15 * * * *` (15 minutes), you can adjust it to whatever time you want to.
-* `UID` - optional, default to `1000`.
-* `GID` - optional, default to `1000`.
-* `LOG` - optional, default to `/vdirsyncer/logs/vdirsyncer.log`, if you want to adjust the log file destination.
+* `LOG` - optional, default to `/vdirsyncer/vdirsyncer.log`, if you want to adjust the log file destination.
 * `VDIRSYNCER_CONFIG` - location, where *Vdirsyncer* reads the config from, default to /vdirsyncer/config **DON'T CHANGE!** 
+
+**New in `2.4.1`:** The `UID` and `GID` variables now have default values, which are not changable!
+* `UID` - default to `1000`.
+* `GID` - default to `1000`.
 
 ---
 
-**Attention**: As i mentioned, don't use `AUTODISCOVER=true` as default. If you are running *Vdirsyncer* for the first time, just try everything manually, before you enable `AUTOSYNC` and `AUTODISCOVER`!
+**Attention**: As I mentioned, don't use `AUTODISCOVER=true` as default. If you are running *Vdirsyncer* for the first time, just try everything manually, before you enable `AUTOSYNC` and `AUTODISCOVER`!
 
 **Attention 2**: I recommend using this way for the pairs `collections = [["mytest", "test", "3b4c9995-5c67-4021-9fa0-be4633623e1c"]]` [LINK](http://vdirsyncer.pimutils.org/en/stable/tutorial.html#advanced-collection-configuration-server-to-server-sync)
 
@@ -143,6 +153,8 @@ You can set eight different environment variables if you want to:
 ---
 
 ## Versions
+**2.4.1 - 03.05.2023:** Added a Vdirsyncer autoupdate function, dropped root/sudo privileges completely, set UID and GID to a static value (1000) and dropped linux/arm/v7 Docker Image (because almost no one used it) - Vdirsyncer 0.19.1, Alpine 3.17.3, Python 3.10.11, Pip 23.1.2, Pipx 1.2.0
+
 **2.4.0 - 03.05.2023:** Updated Vdirsyncer to 0.19.1, Dockerfile updated, fixed Google redirect_uri, bumped Alpine to 3.17.3, Python to 3.10.11, Pip to 23.1.2, Pipx to 1.2.0 - Vdirsyncer 0.19.1, Alpine 3.17.3, Python 3.10.11, Pip 23.1.2, Pipx 1.2.0
 
 **2.3.2 - 14.11.2022:** Bumped Alpine to 3.16.3 and Python to 3.10.8 - Vdirsyncer 0.18.0, Alpine 3.16.3, Python 3.10.8, Pip 22.1.1
