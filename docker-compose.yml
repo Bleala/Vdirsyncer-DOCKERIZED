@@ -17,10 +17,12 @@ services:
       - TZ= # default to `Europe/Vienna`, is used to set the correct container and log time.
       - AUTODISCOVER= # set to true for automatic discover, default to false
       - AUTOSYNC= # set to true for automatic sync, default to false
-      - LOG= # optional, default to /vdirsyncer/log/vdirsyncer.log
+      - AUTOUPDATE= # set to true for automatic Vdirsyncer updates on startup, default to false
+      - LOG= # optional, default to /vdirsyncer/vdirsyncer.log
       - CRON_TIME= # adjust autosync /-discover time, default to 15 minutes - */15 * * * * 
       # Cron Time need to be set in Cron format - look here for generator https://crontab.guru/
       # Set CRON_TIME like that --> '*/15 * * * *'
     volumes:
-      - /path/to/folder/.docker/vdirsyncer:/vdirsyncer
+      - vdirsyncer:/vdirsyncer              # Docker Volume
+      - /path/to/config:/vdirsyncer/config  # Vdirsyncer Config
 
