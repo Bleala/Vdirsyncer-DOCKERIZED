@@ -4,17 +4,31 @@ if [[ -e "${LOG}" ]]
 then
     # Delete old logfiles
     rm -f "${LOG}" > /dev/null 2>&1
-    # User info
-    {
-        echo "Old logfile has been deleted."
-        printf "\n"
-    } | ts '[%Y-%m-%d %H:%M:%S]'
+
+    # Save exit code
+    LOG_FILE_DELETED="${?}"
+
+    # Check if old Log File has been deleted
+    if [[ "${LOG_FILE_DELETED}" -ne 0 ]]
+    then
+        # User info
+        {
+            echo "Old logfile could not be deleted!"
+            echo "Container exits!"
+            echo "Check the \"LOG\" environment variable or the file permissions of the old logfile (maybe delete it manually)."
+        } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]'
+
+        # Exit Container
+        exit 1
+    fi
 fi
 
 # Create Log File
 curl --create-dirs --output "${LOG}" file:///dev/null > /dev/null 2>&1
+
 # Save exit code
 LOG_FILE_CREATED="${?}"
+
 # Check if Log File has been created
 if [[ "${LOG_FILE_CREATED}" -ne 0 ]]
 then
@@ -22,8 +36,9 @@ then
     {
         echo "Logfile could not be created!"
         echo "Container exits!"
-        echo "Check the \"LOG\" environment variable."
-    }  | ts '[%Y-%m-%d %H:%M:%S]'
+        echo "Check the \"LOG\" environment variable or the folder permissions."
+    } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]'
+
     # Exit Container
     exit 1
 fi
@@ -52,21 +67,32 @@ fi
 
     echo "Enjoy!"
     printf "\n"
-} | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+} 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
 # Starting logging
 {
     echo "Starting Logging..."
     printf "\n"
-} | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+} 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
+# Hint if the old logfile has been deleted
+if [[ "${LOG_FILE_DELETED}" -eq 0 ]]
+then
+    # User info
+    {
+        echo "Old logfile has been deleted."
+        printf "\n"
+    } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+fi
+
+# Hint if the logfile has been created
 if [[ "${LOG_FILE_CREATED}" -eq 0 ]]
 then
     # User info
     {
         echo "New logfile has been created."
         printf "\n"
-    } | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+    } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 fi
 
 # Log current Timezone and Date/Time
@@ -74,7 +100,7 @@ fi
     echo "Current timezone is ${TZ}"
     echo "Current time is $(date)"
     printf "\n"
-} | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+} 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
 # Check if the config.example exists
 if [[ ! -e "/vdirsyncer/config.example" ]]
@@ -85,7 +111,7 @@ then
     {
         echo "config.example has been copied to /vdirsyncer."
         printf "\n"
-    } | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+    } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 fi
 
 # Check if Autoupdate is enabled
@@ -118,7 +144,7 @@ then
         # End of update
         echo "#######################################"
         printf "\n"
-    } | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+    } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 fi
 
 ### Set up Cronjobs ###
@@ -131,11 +157,10 @@ then
     && /home/${VDIRSYNCER_USER}/.local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync" >> "${CRON_FILE}"
 
     # User info
-    echo 'Autodiscover and Autosync are enabled.' 2>&1 | ts '[[%Y-%m-%d %H:%M:%S]]' | tee -a "${LOG}"
+    echo 'Autodiscover and Autosync are enabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
     # Start the cronjob
-    /usr/bin/supercronic "${CRON_FILE}" | ts '[[%Y-%m-%d %H:%M:%S]]' | tee -a "${LOG}"
-    #exec crond -l 8 -d 8 -f 2>&1 | ts '[[%Y-%m-%d %H:%M:%S]]' | tee -a "${LOG}"
+    /usr/bin/supercronic "${CRON_FILE}" 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
 # Append to crontab file if autosync is true
 elif [[ "${AUTODISCOVER}" == "false" ]] && [[ "${AUTOSYNC}" == "true" ]]
@@ -145,11 +170,10 @@ then
     && /home/${VDIRSYNCER_USER}/.local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync" >> "${CRON_FILE}"
 
     # User info
-    echo 'Only Autosync is enabled.' 2>&1 | ts '[[%Y-%m-%d %H:%M:%S]]' | tee -a "${LOG}"
+    echo 'Only Autosync is enabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
     # Start the cronjob
-    /usr/bin/supercronic "${CRON_FILE}" | ts '[[%Y-%m-%d %H:%M:%S]]' | tee -a "${LOG}"
-    #exec crond -l 8 -d 8 -f 2>&1 | ts '[[%Y-%m-%d %H:%M:%S]]' | tee -a "${LOG}"
+    /usr/bin/supercronic "${CRON_FILE}" 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
 # Append to crontab file if autodiscover is true
 elif [[ "${AUTODISCOVER}" == "true" ]] && [[ "${AUTOSYNC}" == "false" ]]
@@ -158,15 +182,14 @@ then
     echo "${CRON_TIME} yes | /home/${VDIRSYNCER_USER}/.local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} discover" >> "${CRON_FILE}"
 
     # User info
-    echo 'Only Autodiscover is enabled.' 2>&1 | ts '[[%Y-%m-%d %H:%M:%S]]' | tee -a "${LOG}"
+    echo 'Only Autodiscover is enabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
     # Start the cronjob
-    /usr/bin/supercronic "${CRON_FILE}" | ts '[[%Y-%m-%d %H:%M:%S]]' | tee -a "${LOG}"
-    #exec crond -l 8 -d 8 -f 2>&1 | ts '[[%Y-%m-%d %H:%M:%S]]' | tee -a "${LOG}"
+    /usr/bin/supercronic "${CRON_FILE}" 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
 # Append nothing, if both options are disabled
 else
-    echo 'Autodiscover and Autosync are disabled.' 2>&1 | ts '[[%Y-%m-%d %H:%M:%S]]' | tee -a "${LOG}"
+    echo 'Autodiscover and Autosync are disabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 fi
 
 # Run Container
