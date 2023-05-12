@@ -102,7 +102,7 @@ RUN cp /usr/share/zoneinfo/"${TZ}" /etc/localtime \
 
 # Healthcheck
 HEALTHCHECK --interval=1m --timeout=10s --start-period=1s --retries=3 \
-  CMD sudo ping -c 3 localhost || exit 1
+  CMD ping -c 3 localhost || exit 1
 
 # Labeling
 LABEL maintainer="Bleala" \
