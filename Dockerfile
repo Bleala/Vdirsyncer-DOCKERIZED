@@ -101,8 +101,8 @@ RUN cp /usr/share/zoneinfo/"${TZ}" /etc/localtime \
         && echo "${TZ}" > /etc/timezone
 
 # Healthcheck
-HEALTHCHECK --interval=1m --timeout=10s --start-period=1s --retries=3 \
-  CMD ping -c 3 localhost || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=1 \
+  CMD ps -ef | grep -e "supercronic" | grep -v -e "grep" || exit 1
 
 # Labeling
 LABEL maintainer="Bleala" \
