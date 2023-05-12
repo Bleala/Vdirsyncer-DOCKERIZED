@@ -9,14 +9,13 @@ ARG ALPINE_VERSION="3.17.3" \
         PYTHON_VERSION="3.10.11" \
         VDIRSYNCER_VERSION="0.19.1" \
         VDIRSYNCER_USER="vdirsyncer" \
+        CRON_FILE="/etc/crontabs/vdirsyncer" \
         UID="1000" \
         GID="1000"
 
 # Set up Environment
     # Set Vdirsyncer config location
 ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
-        # Update Path for sh Shell (ensurepath only works for Bash Shell somehow)
-        PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/vdirsyncer/.local/bin \
         # Set log file
         LOG=/vdirsyncer/vdirsyncer.log \
         # Set Autodiscover
@@ -34,7 +33,9 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
         # Set GID
         GID="${GID}" \
         # Set Vdirsyncer user again as environment variable
-        VDIRSYNCER_USER="${VDIRSYNCER_USER}"
+        VDIRSYNCER_USER="${VDIRSYNCER_USER}" \
+        # Set cron file again as environment variable
+        CRON_FILE="${CRON_FILE}"
 
 # Update and install packages
 RUN apk update \
@@ -59,7 +60,11 @@ RUN apk update \
         # For Scripts and Shell
         && apk add --no-cache bash \
         # Nano Editor
-        && apk add --no-cache nano
+        && apk add --no-cache nano \
+        # Cron Update
+        #&& apk add --update busybox-suid \
+        # Supercronic instead of Cron (for cronjobs)
+        && apk add --no-cache supercronic 
 
 # Set up User
     # Set up Group
@@ -80,7 +85,10 @@ RUN addgroup -g "${GID}" "${VDIRSYNCER_USER}" \
         # Remove root password
         #&& passwd -d root \
         # Set up Crontab file
-        && cp /etc/crontabs/root "/etc/crontabs/${VDIRSYNCER_USER}"
+        && touch "${CRON_FILE}"
+
+# Full sudo access for vdirsyncer user
+#RUN echo "vdirsyncer ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/vdirsyncer
 
 # Set up Workdir
 WORKDIR /vdirsyncer
@@ -104,11 +112,11 @@ LABEL maintainer="Bleala" \
 
 # Change Permissions
 RUN chmod -R +x /files/scripts \
-        && chmod -R +r /files \
         && chown -R "${UID}":"${GID}" /files \
         && chown -R "${UID}":"${GID}" /vdirsyncer \
-        && chown -R "${UID}":"${GID}" /etc/crontabs/"${VDIRSYNCER_USER}" \
-        && chmod -R 755 /vdirsyncer
+        && chmod -R 755 /vdirsyncer \
+        && chown "${UID}":"${GID}" "${CRON_FILE}" \
+        && chmod 644 "${CRON_FILE}"
 
 # Switch User
 USER "${VDIRSYNCER_USER}"
