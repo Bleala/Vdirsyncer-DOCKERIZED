@@ -124,7 +124,9 @@ The reason is, cron does not run the `vdirsyncer` command directly inside the `/
 
 **Even more attention for Google user:** Because Google is Google you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/975#issuecomment-1275698939 "Google Instruction").<br>
 **You can skip step 9, this has been done for you during the container build!**<br>
-This has been tested and confirmed working for `Vdirsyncer 0.18.0` from my side, I'll test `Vdirsyncer 0.19.x` in the future and update the docs, if necessary!
+This has been tested and confirmed working for `Vdirsyncer 0.18.0` from my side.<br>
+For `Vdirsyncer 0.19.1` you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1516626359 "Google Instruction")<br>
+This has been tested and confirmed working for `Vdirsyncer 0.19.0` and `Vdirsyncer 0.19.1` from my side.<br>
 
 ### Environment Variables
 
