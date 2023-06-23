@@ -155,6 +155,8 @@ You can set eight different environment variables if you want to:
 ---
 
 ## Versions
+**2.4.3 - 23.06.2023:** Updated Alpine to 3.18.2 and Python to 3.11.4 - Vdirsyncer 0.19.1, Alpine 3.18.2, Python 3.11.4, Pip 23.1.2, Pipx 1.2.0
+
 **2.4.2 - 12.05.2023:** Fixed Cronjob bug and switched to Supercronic instead of Cron, new Healthcheck to monitor the Supercronic process - Vdirsyncer 0.19.1, Alpine 3.17.3, Python 3.10.11, Pip 23.1.2, Pipx 1.2.0
 
 **2.4.1 - 03.05.2023:** Added a Vdirsyncer autoupdate function, dropped root/sudo privileges completely, set UID and GID to a static value (1000) and dropped linux/arm/v7 Docker Image (because almost no one used it) - Vdirsyncer 0.19.1, Alpine 3.17.3, Python 3.10.11, Pip 23.1.2, Pipx 1.2.0
