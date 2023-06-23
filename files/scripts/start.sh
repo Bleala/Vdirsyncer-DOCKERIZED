@@ -152,9 +152,9 @@ fi
 if [[ "${AUTODISCOVER}" == "true" ]] && [[ "${AUTOSYNC}" == "true" ]]
 then
     # Write cronjob to file
-    echo "${CRON_TIME} yes | /home/${VDIRSYNCER_USER}/.local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} discover \
-    && /home/${VDIRSYNCER_USER}/.local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} metasync \
-    && /home/${VDIRSYNCER_USER}/.local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync" >> "${CRON_FILE}"
+    echo "${CRON_TIME} yes | /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} discover \
+    && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} metasync \
+    && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync" >> "${CRON_FILE}"
 
     # User info
     echo 'Autodiscover and Autosync are enabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
@@ -166,8 +166,8 @@ then
 elif [[ "${AUTODISCOVER}" == "false" ]] && [[ "${AUTOSYNC}" == "true" ]]
 then
     # Write cronjob to file
-    echo "${CRON_TIME} /home/${VDIRSYNCER_USER}/.local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} metasync \
-    && /home/${VDIRSYNCER_USER}/.local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync" >> "${CRON_FILE}"
+    echo "${CRON_TIME} /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} metasync \
+    && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync" >> "${CRON_FILE}"
 
     # User info
     echo 'Only Autosync is enabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
@@ -179,7 +179,7 @@ then
 elif [[ "${AUTODISCOVER}" == "true" ]] && [[ "${AUTOSYNC}" == "false" ]]
 then
     # Write cronjob to file
-    echo "${CRON_TIME} yes | /home/${VDIRSYNCER_USER}/.local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} discover" >> "${CRON_FILE}"
+    echo "${CRON_TIME} yes | /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} discover" >> "${CRON_FILE}"
 
     # User info
     echo 'Only Autodiscover is enabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
