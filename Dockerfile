@@ -1,12 +1,12 @@
 # Alpine Image
-FROM alpine:3.17.3
+FROM alpine:3.18.2
 
 # Build Arguments
-ARG ALPINE_VERSION="3.17.3" \
-        IMAGE_VERSION="2.4.2" \
+ARG ALPINE_VERSION="3.18.2" \
+        IMAGE_VERSION="2.4.3" \
         PIP_VERSION="23.1.2" \
         PIPX_VERSION="1.2.0" \
-        PYTHON_VERSION="3.10.11" \
+        PYTHON_VERSION="3.11.4" \
         VDIRSYNCER_VERSION="0.19.1" \
         VDIRSYNCER_USER="vdirsyncer" \
         CRON_FILE="/etc/crontabs/vdirsyncer" \
@@ -138,7 +138,7 @@ RUN pipx install "vdirsyncer==${VDIRSYNCER_VERSION}" \
 # For Vdirsyncer 0.19.1 (Pip Install) 
 #RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' /home/vdirsyncer/.local/lib/python3.10/site-packages/vdirsyncer/storage/google.py
 # For Vdirsyncer 0.19.1 (Pipx Install) 
-RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' "/home/${VDIRSYNCER_USER}/.local/pipx/venvs/vdirsyncer/lib/python3.10/site-packages/vdirsyncer/storage/google.py"
+RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' "/home/${VDIRSYNCER_USER}/.local/pipx/venvs/vdirsyncer/lib/python3.11/site-packages/vdirsyncer/storage/google.py"
 #For Vdirsyncer 0.18.0 - User install
 #RUN sed -i 's~urn:ietf:wg:oauth:2.0:oob~http://127.0.0.1:8088~g' /home/vdirsyncer/.local/lib/python3.10/site-packages/vdirsyncer/storage/google.py
 #For Vdirsyncer 0.18.0 - Root install
