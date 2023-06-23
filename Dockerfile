@@ -118,31 +118,34 @@ RUN chmod -R +x /files/scripts \
         && chown "${UID}":"${GID}" "${CRON_FILE}" \
         && chmod 644 "${CRON_FILE}"
 
-# Switch User
-USER "${VDIRSYNCER_USER}"
-
 # Vdirsyncer installation
-RUN pipx install "vdirsyncer==${VDIRSYNCER_VERSION}" \
+RUN PIPX_HOME="/opt/pipx" PIPX_BIN_DIR="/usr/local/bin" pipx install "vdirsyncer==${VDIRSYNCER_VERSION}" \
         # For Vdirsyncer 0.18.0
         #&& pip install requests-oauthlib
         # For Vdirsyncer 0.19.x (Pip install)
         #&& pip install aiohttp-oauthlib \
         #&& pip install vdirsyncer[google] \
         # For Vdirsyncer 0.19.x (Pipx install)
-        && pipx inject vdirsyncer aiohttp-oauthlib \
-        && pipx inject vdirsyncer vdirsyncer[google] \
+        && PIPX_HOME="/opt/pipx" PIPX_BIN_DIR="/usr/local/bin" pipx inject vdirsyncer aiohttp-oauthlib \
+        && PIPX_HOME="/opt/pipx" PIPX_BIN_DIR="/usr/local/bin" pipx inject vdirsyncer vdirsyncer[google] \
         # Update Path for Pipx
-        && pipx ensurepath
+        && PIPX_HOME="/opt/pipx" PIPX_BIN_DIR="/usr/local/bin" pipx ensurepath
+
 
 # Fix Google redirect uri
 # For Vdirsyncer 0.19.1 (Pip Install) 
 #RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' /home/vdirsyncer/.local/lib/python3.10/site-packages/vdirsyncer/storage/google.py
 # For Vdirsyncer 0.19.1 (Pipx Install) 
-RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' "/home/${VDIRSYNCER_USER}/.local/pipx/venvs/vdirsyncer/lib/python3.11/site-packages/vdirsyncer/storage/google.py"
+#RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' "/home/${VDIRSYNCER_USER}/.local/pipx/venvs/vdirsyncer/lib/python3.11/site-packages/vdirsyncer/storage/google.py"
+# For Vdirsyncer 0.19.1 (Pipx, Global Install) 
+RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' "/opt/pipx/venvs/vdirsyncer/lib/python3.11/site-packages/vdirsyncer/storage/google.py"
 #For Vdirsyncer 0.18.0 - User install
 #RUN sed -i 's~urn:ietf:wg:oauth:2.0:oob~http://127.0.0.1:8088~g' /home/vdirsyncer/.local/lib/python3.10/site-packages/vdirsyncer/storage/google.py
 #For Vdirsyncer 0.18.0 - Root install
 #RUN sed -i 's~urn:ietf:wg:oauth:2.0:oob~http://127.0.0.1:8088~g' /usr/lib/python3.10/site-packages/vdirsyncer/storage/google.py
+
+# Switch User
+USER "${VDIRSYNCER_USER}"
 
 # Entrypoint
 ENTRYPOINT ["bash","/files/scripts/start.sh"]
