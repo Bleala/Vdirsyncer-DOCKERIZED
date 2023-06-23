@@ -109,7 +109,7 @@ The configuration file name is just **config**. Write everything in *.ini* style
 
 For first time use i recommend running `docker exec -it vdirsyncer vdirsyncer discover`. Maybe you have to say yes/no to a few questions, asked by *Vdirsyncer*. **[READ THE DOCS!](http://vdirsyncer.pimutils.org/en/stable/tutorial.html "Official Documentation")**
 
-After you ran `docker exec -it vdirsyncer vdirsyncer discover` you can either run `docker exec -it vdirsyncer vdirsyncer metasync && vdirsyncer sync` or, if you have not set `AUTOSYNC=true`, set it to *true* and restart the container with `docker compose restart`. If you already set it to true, you can just wait until the cronjob runs or, as i said, run `docker exec -it vdirsyncer vdirsyncer metasync && vdirsyncer sync` to do it manually once.
+After you ran `docker exec -it vdirsyncer vdirsyncer discover` you can either run `docker exec -it vdirsyncer /bin/bash -c "vdirsyncer metasync && vdirsyncer sync"` or, if you have not set `AUTOSYNC=true`, set it to *true* and restart the container with `docker compose restart`. If you already set it to true, you can just wait until the cronjob runs or, as i said, run `docker exec -it vdirsyncer /bin/bash -c "vdirsyncer metasync && vdirsyncer sync"` to do it manually once.
 
 Now it will sync everything for the first time.
 
