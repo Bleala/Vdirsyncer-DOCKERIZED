@@ -125,7 +125,7 @@ then
         printf "\n"
 
         # Vdirsyncer update
-        pipx upgrade --include-injected vdirsyncer
+        PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx upgrade --include-injected vdirsyncer
 
         # Save exit code of update
         UPDATE_SUCCESSFUL="${?}"
