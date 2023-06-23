@@ -5,7 +5,7 @@ Vdirsyncer - sync calendars and addressbooks between servers and the local files
 ## About Vdirsyncer
 **New in `2.4.1`:** A Vdirsyncer autoupdate function has been added! :) If you set `AUTOUPDATE` to `true` then `Vdirsyncer` will update itself including all dependencies at container startup.
 
-Also you are not able to set your own `UID` and `GID` anymore and the default value for both is `1000`! I have done this, to drop the root and sudo privileges completely. You should use a docker volume and just mount the `config` file into the container, [check out the docker-compose.yml](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/main/docker-compose.yml "docker-compose.yml"), or when using bind mounts make sure that the folder is readable and writable!
+Also you are not able to set your own `UID` and `GID` anymore and the default value for both is `1000`! I have done this, to drop the root and sudo privileges completely. You should use a docker volume and just mount the `config` file into the container, [check out the docker compose.yml](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/main/docker compose.yml "docker compose.yml"), or when using bind mounts make sure that the folder is readable and writable!
 
 I will no longer push the `linux/arm/v7` docker image to the registry, because almost no one used this one.
 
@@ -65,10 +65,10 @@ Deprecated:
 
 ## Usage
 
-To start the container you can run `docker run -d -e AUTOSYNC=true -v /path/to/local/folder:/vdirsyncer bleala/vdirsyncer:latest`, but since docker-compose is easier to maintain, i'll give you a valid docker-compose example
+To start the container you can run `docker run -d -e AUTOSYNC=true -v /path/to/local/folder:/vdirsyncer bleala/vdirsyncer:latest`, but since docker compose is easier to maintain, i'll give you a valid docker compose example
 
 
-```docker-compose.yml
+```docker compose.yml
 version: "3.9"
 
 networks:                                 
@@ -76,7 +76,7 @@ networks:
     driver: bridge
 
 services:
-  # Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED!
+  # Vdirsyncer - sync calendars and address books between servers and the local filesystem. DOCKERIZED!
   # https://hub.docker.com/r/bleala/vdirsyncer
   app:
     image: bleala/vdirsyncer:latest
@@ -101,7 +101,7 @@ services:
 
 You have to mount a local folder containing the *config* file. [How to config](http://vdirsyncer.pimutils.org/en/stable/tutorial.html "Vdirsyncer configuration")
 
-In the mounted folder you will also find a *config.example* which i copied inside the container for a quick reference.
+In the mounted folder you will also find a *config.example* which I copied inside the container for a quick reference.
 
 The configuration file name is just **config**. Write everything in *.ini* style, like it is shown in the docs and in my *config.example*!
 
@@ -109,13 +109,13 @@ The configuration file name is just **config**. Write everything in *.ini* style
 
 For first time use i recommend running `docker exec -it vdirsyncer vdirsyncer discover`. Maybe you have to say yes/no to a few questions, asked by *Vdirsyncer*. **[READ THE DOCS!](http://vdirsyncer.pimutils.org/en/stable/tutorial.html "Official Documentation")**
 
-After you ran `docker exec -it vdirsyncer vdirsyncer discover` you can either run `docker exec -it vdirsyncer vdirsyncer metasync && vdirsyncer sync` or, if you have not set `AUTOSYNC=true`, set it to *true* and restart the container with `docker-compose restart`. If you already set it to true, you can just wait until the cronjob runs or, as i said, run `docker exec -it vdirsyncer vdirsyncer metasync && vdirsyncer sync` to do it manually once.
+After you ran `docker exec -it vdirsyncer vdirsyncer discover` you can either run `docker exec -it vdirsyncer vdirsyncer metasync && vdirsyncer sync` or, if you have not set `AUTOSYNC=true`, set it to *true* and restart the container with `docker compose restart`. If you already set it to true, you can just wait until the cronjob runs or, as i said, run `docker exec -it vdirsyncer vdirsyncer metasync && vdirsyncer sync` to do it manually once.
 
 Now it will sync everything for the first time.
 
 When everything is okay, you can adjust the `CRON_TIME` value to your desired time. Check out [Crontab.guru](https://crontab.guru/ "Crontab.guru") for help. Default synctime value is 15 minutes `CRON_TIME=*/15 * * * *`.
 
-Everything that is done by *Cron* will get written to the *log file* and to the docker logs! Run `docker logs -f vdirsyncer` or `docker-compose logs -f` to watch the logs.
+Everything that is done by *Cron* will get written to the *log file* and to the docker logs! Run `docker logs -f vdirsyncer` or `docker compose logs -f` to watch the logs.
 
 ### Google specifics
 
