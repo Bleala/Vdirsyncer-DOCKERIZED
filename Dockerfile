@@ -7,11 +7,7 @@ ARG ALPINE_VERSION="3.18.2" \
         PIP_VERSION="23.1.2" \
         PIPX_VERSION="1.2.0" \
         PYTHON_VERSION="3.11.4" \
-        VDIRSYNCER_VERSION="0.19.1" \
-        VDIRSYNCER_USER="vdirsyncer" \
-        CRON_FILE="/etc/crontabs/vdirsyncer" \
-        UID="1000" \
-        GID="1000"
+        VDIRSYNCER_VERSION="0.19.1"
 
 # Set up Environment
     # Set Vdirsyncer config location
@@ -29,13 +25,17 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
         # Set Timezone
         TZ=Europe/Vienna \
         # Set UID
-        UID="${UID}" \
+        UID="1000" \
         # Set GID
-        GID="${GID}" \
-        # Set Vdirsyncer user again as environment variable
-        VDIRSYNCER_USER="${VDIRSYNCER_USER}" \
-        # Set cron file again as environment variable
-        CRON_FILE="${CRON_FILE}"
+        GID="1000" \
+        # Set Vdirsyncer user
+        VDIRSYNCER_USER="vdirsyncer" \
+        # Set cron file
+        CRON_FILE="/etc/crontabs/vdirsyncer" \
+        # Set Pipx home
+        PIPX_HOME="/opt/pipx" \
+        # Set Pipx bin dir
+        PIPX_BIN_DIR="/usr/local/bin"
 
 # Update and install packages
 RUN apk update \
@@ -110,26 +110,18 @@ LABEL maintainer="Bleala" \
         description="Vdirsyncer ${VDIRSYNCER_VERSION} on Alpine ${ALPINE_VERSION}, Pip ${PIP_VERSION}, Pipx ${PIPX_VERSION}, Python ${PYTHON_VERSION}" \
         org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
 
-# Change Permissions
-RUN chmod -R +x /files/scripts \
-        && chown -R "${UID}":"${GID}" /files \
-        && chown -R "${UID}":"${GID}" /vdirsyncer \
-        && chmod -R 755 /vdirsyncer \
-        && chown "${UID}":"${GID}" "${CRON_FILE}" \
-        && chmod 644 "${CRON_FILE}"
-
 # Vdirsyncer installation
-RUN PIPX_HOME="/opt/pipx" PIPX_BIN_DIR="/usr/local/bin" pipx install "vdirsyncer==${VDIRSYNCER_VERSION}" \
+RUN PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx install "vdirsyncer==${VDIRSYNCER_VERSION}" \
         # For Vdirsyncer 0.18.0
         #&& pip install requests-oauthlib
         # For Vdirsyncer 0.19.x (Pip install)
         #&& pip install aiohttp-oauthlib \
         #&& pip install vdirsyncer[google] \
         # For Vdirsyncer 0.19.x (Pipx install)
-        && PIPX_HOME="/opt/pipx" PIPX_BIN_DIR="/usr/local/bin" pipx inject vdirsyncer aiohttp-oauthlib \
-        && PIPX_HOME="/opt/pipx" PIPX_BIN_DIR="/usr/local/bin" pipx inject vdirsyncer vdirsyncer[google] \
+        && PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx inject vdirsyncer aiohttp-oauthlib \
+        && PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx inject vdirsyncer vdirsyncer[google] \
         # Update Path for Pipx
-        && PIPX_HOME="/opt/pipx" PIPX_BIN_DIR="/usr/local/bin" pipx ensurepath
+        && PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx ensurepath
 
 
 # Fix Google redirect uri
@@ -138,11 +130,20 @@ RUN PIPX_HOME="/opt/pipx" PIPX_BIN_DIR="/usr/local/bin" pipx install "vdirsyncer
 # For Vdirsyncer 0.19.1 (Pipx Install) 
 #RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' "/home/${VDIRSYNCER_USER}/.local/pipx/venvs/vdirsyncer/lib/python3.11/site-packages/vdirsyncer/storage/google.py"
 # For Vdirsyncer 0.19.1 (Pipx, Global Install) 
-RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' "/opt/pipx/venvs/vdirsyncer/lib/python3.11/site-packages/vdirsyncer/storage/google.py"
+RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' "${PIPX_HOME}/venvs/vdirsyncer/lib/python3.11/site-packages/vdirsyncer/storage/google.py"
 #For Vdirsyncer 0.18.0 - User install
 #RUN sed -i 's~urn:ietf:wg:oauth:2.0:oob~http://127.0.0.1:8088~g' /home/vdirsyncer/.local/lib/python3.10/site-packages/vdirsyncer/storage/google.py
 #For Vdirsyncer 0.18.0 - Root install
 #RUN sed -i 's~urn:ietf:wg:oauth:2.0:oob~http://127.0.0.1:8088~g' /usr/lib/python3.10/site-packages/vdirsyncer/storage/google.py
+
+# Change Permissions
+RUN chmod -R +x /files/scripts \
+        && chown -R "${UID}":"${GID}" /files \
+        && chown -R "${UID}":"${GID}" /vdirsyncer \
+        && chmod -R 755 /vdirsyncer \
+        && chown "${UID}":"${GID}" "${CRON_FILE}" \
+        && chmod 644 "${CRON_FILE}" \
+        && chown -R "${VDIRSYNCER_USER}":"${VDIRSYNCER_USER}" "${PIPX_HOME}"
 
 # Switch User
 USER "${VDIRSYNCER_USER}"
