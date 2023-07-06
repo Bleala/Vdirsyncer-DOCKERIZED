@@ -109,7 +109,8 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=1 \
 LABEL maintainer="Bleala" \
         version="${IMAGE_VERSION}" \
         description="Vdirsyncer ${VDIRSYNCER_VERSION} on Alpine ${ALPINE_VERSION}, Pip ${PIP_VERSION}, Pipx ${PIPX_VERSION}, Python ${PYTHON_VERSION}" \
-        org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
+        org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED" \
+        org.opencontainers.image.url="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
 
 # Vdirsyncer installation
 RUN PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx install "vdirsyncer==${VDIRSYNCER_VERSION}" \
