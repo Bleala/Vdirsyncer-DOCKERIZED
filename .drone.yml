@@ -2,6 +2,129 @@
 # Start of Build Pipeline
 kind: pipeline
 type: docker
+name: Build Vdirsyncer-DOCKERIZED
+
+# Disable Drone.io clone, because of SSH git clone
+clone:
+  disable: true
+
+# Set platform
+platform:
+  os: linux
+  arch: amd64
+
+# Define steps
+steps:
+  # Clone git repo through SSH
+  - name: Clone Git Repository (SSH)
+    image: alpine/git
+    environment:
+      GIT_PORT:
+        from_secret: git_port
+      GIT_SERVER:
+        from_secret: git_server
+      SSH_KEY:
+        from_secret: ssh_key
+      SSH_KEY_TYPE:
+        from_secret: ssh_key_type
+    # https://gist.github.com/iflamed/2d5aced9148714dcebe0c4918bcc917f?permalink_comment_id=3922322
+    # https://drechsel.xyz/posts/drone-ci-cloning-via-ssh-instead-of-httphttps/
+    commands:
+      - mkdir $${HOME}/.ssh && echo "$${SSH_KEY}" > $${HOME}/.ssh/$${SSH_KEY_TYPE}
+      - chmod 600 $${HOME}/.ssh/$${SSH_KEY_TYPE}
+      - ssh-keyscan -p $${GIT_PORT} -H $${GIT_SERVER} > $${HOME}/.ssh/known_hosts 2> /dev/null
+      - git clone ssh://git@$${GIT_SERVER}:$${GIT_PORT}/$${DRONE_REPO}.git .
+      - git checkout $${DRONE_COMMIT}
+
+  # Build image for Docker Hub
+  - name: Docker Hub (Auto Tag)
+    # https://blog.wu-boy.com/2023/04/drone-ci-cd-to-build-multiarch-docker-images-with-buildx-en/
+    # https://drone-plugin-index.geekdocs.de/plugins/drone-docker-buildx/
+    image: thegeeklab/drone-docker-buildx:23
+    privileged: true
+    settings:
+      username:
+        from_secret: username_dockerhub
+      password:
+        from_secret: password_dockerhub
+      repo: bleala/vdirsyncer
+      auto_tag: true
+      dockerfile: ./Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+      labels:
+        - org.opencontainers.image.revision=${DRONE_COMMIT}
+        - org.opencontainers.image.created=${DRONE_BUILD_FINISHED}
+
+  # Build image for Docker Hub
+  - name: Docker Hub (Latest Tag)
+    image: thegeeklab/drone-docker-buildx:23
+    privileged: true
+    settings:
+      username:
+        from_secret: username_dockerhub
+      password:
+        from_secret: password_dockerhub
+      repo: bleala/vdirsyncer
+      tags: 
+        - latest
+      dockerfile: ./Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+      labels:
+        - org.opencontainers.image.revision=${DRONE_COMMIT}
+        - org.opencontainers.image.created=${DRONE_BUILD_FINISHED}
+
+  # Build image for GHCR
+  - name: GHCR (Auto Tag)
+    image: thegeeklab/drone-docker-buildx:23
+    privileged: true
+    settings:
+      registry: ghcr.io
+      username:
+        from_secret: username_ghcr
+      password:
+        from_secret: password_ghcr
+      repo: ghcr.io/bleala/vdirsyncer
+      auto_tag: true
+      dockerfile: ./Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+      labels:
+        - org.opencontainers.image.revision=${DRONE_COMMIT}
+        - org.opencontainers.image.created=${DRONE_BUILD_FINISHED}
+   # Build image for GHCR
+  - name: GHCR (Latest Tag)
+    image: thegeeklab/drone-docker-buildx:23
+    privileged: true
+    settings:
+      registry: ghcr.io
+      username:
+        from_secret: username_ghcr
+      password:
+        from_secret: password_ghcr
+      repo: ghcr.io/bleala/vdirsyncer
+      tags: 
+        - latest
+      dockerfile: ./Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+      labels:
+        - org.opencontainers.image.revision=${DRONE_COMMIT}
+        - org.opencontainers.image.created=${DRONE_BUILD_FINISHED}
+
+trigger:
+  event:
+    - tag
+
+---
+# Start of Build Pipeline
+kind: pipeline
+type: docker
 name: Dev Build Vdirsyncer-DOCKERIZED
 
 # Disable Drone.io clone, because of SSH git clone
