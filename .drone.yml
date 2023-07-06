@@ -163,7 +163,7 @@ steps:
     privileged: true
     settings:
       username:
-        from_secret: username
+        from_secret: username_dockerhub
       password:
         from_secret: password_dockerhub
       repo: bleala/test
