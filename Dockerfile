@@ -36,7 +36,9 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
         # Set Pipx home
         PIPX_HOME="/opt/pipx" \
         # Set Pipx bin dir
-        PIPX_BIN_DIR="/usr/local/bin"
+        PIPX_BIN_DIR="/usr/local/bin" \
+        # Supercronic log level
+        LOG_LEVEL=""
 
 # Update and install packages
 RUN apk update \
@@ -47,7 +49,7 @@ RUN apk update \
         # Update Pip
         && pip install --upgrade pip \
         # Install Pipx
-        pip install pipx \
+        && pip install pipx \
         # For Curl Commands
         && apk add --no-cache curl \                    
         # For TS
