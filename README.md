@@ -5,7 +5,7 @@ Vdirsyncer - sync calendars and addressbooks between servers and the local files
 ## About Vdirsyncer
 **New in `2.4.1`:** A Vdirsyncer autoupdate function has been added! :) If you set `AUTOUPDATE` to `true` then `Vdirsyncer` will update itself including all dependencies at container startup.
 
-Also you are not able to set your own `UID` and `GID` anymore and the default value for both is `1000`! I have done this, to drop the root and sudo privileges completely. You should use a docker volume and just mount the `config` file into the container, [check out the docker compose.yml](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/main/docker compose.yml "docker compose.yml"), or when using bind mounts make sure that the folder is readable and writable!
+Also you are not able to set your own `UID` and `GID` anymore and the default value for both is `1000`! I have done this, to drop the root and sudo privileges completely. You should use a docker volume and just mount the `config` file into the container, [check out the docker-compose.yml](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/main/docker-compose.yml "docker compose.yml"), or when using bind mounts make sure that the folder is readable and writable!
 
 I will no longer push the `linux/arm/v7` docker image to the registry, because almost no one used this one.
 
@@ -90,6 +90,7 @@ services:
       - AUTOSYNC= # set to true for automatic sync, default to false
       - AUTOUPDATE= # set to true for automatic Vdirsyncer and dependencies updates on container startup, default to false
       - LOG= # optional, default to /vdirsyncer/vdirsyncer.log
+      - LOG_LEVEL= # optional, default is normal output from supercronic
       - CRON_TIME= # adjust autosync /-discover time, default to 15 minutes - */15 * * * * 
       # Cron Time need to be set in Cron format - look here for generator https://crontab.guru/
       # Set CRON_TIME like that --> */15 * * * *
@@ -107,7 +108,7 @@ The configuration file name is just **config**. Write everything in *.ini* style
 
 **Attention:** It is not recommended to use `AUTODISCOVER=true` by default, if you have never used *Vdirsyncer* before! If you set it to true, it will automatically accept everything `Vdirsyncer` asks, so don't ruin your calender/contacts structure! **Use it only if you know what you are doing!**
 
-For first time use i recommend running `docker exec -it vdirsyncer vdirsyncer discover`. Maybe you have to say yes/no to a few questions, asked by *Vdirsyncer*. **[READ THE DOCS!](http://vdirsyncer.pimutils.org/en/stable/tutorial.html "Official Documentation")**
+For first time use I recommend running `docker exec -it vdirsyncer vdirsyncer discover`. Maybe you have to say yes/no to a few questions, asked by *Vdirsyncer*. **[READ THE DOCS!](http://vdirsyncer.pimutils.org/en/stable/tutorial.html "Official Documentation")**
 
 After you ran `docker exec -it vdirsyncer vdirsyncer discover` you can either run `docker exec -it vdirsyncer /bin/bash -c "vdirsyncer metasync && vdirsyncer sync"` or, if you have not set `AUTOSYNC=true`, set it to *true* and restart the container with `docker compose restart`. If you already set it to true, you can just wait until the cronjob runs or, as i said, run `docker exec -it vdirsyncer /bin/bash -c "vdirsyncer metasync && vdirsyncer sync"` to do it manually once.
 
@@ -115,7 +116,7 @@ Now it will sync everything for the first time.
 
 When everything is okay, you can adjust the `CRON_TIME` value to your desired time. Check out [Crontab.guru](https://crontab.guru/ "Crontab.guru") for help. Default synctime value is 15 minutes `CRON_TIME=*/15 * * * *`.
 
-Everything that is done by *Cron* will get written to the *log file* and to the docker logs! Run `docker logs -f vdirsyncer` or `docker compose logs -f` to watch the logs.
+Everything that is done by *Supercronic* will get written to the *log file* and to the docker logs! Run `docker logs -f vdirsyncer` or `docker compose logs -f` to watch the logs.
 
 ### Google specifics
 
@@ -132,13 +133,17 @@ This has been tested and confirmed working for `Vdirsyncer 0.19.0` and `Vdirsync
 
 You can set eight different environment variables if you want to:
 
-* `TZ` - default to `Europe/Vienna`, is used to set the correct container and log time.
-* `AUTODISCOVER` - default to false, is used to automatically run `vdirsyncer discover`.
-* `AUTOSYNC` - default to false, is used to automatically run `vdirsyncer metasync && vdirsyncer sync`.
-* `AUTOUPDATE` - default to false, is used to automatically update `Vdirsyncer` with all dependencies on container startup.
-* `CRON_TIME` - default to `*/15 * * * *` (15 minutes), you can adjust it to whatever time you want to.
-* `LOG` - optional, default to `/vdirsyncer/vdirsyncer.log`, if you want to adjust the log file destination.
-* `VDIRSYNCER_CONFIG` - location, where *Vdirsyncer* reads the config from, default to /vdirsyncer/config **DON'T CHANGE!** 
+| **Variable** | **Info** | **Value** |
+|:----:|:----:|:----:|
+|   `TZ`   |   to set the corrent container and log time   |   default to `Europe/Vienna`, look [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones "Timezones") for possible values  |
+|   `AUTODISCOVER`   |   is used to automatically run `vdirsyncer discover`   |   default to `false`, can be `true`   |
+|   `AUTOSYNC`   |   is used to automatically run `vdirsyncer metasync && vdirsyncer sync`   |   default to `false`, can be `true`   |
+|   `AUTOUPDATE`   |   is used to automatically update `Vdirsyncer` with all dependencies on container startup   |   default to `false`, can be `true`   |
+|   `CRON_TIME`   |   for `Supercronic`, you can adjust it to whatever time you want to   |   default to `*/15 * * * *`, look [here](https://crontab.guru/ "Crontab Generator") for crontab generator   |
+|   `LOG`   |   if you want to adjust the log file destination   |   optional, default to `/vdirsyncer/vdirsyncer.log`   |
+|   `LOG_LEVEL`   |   if you want to adjust the log level   |   optional, default to `nothing --> normal supercronic output`, can be `-quiet`, `-debug` or `no value --> leave variable empty`   |
+|   `VDIRSYNCER_CONFIG`   |   location, where *Vdirsyncer* reads the config from   |   default to /vdirsyncer/config **DON'T CHANGE!**   |
+
 
 **New in `2.4.1`:** The `UID` and `GID` variables now have default values, which are not changable!
 * `UID` - default to `1000`.
@@ -155,6 +160,8 @@ You can set eight different environment variables if you want to:
 ---
 
 ## Versions
+**2.4.4 - 07.07.2023:** Option to set the Supercronic log level - Vdirsyncer 0.19.1, Alpine 3.18.2, Python 3.11.4, Pip 23.1.2, Pipx 1.2.0
+
 **2.4.3 - 23.06.2023:** Vdirsyncer global install, updated Alpine to 3.18.2 and Python to 3.11.4 - Vdirsyncer 0.19.1, Alpine 3.18.2, Python 3.11.4, Pip 23.1.2, Pipx 1.2.0
 
 **2.4.2 - 12.05.2023:** Fixed Cronjob bug and switched to Supercronic instead of Cron, new Healthcheck to monitor the Supercronic process - Vdirsyncer 0.19.1, Alpine 3.17.3, Python 3.10.11, Pip 23.1.2, Pipx 1.2.0
