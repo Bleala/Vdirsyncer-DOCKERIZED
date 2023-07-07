@@ -166,7 +166,7 @@ steps:
         from_secret: username_dockerhub
       password:
         from_secret: password_dockerhub
-      repo: bleala/test
+      repo: bleala/vdirsyncer
       tags: 
         - dev
       dockerfile: ./Dockerfile
