@@ -1,3 +1,4 @@
 reference.yml
 .gitignore
 .gitattributes
+.drone.yml
