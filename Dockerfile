@@ -38,7 +38,7 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
         # Set Pipx bin dir
         PIPX_BIN_DIR="/usr/local/bin" \
         # Supercronic log level
-        LOG_LEVEL=""
+        LOG_LEVEL=
 
 # Update and install packages
 RUN apk update \
