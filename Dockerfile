@@ -8,7 +8,7 @@ ARG ALPINE_VERSION="3.18.2" \
         PIPX_VERSION="1.2.0" \
         PYTHON_VERSION="3.11.4" \
         PYTHON_VERSION_SHORT="3.11" \
-        VDIRSYNCER_VERSION="0.19.1"
+        VDIRSYNCER_VERSION="0.19.2"
 
 # Set up Environment
     # Set Vdirsyncer config location
@@ -134,7 +134,7 @@ RUN PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx install "vdirsy
 # For Vdirsyncer 0.19.1 (Pipx Install) 
 #RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' "/home/${VDIRSYNCER_USER}/.local/pipx/venvs/vdirsyncer/lib/python3.11/site-packages/vdirsyncer/storage/google.py"
 # For Vdirsyncer 0.19.1 (Pipx, Global Install) 
-RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' "${PIPX_HOME}/venvs/vdirsyncer/lib/python${PYTHON_VERSION_SHORT}/site-packages/vdirsyncer/storage/google.py"
+#RUN sed -i 's~f"http://{host}:{local_server.server_port}"~"http://127.0.0.1:8088"~g' "${PIPX_HOME}/venvs/vdirsyncer/lib/python${PYTHON_VERSION_SHORT}/site-packages/vdirsyncer/storage/google.py"
 #For Vdirsyncer 0.18.0 - User install
 #RUN sed -i 's~urn:ietf:wg:oauth:2.0:oob~http://127.0.0.1:8088~g' /home/vdirsyncer/.local/lib/python3.10/site-packages/vdirsyncer/storage/google.py
 #For Vdirsyncer 0.18.0 - Root install
