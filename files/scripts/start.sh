@@ -159,8 +159,17 @@ then
     # User info
     echo 'Autodiscover and Autosync are enabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
-    # Start the cronjob
-    /usr/bin/supercronic "${LOG_LEVEL}" "${CRON_FILE}" 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+    # Check if LOG_LEVEL environment variable is empty
+    if [[ -z "${LOG_LEVEL}" ]]
+    then
+        # Start the cronjob
+        /usr/bin/supercronic "${CRON_FILE}" 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+
+    # If LOG_LEVEL environment variable is set
+    else
+        # Start the cronjob
+        /usr/bin/supercronic "${LOG_LEVEL}" "${CRON_FILE}" 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+    fi
 
 # Append to crontab file if autosync is true
 elif [[ "${AUTODISCOVER}" == "false" ]] && [[ "${AUTOSYNC}" == "true" ]]
@@ -172,8 +181,17 @@ then
     # User info
     echo 'Only Autosync is enabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
-    # Start the cronjob
-    /usr/bin/supercronic "${LOG_LEVEL}" "${CRON_FILE}" 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+    # Check if LOG_LEVEL environment variable is empty
+    if [[ -z "${LOG_LEVEL}" ]]
+    then
+        # Start the cronjob
+        /usr/bin/supercronic "${CRON_FILE}" 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+
+    # If LOG_LEVEL environment variable is set
+    else
+        # Start the cronjob
+        /usr/bin/supercronic "${LOG_LEVEL}" "${CRON_FILE}" 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+    fi
 
 # Append to crontab file if autodiscover is true
 elif [[ "${AUTODISCOVER}" == "true" ]] && [[ "${AUTOSYNC}" == "false" ]]
@@ -184,8 +202,17 @@ then
     # User info
     echo 'Only Autodiscover is enabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
-    # Start the cronjob
-    /usr/bin/supercronic "${LOG_LEVEL}" "${CRON_FILE}" 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+    # Check if LOG_LEVEL environment variable is empty
+    if [[ -z "${LOG_LEVEL}" ]]
+    then
+        # Start the cronjob
+        /usr/bin/supercronic "${CRON_FILE}" 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+
+    # If LOG_LEVEL environment variable is set
+    else
+        # Start the cronjob
+        /usr/bin/supercronic "${LOG_LEVEL}" "${CRON_FILE}" 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+    fi
 
 # Append nothing, if both options are disabled
 else
