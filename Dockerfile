@@ -2,11 +2,11 @@
 FROM alpine:3.18.3
 
 # Build Arguments
-ARG ALPINE_VERSION="3.18.2" \
-        IMAGE_VERSION="2.4.4" \
-        PIP_VERSION="23.1.2" \
+ARG ALPINE_VERSION="3.18.3" \
+        IMAGE_VERSION="2.5.0" \
+        PIP_VERSION="23.2.1" \
         PIPX_VERSION="1.2.0" \
-        PYTHON_VERSION="3.11.4" \
+        PYTHON_VERSION="3.11.5" \
         PYTHON_VERSION_SHORT="3.11" \
         VDIRSYNCER_VERSION="0.19.2"
 
