@@ -127,7 +127,7 @@ The reason is, cron does not run the `vdirsyncer` command directly inside the `/
 **You can skip step 9, this has been done for you during the container build!**<br>
 This has been tested and confirmed working for `Vdirsyncer 0.18.0` from my side.<br>
 For `Vdirsyncer 0.19.1` you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1516626359 "Google Instruction")<br>
-This has been tested and confirmed working for `Vdirsyncer 0.19.0` and `Vdirsyncer 0.19.1` from my side.<br>
+This has been tested and confirmed working for `Vdirsyncer 0.19.0`, `Vdirsyncer 0.19.1` and `Vdirsyncer 0.19.2` from my side.<br>
 
 ### Environment Variables
 
@@ -160,6 +160,10 @@ You can set eight different environment variables if you want to:
 ---
 
 ## Versions
+**2.5.0 - 08.09.2023:** Updated Vdirsyncer to 0.19.2, Alpine to 3.18.3, Python to 3.11.5 and Pip to 23.2.1 - Vdirsyncer 0.19.2, Alpine 3.18.3, Python 3.11.5, Pip 23.2.1, Pipx 1.2.0
+
+**2.4.5 - 14.07.2023:** Supercronic start issue resolved, if LOG_LEVEL environment variable is empty and Alpine packages update - Vdirsyncer 0.19.1, Alpine 3.18.2, Python 3.11.4, Pip 23.1.2, Pipx 1.2.0
+
 **2.4.4 - 07.07.2023:** Option to set the Supercronic log level - Vdirsyncer 0.19.1, Alpine 3.18.2, Python 3.11.4, Pip 23.1.2, Pipx 1.2.0
 
 **2.4.3 - 23.06.2023:** Vdirsyncer global install, updated Alpine to 3.18.2 and Python to 3.11.4 - Vdirsyncer 0.19.1, Alpine 3.18.2, Python 3.11.4, Pip 23.1.2, Pipx 1.2.0
