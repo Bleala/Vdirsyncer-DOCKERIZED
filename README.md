@@ -160,6 +160,8 @@ You can set eight different environment variables if you want to:
 ---
 
 ## Versions
+**2.5.1 - 14.12.2023:** Updated Alpine to 3.18.5, Python to 3.11.6, Pip to 23.3.1 and Pipx to 1.3.3 - Vdirsyncer 0.19.2, Alpine 3.18.5, Python 3.11.6, Pip 23.3.1, Pipx 1.3.3
+
 **2.5.0 - 08.09.2023:** Updated Vdirsyncer to 0.19.2, Alpine to 3.18.3, Python to 3.11.5 and Pip to 23.2.1 - Vdirsyncer 0.19.2, Alpine 3.18.3, Python 3.11.5, Pip 23.2.1, Pipx 1.2.0
 
 **2.4.5 - 14.07.2023:** Supercronic start issue resolved, if LOG_LEVEL environment variable is empty and Alpine packages update - Vdirsyncer 0.19.1, Alpine 3.18.2, Python 3.11.4, Pip 23.1.2, Pipx 1.2.0
