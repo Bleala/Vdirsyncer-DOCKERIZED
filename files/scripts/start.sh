@@ -149,11 +149,13 @@ then
     } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 fi
 
-# Post sync script
+# Check, if POST_SYNC_SCRIPT_FILE is set
 if [ -z "${POST_SYNC_SCRIPT_FILE}" ]
 then
     # Set Post Sync Snippet to nothing
     POST_SYNC_SNIPPET=""
+
+# Set POST_SYNC_SNIPPET, if  POST_SYNC_SCRIPT_FILE is set
 else
     # Set Post Sync Snippet to Post Sync File
     POST_SYNC_SNIPPET=" && ${POST_SYNC_SCRIPT_FILE}"
