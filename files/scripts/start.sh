@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# Post sync script
-if [ -z "${POST_SYNC_SCRIPT_FILE}" ]; then
-    POST_SYNC_SNIPPET=""
-else
-    POST_SYNC_SNIPPET=" && ${POST_SYNC_SCRIPT_FILE}"
-fi
-
 # Check if a logfile exists
 if [[ -e "${LOG}" ]]
 then
@@ -145,6 +138,7 @@ then
             printf "\n"
             echo "Vdirsyncer update was successful."
         else
+            # User info
             printf "\n"
             echo "Vdirsyncer update FAILED!"
         fi
@@ -153,6 +147,16 @@ then
         echo "#######################################"
         printf "\n"
     } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+fi
+
+# Post sync script
+if [ -z "${POST_SYNC_SCRIPT_FILE}" ]
+then
+    # Set Post Sync Snippet to nothing
+    POST_SYNC_SNIPPET=""
+else
+    # Set Post Sync Snippet to Post Sync File
+    POST_SYNC_SNIPPET=" && ${POST_SYNC_SCRIPT_FILE}"
 fi
 
 ### Set up Cronjobs ###
