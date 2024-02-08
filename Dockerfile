@@ -1,8 +1,8 @@
 # Alpine Image
-FROM alpine:3.18.6
+FROM alpine:3.19.1
 
 # Build Arguments
-ARG ALPINE_VERSION="3.18.6" \
+ARG ALPINE_VERSION="3.19.1" \
         IMAGE_VERSION="2.5.1" \
         PIP_VERSION="24.0.0" \
         PIPX_VERSION="1.4.3" \
@@ -47,9 +47,9 @@ RUN apk update \
         # Install Pip
         && apk add --no-cache py3-pip \
         # Update Pip
-        && pip install --upgrade pip \
+        && pip install --upgrade --break-system-packages pip \
         # Install Pipx
-        && pip install pipx \
+        && pip install --upgrade --break-system-packages pipx \
         # For Curl Commands
         && apk add --no-cache curl \                    
         # For TS
