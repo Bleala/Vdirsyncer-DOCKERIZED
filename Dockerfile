@@ -3,7 +3,7 @@ FROM alpine:3.19.1
 
 # Build Arguments
 ARG ALPINE_VERSION="3.19.1" \
-        IMAGE_VERSION="2.5.1" \
+        IMAGE_VERSION="2.5.2" \
         PIP_VERSION="24.0.0" \
         PIPX_VERSION="1.4.3" \
         PYTHON_VERSION="3.11.6" \
