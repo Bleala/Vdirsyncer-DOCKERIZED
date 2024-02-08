@@ -9,11 +9,7 @@ Also you are not able to set your own `UID` and `GID` anymore and the default va
 
 I will no longer push the `linux/arm/v7` docker image to the registry, because almost no one used this one.
 
-**New in `2.3.0`:** In Version `2.3.0` there are some improvements. The Container does not run as root anymore, it has a dedicated user called *Vdirsyncer*.
-
 **Disclaimer:** I am just the maintainer of this docker container, i did not write the software. Visit the [Official Github Repository](https://github.com/pimutils/vdirsyncer "Vdirsyncer Github Repository") to thank the author(s)! :)
-
-**Note:** With Version 2.3.0 the default `USER`, `UID` and `GID` changed!
 
 Vdirsyncer is a command-line tool for synchronizing calendars and addressbooks between a variety of servers and the local filesystem. The most popular usecase is to synchronize a server with a local folder and use a set of other programs to change the local events and contacts. Vdirsyncer can then synchronize those changes back to the server.
 
@@ -43,7 +39,7 @@ Docker Hub - https://hub.docker.com/r/bleala/vdirsyncer
 ---
 ## Image, Versions and Architecture
 
-I built this image based on [Alpine Linux](https://hub.docker.com/_/alpine "Alpine Linux Image") and set up everything with python3 and pip3.
+I built this image based on [Alpine Linux](https://hub.docker.com/_/alpine "Alpine Linux Image") and set up everything with python3, pip3 and pipx.
 
 There will always be two different versions:
 
@@ -89,14 +85,18 @@ services:
       - AUTODISCOVER= # set to true for automatic discover, default to false
       - AUTOSYNC= # set to true for automatic sync, default to false
       - AUTOUPDATE= # set to true for automatic Vdirsyncer and dependencies updates on container startup, default to false
-      - LOG= # optional, default to /vdirsyncer/vdirsyncer.log
-      - LOG_LEVEL= # optional, default is normal output from supercronic
       - CRON_TIME= # adjust autosync /-discover time, default to 15 minutes - */15 * * * * 
       # Cron Time need to be set in Cron format - look here for generator https://crontab.guru/
       # Set CRON_TIME like that --> */15 * * * *
+      # Optional
+      - POST_SYNC_SCRIPT_FILE= # optional,  set to script path to automatically run your custom script after the cronjob `vdirsyncer` command(s), default to nothing
+      - LOG= # optional, default to /vdirsyncer/vdirsyncer.log
+      - LOG_LEVEL= # optional, default is normal output from supercronic
     volumes:
       - vdirsyncer:/vdirsyncer              # Docker Volume
       - /path/to/config:/vdirsyncer/config  # Vdirsyncer Config
+      # Optional
+      - /path/to/custom_script.sh:/vdirsyncer/custom_script.sh  # Custom Script
 
 ```
 
@@ -118,6 +118,11 @@ When everything is okay, you can adjust the `CRON_TIME` value to your desired ti
 
 Everything that is done by *Supercronic* will get written to the *log file* and to the docker logs! Run `docker logs -f vdirsyncer` or `docker compose logs -f` to watch the logs.
 
+### User
+
+`Vdirsyncer` does run with an user called `vdirsyncer` inside the container and not as root.<br>
+The `UID` and `GID` for this user are `1000`, so be careful, if you use a bind mount instead of a docker volume.
+
 ### Google specifics
 
 **Attention for Google users:** As you can read in the [Docs](http://vdirsyncer.pimutils.org/en/stable/config.html#google "Google Docs Vdirsyncer") you have to specify a path for `token_file = "PATH"`. In order to work properly, use an **absolute path!** So for the carddav storage set the `token_file` like `token_file = "/vdirsyncer/google_carddav"`and for the caldav storage like `token_file = "/vdirsyncer/google_calendar"`.<br>
@@ -126,12 +131,12 @@ The reason is, cron does not run the `vdirsyncer` command directly inside the `/
 **Even more attention for Google user:** Because Google is Google you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/975#issuecomment-1275698939 "Google Instruction").<br>
 **You can skip step 9, this has been done for you during the container build!**<br>
 This has been tested and confirmed working for `Vdirsyncer 0.18.0` from my side.<br>
-For `Vdirsyncer 0.19.1` you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1516626359 "Google Instruction")<br>
+For `Vdirsyncer 0.19.2` you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500 "Google Instruction")<br>
 This has been tested and confirmed working for `Vdirsyncer 0.19.0`, `Vdirsyncer 0.19.1` and `Vdirsyncer 0.19.2` from my side.<br>
 
 ### Environment Variables
 
-You can set eight different environment variables if you want to:
+You can set nine different environment variables if you want to:
 
 | **Variable** | **Info** | **Value** |
 |:----:|:----:|:----:|
@@ -140,6 +145,7 @@ You can set eight different environment variables if you want to:
 |   `AUTOSYNC`   |   is used to automatically run `vdirsyncer metasync && vdirsyncer sync`   |   default to `false`, can be `true`   |
 |   `AUTOUPDATE`   |   is used to automatically update `Vdirsyncer` with all dependencies on container startup   |   default to `false`, can be `true`   |
 |   `CRON_TIME`   |   for `Supercronic`, you can adjust it to whatever time you want to   |   default to `*/15 * * * *`, look [here](https://crontab.guru/ "Crontab Generator") for crontab generator   |
+|   `POST_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script after the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
 |   `LOG`   |   if you want to adjust the log file destination   |   optional, default to `/vdirsyncer/vdirsyncer.log`   |
 |   `LOG_LEVEL`   |   if you want to adjust the log level   |   optional, default to `nothing --> normal supercronic output`, can be `-quiet`, `-debug` or `no value --> leave variable empty`   |
 |   `VDIRSYNCER_CONFIG`   |   location, where *Vdirsyncer* reads the config from   |   default to /vdirsyncer/config **DON'T CHANGE!**   |
@@ -160,9 +166,14 @@ You can set eight different environment variables if you want to:
 ---
 
 ## Versions
+**2.5.2 - 08.02.2024:** Merged Pull Request for POST_SYNC_SCRIPT_FILE variable, to automatically run a custom script after the cronjob `vdirsyncer` command(s) and updated Alpine to 3.19.1 - Vdirsyncer 0.19.2, Alpine 3.19.1, Python 3.11.6, Pip 24.0.0, Pipx 1.4.3
+
 **2.5.1 - 07.02.2024:** Updated Alpine to 3.18.6, Python to 3.11.6, Pip to 24.0.0 and Pipx to 1.4.3 - Vdirsyncer 0.19.2, Alpine 3.18.6, Python 3.11.6, Pip 24.0.0, Pipx 1.4.3
 
 **2.5.0 - 08.09.2023:** Updated Vdirsyncer to 0.19.2, Alpine to 3.18.3, Python to 3.11.5 and Pip to 23.2.1 - Vdirsyncer 0.19.2, Alpine 3.18.3, Python 3.11.5, Pip 23.2.1, Pipx 1.2.0
+
+<details>
+<summary>Old Version History</summary><br>
 
 **2.4.5 - 14.07.2023:** Supercronic start issue resolved, if LOG_LEVEL environment variable is empty and Alpine packages update - Vdirsyncer 0.19.1, Alpine 3.18.2, Python 3.11.4, Pip 23.1.2, Pipx 1.2.0
 
@@ -175,9 +186,6 @@ You can set eight different environment variables if you want to:
 **2.4.1 - 03.05.2023:** Added a Vdirsyncer autoupdate function, dropped root/sudo privileges completely, set UID and GID to a static value (1000) and dropped linux/arm/v7 Docker Image (because almost no one used it) - Vdirsyncer 0.19.1, Alpine 3.17.3, Python 3.10.11, Pip 23.1.2, Pipx 1.2.0
 
 **2.4.0 - 03.05.2023:** Updated Vdirsyncer to 0.19.1, Dockerfile updated, fixed Google redirect_uri, bumped Alpine to 3.17.3, Python to 3.10.11, Pip to 23.1.2, Pipx to 1.2.0 - Vdirsyncer 0.19.1, Alpine 3.17.3, Python 3.10.11, Pip 23.1.2, Pipx 1.2.0
-
-<details>
-<summary>Old Version History</summary><br>
 
 **2.3.2 - 14.11.2022:** Bumped Alpine to 3.16.3 and Python to 3.10.8 - Vdirsyncer 0.18.0, Alpine 3.16.3, Python 3.10.8, Pip 22.1.1
 
