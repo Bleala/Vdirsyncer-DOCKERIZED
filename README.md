@@ -71,6 +71,11 @@ networks:
   default:
     driver: bridge
 
+volumes:
+  vdirsyncer:
+    name: vdirsyncer
+    driver: local
+
 services:
   # Vdirsyncer - sync calendars and address books between servers and the local filesystem. DOCKERIZED!
   # https://hub.docker.com/r/bleala/vdirsyncer
