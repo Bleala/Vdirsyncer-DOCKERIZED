@@ -6,7 +6,7 @@ on:
       - "*.*.*"
 
 jobs:
-  Explore-Gitea-Actions:
+  Vdirsyncer-Deployment:
     runs-on: ubuntu-latest
     steps:
       # https://github.com/marketplace/actions/checkout
