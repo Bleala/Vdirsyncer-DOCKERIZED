@@ -6,7 +6,7 @@ on:
       - "dev"
 
 jobs:
-  Explore-Gitea-Actions:
+  Vdirsyncer-Deployment-Development:
     runs-on: ubuntu-latest
     steps:
       # https://github.com/marketplace/actions/checkout
