@@ -1,13 +1,13 @@
 # Alpine Image
-FROM alpine:3.19.1
+FROM alpine:3.20.2
 
 # Build Arguments
-ARG ALPINE_VERSION="3.19.1" \
-        IMAGE_VERSION="2.5.2" \
-        PIP_VERSION="24.0.0" \
-        PIPX_VERSION="1.4.3" \
-        PYTHON_VERSION="3.11.6" \
-        PYTHON_VERSION_SHORT="3.11" \
+ARG ALPINE_VERSION="3.20.2" \
+        IMAGE_VERSION="2.5.3" \
+        PIP_VERSION="24.2.0" \
+        PIPX_VERSION="1.6.0" \
+        PYTHON_VERSION="3.12.3" \
+        PYTHON_VERSION_SHORT="3.12" \
         VDIRSYNCER_VERSION="0.19.2"
 
 # Set up Environment
