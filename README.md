@@ -9,7 +9,7 @@ Also you are not able to set your own `UID` and `GID` anymore and the default va
 
 I will no longer push the `linux/arm/v7` docker image to the registry, because almost no one used this one.
 
-**Disclaimer:** I am just the maintainer of this docker container, i did not write the software. Visit the [Official Github Repository](https://github.com/pimutils/vdirsyncer "Vdirsyncer Github Repository") to thank the author(s)! :)
+**Disclaimer:** I am just the maintainer of this docker container, I did not write the software. Visit the [Official Github Repository](https://github.com/pimutils/vdirsyncer "Vdirsyncer Github Repository") to thank the author(s)! :)
 
 Vdirsyncer is a command-line tool for synchronizing calendars and addressbooks between a variety of servers and the local filesystem. The most popular usecase is to synchronize a server with a local folder and use a set of other programs to change the local events and contacts. Vdirsyncer can then synchronize those changes back to the server.
 
@@ -61,7 +61,7 @@ Deprecated:
 
 ## Usage
 
-To start the container you can run `docker run -d -e AUTOSYNC=true -v /path/to/local/folder:/vdirsyncer bleala/vdirsyncer:latest`, but since docker compose is easier to maintain, i'll give you a valid docker compose example
+To start the container you can run `docker run -d -e AUTOSYNC=true -v /path/to/local/folder:/vdirsyncer bleala/vdirsyncer:latest`, but since docker compose is easier to maintain, I'll give you a valid docker compose example
 
 
 ```docker compose.yml
@@ -115,7 +115,7 @@ The configuration file name is just **config**. Write everything in *.ini* style
 
 For first time use I recommend running `docker exec -it vdirsyncer vdirsyncer discover`. Maybe you have to say yes/no to a few questions, asked by *Vdirsyncer*. **[READ THE DOCS!](http://vdirsyncer.pimutils.org/en/stable/tutorial.html "Official Documentation")**
 
-After you ran `docker exec -it vdirsyncer vdirsyncer discover` you can either run `docker exec -it vdirsyncer /bin/bash -c "vdirsyncer metasync && vdirsyncer sync"` or, if you have not set `AUTOSYNC=true`, set it to *true* and restart the container with `docker compose restart`. If you already set it to true, you can just wait until the cronjob runs or, as i said, run `docker exec -it vdirsyncer /bin/bash -c "vdirsyncer metasync && vdirsyncer sync"` to do it manually once.
+After you ran `docker exec -it vdirsyncer vdirsyncer discover` you can either run `docker exec -it vdirsyncer /bin/bash -c "vdirsyncer metasync && vdirsyncer sync"` or, if you have not set `AUTOSYNC=true`, set it to *true* and restart the container with `docker compose restart`. If you already set it to true, you can just wait until the cronjob runs or, as I said, run `docker exec -it vdirsyncer /bin/bash -c "vdirsyncer metasync && vdirsyncer sync"` to do it manually once.
 
 Now it will sync everything for the first time.
 
@@ -152,7 +152,7 @@ You can set nine different environment variables if you want to:
 |   `CRON_TIME`   |   for `Supercronic`, you can adjust it to whatever time you want to   |   default to `*/15 * * * *`, look [here](https://crontab.guru/ "Crontab Generator") for crontab generator   |
 |   `POST_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script after the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
 |   `LOG`   |   if you want to adjust the log file destination   |   optional, default to `/vdirsyncer/vdirsyncer.log`   |
-|   `LOG_LEVEL`   |   if you want to adjust the log level   |   optional, default to `nothing --> normal supercronic output`, can be `-quiet`, `-debug` or `no value --> leave variable empty`   |
+|   `LOG_LEVEL`   |   if you want to adjust the log level   |   optional, default to `nothing` --> normal supercronic output <br> Can be `-quiet`, `-debug` or `no value` --> leave variable empty   |
 |   `VDIRSYNCER_CONFIG`   |   location, where *Vdirsyncer* reads the config from   |   default to /vdirsyncer/config **DON'T CHANGE!**   |
 
 
@@ -162,11 +162,11 @@ You can set nine different environment variables if you want to:
 
 ---
 
-**Attention**: As I mentioned, don't use `AUTODISCOVER=true` as default. If you are running *Vdirsyncer* for the first time, just try everything manually, before you enable `AUTOSYNC` and `AUTODISCOVER`!
+**Attention**: As I mentioned, don't use `AUTOSYNC=true` and `AUTODISCOVER=true` as default. If you are running *Vdirsyncer* for the first time, just try everything manually, before you enable `AUTOSYNC` and `AUTODISCOVER`!
 
 **Attention 2**: I recommend using this way for the pairs `collections = [["mytest", "test", "3b4c9995-5c67-4021-9fa0-be4633623e1c"]]` [LINK](http://vdirsyncer.pimutils.org/en/stable/tutorial.html#advanced-collection-configuration-server-to-server-sync)
 
-**Attention 3**: Nextcloud fucks up the whole thing pretty much, if you try to sync contacts from Nextcloud to Google or Apple. I don't know why, maybe it's a bug in *vdirsyncer*, so i decided to pair Nextcloud with a [read_only](http://vdirsyncer.pimutils.org/en/stable/tutorial.html#advanced-collection-configuration-server-to-server-sync) storage. This way Nextcloud gets everything and does not fuck things up (Maybe also a problem with Owncloud, but i did not test it) 
+**Attention 3**: Nextcloud fucks up the whole thing pretty much, if you try to sync contacts from Nextcloud to Google or Apple. I don't know why, maybe it's a bug in *vdirsyncer*, so I decided to pair Nextcloud with a [read_only](http://vdirsyncer.pimutils.org/en/stable/tutorial.html#advanced-collection-configuration-server-to-server-sync) storage. This way Nextcloud gets everything and does not fuck things up (Maybe also a problem with Owncloud, but I did not test it) 
 
 ---
 
