@@ -33,7 +33,7 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
         VDIRSYNCER_USER="vdirsyncer" \
         # Set cron file
         CRON_FILE="/etc/crontabs/vdirsyncer" \
-        # Script to run after sync complete
+        # Set script path to run after sync complete
         POST_SYNC_SCRIPT_FILE= \
         # Set Pipx home
         PIPX_HOME="/opt/pipx" \
@@ -69,7 +69,9 @@ RUN apk update \
         # Cron Update
         #&& apk add --update busybox-suid \
         # Supercronic instead of Cron (for cronjobs)
-        && apk add --no-cache supercronic 
+        && apk add --no-cache supercronic \
+        # Clear cache
+        && rm -rf /var/cache/apk/*
 
 # Set up User
     # Set up Group
@@ -93,7 +95,7 @@ RUN addgroup -g "${GID}" "${VDIRSYNCER_USER}" \
         && touch "${CRON_FILE}"
 
 # Full sudo access for vdirsyncer user
-#RUN echo "vdirsyncer ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/vdirsyncer
+# RUN echo "vdirsyncer ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/vdirsyncer
 
 # Set up Workdir
 WORKDIR /vdirsyncer
