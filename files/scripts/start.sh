@@ -4,7 +4,7 @@
 if [[ -e "${LOG}" ]]
 then
     # Delete old logfiles
-    rm -f "${LOG}" > /dev/null 2>&1
+    rm --force "${LOG}" > /dev/null 2>&1
 
     # Save exit code
     LOG_FILE_DELETED="${?}"
@@ -14,9 +14,9 @@ then
     then
         # User info
         {
-            echo "Old logfile could not be deleted!"
-            echo "Container exits!"
+            echo "Old log file could not be deleted!"
             echo "Check the \"LOG\" environment variable or the file permissions of the old logfile (maybe delete it manually)."
+            echo "Container exits!"
         } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]'
 
         # Exit Container
@@ -25,7 +25,7 @@ then
 fi
 
 # Create Log File
-curl --create-dirs --output "${LOG}" file:///dev/null > /dev/null 2>&1
+/usr/bin/curl --create-dirs --output "${LOG}" file:///dev/null > /dev/null 2>&1
 
 # Save exit code
 LOG_FILE_CREATED="${?}"
@@ -35,9 +35,9 @@ if [[ "${LOG_FILE_CREATED}" -ne 0 ]]
 then
     # User info
     {
-        echo "Logfile could not be created!"
-        echo "Container exits!"
+        echo "Log file (\"${LOG}\") could not be created!"
         echo "Check the \"LOG\" environment variable or the folder permissions."
+        echo "Container exits!"
     } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]'
 
     # Exit Container
@@ -81,7 +81,7 @@ if [[ "${LOG_FILE_DELETED}" -eq 0 ]]
 then
     # User info
     {
-        echo "Old logfile has been deleted."
+        echo "Old log file has been deleted."
         printf "\n"
     } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 fi
@@ -91,15 +91,15 @@ if [[ "${LOG_FILE_CREATED}" -eq 0 ]]
 then
     # User info
     {
-        echo "New logfile has been created."
+        echo "New log file (\"${LOG}\") has been created."
         printf "\n"
     } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 fi
 
 # Log current Timezone and Date/Time
 {
-    echo "Current timezone is ${TZ}"
-    echo "Current time is $(date)"
+    echo "Current timezone is ${TZ}."
+    echo "Current time is $(date)."
     printf "\n"
 } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
@@ -121,6 +121,7 @@ then
     {
         # User info
         echo "#######################################"
+        printf "\n"
         echo "Autoupdate of Vdirsyncer is enabled."
         echo "Starting update..."
         printf "\n"
@@ -144,6 +145,7 @@ then
         fi
         
         # End of update
+        printf "\n"
         echo "#######################################"
         printf "\n"
     } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
@@ -157,8 +159,14 @@ then
 
 # Set POST_SYNC_SNIPPET, if  POST_SYNC_SCRIPT_FILE is set
 else
+    # User info
+    {
+        echo "Custom scripts are enabled."
+        printf "\n"
+    } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+
     # Set Post Sync Snippet to Post Sync File
-    POST_SYNC_SNIPPET=" && ${POST_SYNC_SCRIPT_FILE}"
+    POST_SYNC_SNIPPET=" ${POST_SYNC_SCRIPT_FILE} || echo 'Error during Script'"
 fi
 
 ### Set up Cronjobs ###
