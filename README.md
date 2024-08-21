@@ -171,6 +171,8 @@ You can set nine different environment variables if you want to:
 ---
 
 ## Versions
+**2.5.3 - 21.08.2024:** Dependencies update: Alpine to 3.20.2, Python to 3.12.3, Pip to 24.2.0, Pipx to 1.6.0  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
+
 **2.5.2 - 08.02.2024:** Merged Pull Request for POST_SYNC_SCRIPT_FILE variable, to automatically run a custom script after the cronjob `vdirsyncer` command(s) and updated Alpine to 3.19.1 - Vdirsyncer 0.19.2, Alpine 3.19.1, Python 3.11.6, Pip 24.0.0, Pipx 1.4.3
 
 **2.5.1 - 07.02.2024:** Updated Alpine to 3.18.6, Python to 3.11.6, Pip to 24.0.0 and Pipx to 1.4.3 - Vdirsyncer 0.19.2, Alpine 3.18.6, Python 3.11.6, Pip 24.0.0, Pipx 1.4.3
