@@ -4,7 +4,7 @@
 if [[ -e "${LOG}" ]]
 then
     # Delete old logfiles
-    rm --force "${LOG}" > /dev/null 2>&1
+    rm -f "${LOG}" > /dev/null 2>&1
 
     # Save exit code
     LOG_FILE_DELETED="${?}"
