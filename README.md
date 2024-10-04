@@ -1,7 +1,7 @@
 # [Vdirsyncer](https://vdirsyncer.pimutils.org/en/stable/index.html "Official Documentation")-DOCKERIZED
-[![Docker Image Version](https://img.shields.io/docker/v/bleala/vdirsyncer/latest?style=flat&label=Version)](https://hub.docker.com/r/bleala/postfix/)
-[![Docker Stars](https://img.shields.io/docker/stars/bleala/vdirsyncer?style=flat&label=Docker%20Stars)](https://hub.docker.com/r/bleala/postfix/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/bleala/vdirsyncer?style=flat&label=Docker%20Pulls)](https://hub.docker.com/r/bleala/postfix/)
+[![Docker Image Version](https://img.shields.io/docker/v/bleala/vdirsyncer/latest?style=flat&label=Version)](https://hub.docker.com/r/bleala/vdirsyncer)
+[![Docker Stars](https://img.shields.io/docker/stars/bleala/vdirsyncer?style=flat&label=Docker%20Stars)](https://hub.docker.com/r/bleala/vdirsyncer)
+[![Docker Pulls](https://img.shields.io/docker/pulls/bleala/vdirsyncer?style=flat&label=Docker%20Pulls)](https://hub.docker.com/r/bleala/vdirsyncer)
 
 Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED! 
 
@@ -174,6 +174,8 @@ You can set nine different environment variables if you want to:
 ---
 
 ## Versions
+**2.5.5 - 04.10.2024:** Updated Vdirsyncer to 0.19.3, Alpine to 3.20.3, Python to 3.12.6 and Pipx to 1.7.1. Fixed multiple cronjobs [Issue #29](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/29 "Issue #29")  - Vdirsyncer 0.19.3, Alpine 3.20.3, Python 3.12.6, Pip 24.2.0, Pipx 1.7.1
+
 **2.5.4 - 18.09.2024:** Fix rm parameter  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
 
 **2.5.3 - 21.08.2024:** Dependencies update: Alpine to 3.20.2, Python to 3.12.3, Pip to 24.2.0, Pipx to 1.6.0  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
