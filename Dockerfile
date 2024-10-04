@@ -5,8 +5,8 @@ FROM alpine:3.20.2
 ARG ALPINE_VERSION="3.20.3" \
         IMAGE_VERSION="2.5.4" \
         PIP_VERSION="24.2.0" \
-        PIPX_VERSION="1.6.0" \
-        PYTHON_VERSION="3.12.3" \
+        PIPX_VERSION="1.7.1" \
+        PYTHON_VERSION="3.12.6" \
         PYTHON_VERSION_SHORT="3.12" \
         VDIRSYNCER_VERSION="0.19.3"
 
