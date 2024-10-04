@@ -174,6 +174,8 @@ You can set nine different environment variables if you want to:
 ---
 
 ## Versions
+**2.5.5 - 04.10.2024:** Updated Vdirsyncer to 0.19.3, Alpine to 3.20.3, Python to 3.12.6 and Pipx to 1.7.1. Fixed multiple cronjobs [Issue #29](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/29 "Issue #29")  - Vdirsyncer 0.19.3, Alpine 3.20.3, Python 3.12.6, Pip 24.2.0, Pipx 1.7.1
+
 **2.5.4 - 18.09.2024:** Fix rm parameter  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
 
 **2.5.3 - 21.08.2024:** Dependencies update: Alpine to 3.20.2, Python to 3.12.3, Pip to 24.2.0, Pipx to 1.6.0  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
