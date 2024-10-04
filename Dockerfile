@@ -2,7 +2,7 @@
 FROM alpine:3.20.2
 
 # Build Arguments
-ARG ALPINE_VERSION="3.20.2" \
+ARG ALPINE_VERSION="3.20.3" \
         IMAGE_VERSION="2.5.4" \
         PIP_VERSION="24.2.0" \
         PIPX_VERSION="1.6.0" \
