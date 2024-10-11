@@ -103,6 +103,12 @@ fi
     printf "\n"
 } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
+# Log current CRON_TIME
+{
+    echo "Current CRON_TIME is ${CRON_TIME}."
+    printf "\n"
+} 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+
 # Check if the config.example exists
 if [[ ! -e "/vdirsyncer/config.example" ]]
 then
