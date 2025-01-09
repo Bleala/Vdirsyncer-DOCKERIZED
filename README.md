@@ -139,8 +139,8 @@ The reason is, cron does not run the `vdirsyncer` command directly inside the `/
 **Even more attention for Google user:** Because Google is Google you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/975#issuecomment-1275698939 "Google Instruction").<br>
 **You can skip step 9, this has been done for you during the container build!**<br>
 This has been tested and confirmed working for `Vdirsyncer 0.18.0` from my side.<br>
-For `Vdirsyncer 0.19.2` you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500 "Google Instruction")<br>
-This has been tested and confirmed working for `Vdirsyncer 0.19.0`, `Vdirsyncer 0.19.1` and `Vdirsyncer 0.19.2` from my side.<br>
+For `Vdirsyncer 0.19.x` you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500 "Google Instruction")<br>
+This has been tested and confirmed working for `Vdirsyncer 0.19.0`, `Vdirsyncer 0.19.1`, `Vdirsyncer 0.19.2` and `Vdirsyncer 0.19.3` from my side.<br>
 
 ### Environment Variables
 
@@ -174,6 +174,8 @@ You can set nine different environment variables if you want to:
 ---
 
 ## Versions
+**2.5.6 - 09.01.2025:** Updated Alpine to 3.21.2, Python to 3.12.8 and Pip to 24.3.1. - Vdirsyncer 0.19.3, Alpine 3.21.2, Python 3.12.8, Pip 24.3.1, Pipx 1.7.1
+
 **2.5.5 - 04.10.2024:** Updated Vdirsyncer to 0.19.3, Alpine to 3.20.3, Python to 3.12.6 and Pipx to 1.7.1. Fixed multiple cronjobs [Issue #29](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/29 "Issue #29")  - Vdirsyncer 0.19.3, Alpine 3.20.3, Python 3.12.6, Pip 24.2.0, Pipx 1.7.1
 
 **2.5.4 - 18.09.2024:** Fix rm parameter  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
