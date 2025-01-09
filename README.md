@@ -31,13 +31,21 @@ Vdirsyncer also support many different servers:
 * Radicale
 * Xandikos
 
-Official Github Repository - https://github.com/pimutils/vdirsyncer
+### Links
 
-Docs - https://vdirsyncer.pimutils.org/en/stable/tutorial.html
+Official Github Repository: https://github.com/pimutils/vdirsyncer
 
-My Github Repository - https://github.com/Bleala/Vdirsyncer-DOCKERIZED
+Docs: https://vdirsyncer.pimutils.org/en/stable/tutorial.html
 
-Docker Hub - https://hub.docker.com/r/bleala/vdirsyncer
+My Github Repository: https://github.com/Bleala/Vdirsyncer-DOCKERIZED
+
+### Downloads
+
+Docker Hub: https://hub.docker.com/r/bleala/vdirsyncer
+
+Github Container Registry: https://github.com/-/bleala/packages/container/package/vdirsyncer
+
+Quay.io: https://quay.io/repository/bleala/vdirsyncer
 
 ---
 ## Image, Versions and Architecture
