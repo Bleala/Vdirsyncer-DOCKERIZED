@@ -11,7 +11,7 @@ jobs:
     steps:
       # https://github.com/marketplace/actions/checkout
       - name: Check Out Repository Code
-        uses: actions/checkout@v4.2.0
+        uses: actions/checkout@v4.2.2
 
       # https://github.com/marketplace/actions/docker-hub-description
       - name: Docker Hub Description
@@ -31,11 +31,11 @@ jobs:
 
       # https://github.com/marketplace/actions/docker-setup-qemu
       - name: Set Up QEMU
-        uses: docker/setup-qemu-action@v3.2.0
+        uses: docker/setup-qemu-action@v3.3.0
 
       # https://github.com/marketplace/actions/docker-setup-buildx
       - name: Set Up Docker Buildx
-        uses: docker/setup-buildx-action@v3.7.1
+        uses: docker/setup-buildx-action@v3.8.0
 
       # https://github.com/marketplace/actions/docker-login#github-container-registry
       - name: Login To Docker Hub
@@ -62,7 +62,7 @@ jobs:
 
       # https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Build And Push
-        uses: docker/build-push-action@v6.9.0
+        uses: docker/build-push-action@v6.11.0
         with:
           context: .
           platforms: linux/amd64,linux/arm64
