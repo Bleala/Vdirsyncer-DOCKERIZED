@@ -12,8 +12,6 @@ jobs:
       # https://github.com/marketplace/actions/checkout
       - name: Check Out Repository Code
         uses: actions/checkout@v4.2.2
-        with:
-          repository: ${{ secrets.GIT_REPO_PROD }}
 
       # https://github.com/marketplace/actions/docker-hub-description
       - name: Docker Hub Description
