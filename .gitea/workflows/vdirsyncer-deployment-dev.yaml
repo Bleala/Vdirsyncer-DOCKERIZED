@@ -19,7 +19,7 @@ jobs:
         with:
           repository: 'bleala/Vdirsyncer-DOCKERIZED'
           # ref: 'dev'
-          github-server-url: ${{ secrets.LOCAL_URL }}
+          github-server-url: ${{ secrets.TEST_URL }}
 
       # # https://github.com/marketplace/actions/checkout
       # - name: Check Out Repository Code
