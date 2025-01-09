@@ -12,6 +12,9 @@ jobs:
       # https://github.com/marketplace/actions/checkout
       - name: Check Out Repository Code
         uses: actions/checkout@v4.2.2
+        with:
+          ssh-key: ${{ secrets.GIT_SSH_KEY }}
+          ssh-strict: false
 
       # https://github.com/marketplace/actions/docker-hub-description
       - name: Docker Hub Description
