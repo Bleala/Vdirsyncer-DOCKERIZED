@@ -15,10 +15,11 @@ jobs:
 
       # https://github.com/marketplace/actions/checkout
       - name: Check Out Repository Code
-        uses: actions/checkout@v4.2.0
+        uses: actions/checkout@v4.2.2
         with:
-          repository: 'bleala/Vdirsyncer-DOCKERIZED'
-          ref: 'dev'
+          repository: 'Bleala/Vdirsyncer-DOCKERIZED'
+          # ref: 'dev'
+          github-server-url: 'https://github.com'
 
       # # https://github.com/marketplace/actions/checkout
       # - name: Check Out Repository Code
