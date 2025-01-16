@@ -38,6 +38,7 @@ jobs:
           images: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
             ${{ secrets.GHCR_URL }}/${{ secrets.GHCR_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
+            ${{ secrets.QUAY_URL }}/${{ secrets.QUAY_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
             ${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
           # generate Docker tags based on the following events/attributes
           tags: |

@@ -78,6 +78,7 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:dev
             ${{ secrets.GHCR_URL }}/${{ secrets.GHCR_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:dev
+            ${{ secrets.QUAY_URL }}/${{ secrets.QUAY_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:dev
             ${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:dev
 
       # https://github.com/marketplace/actions/ntfy_action
