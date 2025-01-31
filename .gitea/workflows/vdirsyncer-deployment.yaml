@@ -2,12 +2,18 @@ name: Vdirsyncer Deployment
 run-name: Vdirsyncer Deployment For Production Usage 🚀
 on:
   push:
+    branches:
+      - "main"
     tags:
       - "*.*.*"
 
 jobs:
   Vdirsyncer-Deployment:
+    name: Vdirsyncer Deployment
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     steps:
       # https://github.com/marketplace/actions/checkout
       - name: Check Out Repository Code
@@ -89,57 +95,25 @@ jobs:
       - name: Build And Push
         uses: docker/build-push-action@v6.11.0
         with:
-          context: .
+          context: ./docker
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ${{ steps.meta.outputs.tags }}
 
-      # https://github.com/marketplace/actions/ntfy_action
-      - name: Ntfy Notification Successful
+      # https://github.com/niniyas/ntfy-action
+      - name: Ntfy Notification
         uses: niniyas/ntfy-action@v1.0.4
-        if: success()
+        if: always()  # Wird immer ausgeführt, egal ob success, failure oder cancelled
+        env:
+          STATUS: ${{ job.status }}
         with:
           url: '${{ secrets.NTFY_URL }}'
           topic: '${{ secrets.NTFY_TOPIC }}'
-          tags: +1,partying_face,tada,action,successfully,completed
-          title: 'Gitea Actions erfolgreich: ${{ env.GITHUB_REPOSITORY }} | ${{ env.GITHUB_REF_NAME }}'
-          priority: 3
-          details: Gitea Actions Workflow ist erfolgreich abgeschlossen.
-          # Bearer Header notwendig in JSON --> https://docs.ntfy.sh/publish/#access-tokens
-          headers: '${{ secrets.NTFY_HEADERS }}'
-          actions: '[{"action": "view", "label": "Gitea öffnen", "url": "${{ secrets.GIT_URL }}/${{ env.GITHUB_REPOSITORY }}", "clear": true}]'
-          icon: 'https://w7.pngwing.com/pngs/940/571/png-transparent-gitea-hd-logo.png'
-          image: true
-
-      # https://github.com/marketplace/actions/ntfy_action
-      - name: Ntfy Notification Failed
-        uses: niniyas/ntfy-action@v1.0.4
-        if: failure()
-        with:
-          url: '${{ secrets.NTFY_URL }}'
-          topic: '${{ secrets.NTFY_TOPIC }}'
-          tags: -1,no_entry,skull,action,failed
-          title: 'Gitea Actions fehlgeschlagen: ${{ env.GITHUB_REPOSITORY }} | ${{ env.GITHUB_REF_NAME }}'
-          priority: 5
-          details: Gitea Actions Workflow ist fehlgeschlagen!
-          # Bearer Header notwendig in JSON --> https://docs.ntfy.sh/publish/#access-tokens
-          headers: '${{ secrets.NTFY_HEADERS }}'
-          actions: '[{"action": "view", "label": "Gitea öffnen", "url": "${{ secrets.GIT_URL }}/${{ env.GITHUB_REPOSITORY }}/actions", "clear": true}]'
-          icon: 'https://w7.pngwing.com/pngs/940/571/png-transparent-gitea-hd-logo.png'
-          image: true
-
-      # https://github.com/marketplace/actions/ntfy_action
-      - name: Ntfy Notification Cancelled
-        uses: niniyas/ntfy-action@v1.0.4
-        if: cancelled()
-        with:
-          url: '${{ secrets.NTFY_URL }}'
-          topic: '${{ secrets.NTFY_TOPIC }}'
-          tags: -1,cry,triangular_flag_on_post,action,cancelled
-          title: 'Gitea Actions abgebrochen: ${{ env.GITHUB_REPOSITORY }} | ${{ env.GITHUB_REF_NAME }}'
-          priority: 5
-          details: Gitea Actions Workflow wurde abgebrochen!
+          tags: ${{ env.STATUS == 'success' && '+1,partying_face,tada,action,successfully,completed' || env.STATUS == 'failure' && '-1,no_entry,skull,action,failed' || env.STATUS == 'cancelled' && '-1,cry,triangular_flag_on_post,action,cancelled' }}
+          title: "Gitea Actions ${{ env.STATUS == 'success' && 'erfolgreich' || env.STATUS == 'failure' && 'fehlgeschlagen' || env.STATUS == 'cancelled' && 'abgebrochen' }}: ${{ env.GITHUB_REPOSITORY }} | ${{ env.GITHUB_REF_NAME }}"
+          priority: ${{ env.STATUS == 'success' && 3 || 5 }}
+          details: "Gitea Actions Workflow ${{ env.STATUS == 'success' && 'ist erfolgreich abgeschlossen.' || env.STATUS == 'failure' && 'ist fehlgeschlagen!' || env.STATUS == 'cancelled' && 'wurde abgebrochen!' }}"
           # Bearer Header notwendig in JSON --> https://docs.ntfy.sh/publish/#access-tokens
           headers: '${{ secrets.NTFY_HEADERS }}'
           actions: '[{"action": "view", "label": "Gitea öffnen", "url": "${{ secrets.GIT_URL }}/${{ env.GITHUB_REPOSITORY }}/actions", "clear": true}]'
