@@ -1,12 +1,12 @@
 # Alpine Image
-FROM alpine:3.21.2
+FROM alpine:3.21.3
 
 # Build Arguments
-ARG ALPINE_VERSION="3.21.2" \
-        IMAGE_VERSION="2.5.6" \
-        PIP_VERSION="24.3.1" \
+ARG ALPINE_VERSION="3.21.3" \
+        IMAGE_VERSION="2.5.7" \
+        PIP_VERSION="25.0.1" \
         PIPX_VERSION="1.7.1" \
-        PYTHON_VERSION="3.12.8" \
+        PYTHON_VERSION="3.12.9" \
         PYTHON_VERSION_SHORT="3.12" \
         VDIRSYNCER_VERSION="0.19.3"
 
