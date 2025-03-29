@@ -150,7 +150,7 @@ RUN chmod -R +x /files/scripts \
         && chown -R "${UID}":"${GID}" /vdirsyncer \
         && chmod -R 755 /vdirsyncer \
         && chown "${UID}":"${GID}" "${CRON_FILE}" \
-        && chmod 644 "${CRON_FILE}" \
+        && chmod 666 "${CRON_FILE}" \
         && chown -R "${VDIRSYNCER_USER}":"${VDIRSYNCER_USER}" "${PIPX_HOME}"
 
 # Switch User
