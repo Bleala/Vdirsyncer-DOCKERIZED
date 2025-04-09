@@ -172,7 +172,7 @@ else
     } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
     # Set Post Sync Snippet to Post Sync File
-    POST_SYNC_SNIPPET=" ${POST_SYNC_SCRIPT_FILE} || echo 'Error during Script'"
+    POST_SYNC_SNIPPET="&& ${POST_SYNC_SCRIPT_FILE} || echo 'Error during Script'"
 fi
 
 ### Set up Cronjobs ###
