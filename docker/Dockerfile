@@ -33,7 +33,9 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
         VDIRSYNCER_USER="vdirsyncer" \
         # Set cron file
         CRON_FILE="/etc/crontabs/vdirsyncer" \
-        # Set script path to run after sync complete
+        # Set script path to run before vdirsyncer commands
+        PRE_SYNC_SCRIPT_FILE= \
+        # Set script path to run after vdirsyncer commands
         POST_SYNC_SCRIPT_FILE= \
         # Set Pipx home
         PIPX_HOME="/opt/pipx" \

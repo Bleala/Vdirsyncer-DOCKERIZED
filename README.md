@@ -76,10 +76,8 @@ To start the container you can run `docker run -d -e AUTOSYNC=true -v /path/to/l
 
 
 ```docker compose.yml
-version: "3.9"
-
 networks:                                 
-  default:
+  vdirsyncer:
     driver: bridge
 
 volumes:
@@ -88,32 +86,33 @@ volumes:
     driver: local
 
 services:
-  # Vdirsyncer - sync calendars and address books between servers and the local filesystem. DOCKERIZED!
+  # Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED!
   # https://hub.docker.com/r/bleala/vdirsyncer
   app:
     image: bleala/vdirsyncer:latest
     container_name: vdirsyncer
     restart: unless-stopped
     networks:
-      - default
+      vdirsyncer:
     environment:
-      - TZ= # set your timezone, for correct container and log time, default to Europe/Vienna
-      - AUTODISCOVER= # set to true for automatic discover, default to false
-      - AUTOSYNC= # set to true for automatic sync, default to false
-      - AUTOUPDATE= # set to true for automatic Vdirsyncer and dependencies updates on container startup, default to false
-      - CRON_TIME= # adjust autosync /-discover time, default to 15 minutes - */15 * * * * 
+      TZ: # set your timezone, for correct container and log time, default to Europe/Vienna
+      AUTODISCOVER: # set to true for automatic discover, default to false
+      AUTOSYNC: # set to true for automatic sync, default to false
+      AUTOUPDATE: # set to true for automatic Vdirsyncer and dependencies updates on container startup, default to false
+      CRON_TIME: # adjust autosync /-discover time, default to 15 minutes - */15 * * * * 
       # Cron Time need to be set in Cron format - look here for generator https://crontab.guru/
       # Set CRON_TIME like that --> */15 * * * *
       # Optional
-      - POST_SYNC_SCRIPT_FILE= # optional,  set to script path to automatically run your custom script after the cronjob `vdirsyncer` command(s), default to nothing
-      - LOG= # optional, default to /vdirsyncer/vdirsyncer.log
-      - LOG_LEVEL= # optional, default is normal output from supercronic
+      PRE_SYNC_SCRIPT_FILE: # optional,  set to script path to automatically run your custom script before the cronjob `vdirsyncer` command(s), default to nothing
+      POST_SYNC_SCRIPT_FILE: # optional,  set to script path to automatically run your custom script after the cronjob `vdirsyncer` command(s), default to nothing
+      LOG: # optional, default to /vdirsyncer/vdirsyncer.log
+      LOG_LEVEL: # optional, default is normal output from supercronic
     volumes:
       - vdirsyncer:/vdirsyncer              # Docker Volume
       - /path/to/config:/vdirsyncer/config  # Vdirsyncer Config
       # Optional
-      - /path/to/custom_script.sh:/vdirsyncer/custom_script.sh  # Custom Script
-
+      - /path/to/custom_before_script.sh:/vdirsyncer/custom_before_script.sh  # Custom Before Script
+      - /path/to/custom_after_script.sh:/vdirsyncer/custom_after_script.sh  # Custom After Script
 ```
 
 You have to mount a local folder containing the *config* file. [How to config](http://vdirsyncer.pimutils.org/en/stable/tutorial.html "Vdirsyncer configuration")
@@ -139,14 +138,17 @@ Everything that is done by *Supercronic* will get written to the *log file* and 
 `Vdirsyncer` does run with an user called `vdirsyncer` inside the container and not as root.<br>
 The `UID` and `GID` for this user are `1000`, so be careful, if you use a bind mount instead of a docker volume.
 
+If you need to set a custom `UID` and `GID` add the `user` key to your `docker-compose.yml`.
+
+Example:<br>
+`user: "your_UID:your_GID"`
+
 ### Google specifics
 
 **Attention for Google users:** As you can read in the [Docs](http://vdirsyncer.pimutils.org/en/stable/config.html#google "Google Docs Vdirsyncer") you have to specify a path for `token_file = "PATH"`. In order to work properly, use an **absolute path!** So for the carddav storage set the `token_file` like `token_file = "/vdirsyncer/google_carddav"`and for the caldav storage like `token_file = "/vdirsyncer/google_calendar"`.<br>
 The reason is, cron does not run the `vdirsyncer` command directly inside the `/vdirsyncer` folder, so if you use a relative path, `vdirsyncer` does not know where your google tokens are stored and the `AUTOSYNC` fails!
 
-**Even more attention for Google user:** Because Google is Google you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/975#issuecomment-1275698939 "Google Instruction").<br>
-**You can skip step 9, this has been done for you during the container build!**<br>
-This has been tested and confirmed working for `Vdirsyncer 0.18.0` from my side.<br>
+**Even more attention for Google user:** Because Google is Google you have to follow this instruction to get the Google sync working again.<br>
 For `Vdirsyncer 0.19.x` you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500 "Google Instruction")<br>
 This has been tested and confirmed working for `Vdirsyncer 0.19.0`, `Vdirsyncer 0.19.1`, `Vdirsyncer 0.19.2` and `Vdirsyncer 0.19.3` from my side.<br>
 
@@ -161,15 +163,11 @@ You can set nine different environment variables if you want to:
 |   `AUTOSYNC`   |   is used to automatically run `vdirsyncer metasync && vdirsyncer sync`   |   default to `false`, can be `true`   |
 |   `AUTOUPDATE`   |   is used to automatically update `Vdirsyncer` with all dependencies on container startup   |   default to `false`, can be `true`   |
 |   `CRON_TIME`   |   for `Supercronic`, you can adjust it to whatever time you want to   |   default to `*/15 * * * *`, look [here](https://crontab.guru/ "Crontab Generator") for crontab generator   |
-|   `POST_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script after the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
+|   `PRE_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script before the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_before_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
+|   `POST_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script after the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_after_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
 |   `LOG`   |   if you want to adjust the log file destination   |   optional, default to `/vdirsyncer/vdirsyncer.log`   |
 |   `LOG_LEVEL`   |   if you want to adjust the log level   |   optional, default to `nothing` --> normal supercronic output <br> Can be `-quiet`, `-debug` or `no value` --> leave variable empty   |
 |   `VDIRSYNCER_CONFIG`   |   location, where *Vdirsyncer* reads the config from   |   default to /vdirsyncer/config **DON'T CHANGE!**   |
-
-
-**New in `2.4.1`:** The `UID` and `GID` variables now have default values, which are not changable!
-* `UID` - default to `1000`.
-* `GID` - default to `1000`.
 
 ---
 
@@ -188,6 +186,9 @@ You can set nine different environment variables if you want to:
 
 **2.5.4 - 18.09.2024:** Fix rm parameter  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
 
+<details>
+<summary>Old Version History</summary><br>
+
 **2.5.3 - 21.08.2024:** Dependencies update: Alpine to 3.20.2, Python to 3.12.3, Pip to 24.2.0, Pipx to 1.6.0  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
 
 **2.5.2 - 08.02.2024:** Merged Pull Request for POST_SYNC_SCRIPT_FILE variable, to automatically run a custom script after the cronjob `vdirsyncer` command(s) and updated Alpine to 3.19.1 - Vdirsyncer 0.19.2, Alpine 3.19.1, Python 3.11.6, Pip 24.0.0, Pipx 1.4.3
@@ -195,9 +196,6 @@ You can set nine different environment variables if you want to:
 **2.5.1 - 07.02.2024:** Updated Alpine to 3.18.6, Python to 3.11.6, Pip to 24.0.0 and Pipx to 1.4.3 - Vdirsyncer 0.19.2, Alpine 3.18.6, Python 3.11.6, Pip 24.0.0, Pipx 1.4.3
 
 **2.5.0 - 08.09.2023:** Updated Vdirsyncer to 0.19.2, Alpine to 3.18.3, Python to 3.11.5 and Pip to 23.2.1 - Vdirsyncer 0.19.2, Alpine 3.18.3, Python 3.11.5, Pip 23.2.1, Pipx 1.2.0
-
-<details>
-<summary>Old Version History</summary><br>
 
 **2.4.5 - 14.07.2023:** Supercronic start issue resolved, if LOG_LEVEL environment variable is empty and Alpine packages update - Vdirsyncer 0.19.1, Alpine 3.18.2, Python 3.11.4, Pip 23.1.2, Pipx 1.2.0
 
