@@ -4,9 +4,9 @@ FROM alpine:3.21.3
 # Build Arguments
 ARG ALPINE_VERSION="3.21.3" \
         IMAGE_VERSION="2.5.7" \
-        PIP_VERSION="25.0.1" \
+        PIP_VERSION="25.1.1" \
         PIPX_VERSION="1.7.1" \
-        PYTHON_VERSION="3.12.9" \
+        PYTHON_VERSION="3.12.10" \
         PYTHON_VERSION_SHORT="3.12" \
         VDIRSYNCER_VERSION="0.19.3"
 
