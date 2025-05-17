@@ -1,12 +1,12 @@
 # Alpine Image
-FROM alpine:3.21.2
+FROM alpine:3.21.3
 
 # Build Arguments
-ARG ALPINE_VERSION="3.21.2" \
-        IMAGE_VERSION="2.5.6" \
-        PIP_VERSION="24.3.1" \
+ARG ALPINE_VERSION="3.21.3" \
+        IMAGE_VERSION="2.5.7" \
+        PIP_VERSION="25.1.1" \
         PIPX_VERSION="1.7.1" \
-        PYTHON_VERSION="3.12.8" \
+        PYTHON_VERSION="3.12.10" \
         PYTHON_VERSION_SHORT="3.12" \
         VDIRSYNCER_VERSION="0.19.3"
 
@@ -33,7 +33,9 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
         VDIRSYNCER_USER="vdirsyncer" \
         # Set cron file
         CRON_FILE="/etc/crontabs/vdirsyncer" \
-        # Set script path to run after sync complete
+        # Set script path to run before vdirsyncer commands
+        PRE_SYNC_SCRIPT_FILE= \
+        # Set script path to run after vdirsyncer commands
         POST_SYNC_SCRIPT_FILE= \
         # Set Pipx home
         PIPX_HOME="/opt/pipx" \
@@ -150,7 +152,7 @@ RUN chmod -R +x /files/scripts \
         && chown -R "${UID}":"${GID}" /vdirsyncer \
         && chmod -R 755 /vdirsyncer \
         && chown "${UID}":"${GID}" "${CRON_FILE}" \
-        && chmod 644 "${CRON_FILE}" \
+        && chmod 666 "${CRON_FILE}" \
         && chown -R "${VDIRSYNCER_USER}":"${VDIRSYNCER_USER}" "${PIPX_HOME}"
 
 # Switch User
