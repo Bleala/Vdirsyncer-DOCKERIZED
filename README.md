@@ -8,12 +8,6 @@ Vdirsyncer - sync calendars and addressbooks between servers and the local files
 ---
 
 ## About Vdirsyncer
-**New in `2.4.1`:** A Vdirsyncer autoupdate function has been added! :) If you set `AUTOUPDATE` to `true` then `Vdirsyncer` will update itself including all dependencies at container startup.
-
-Also you are not able to set your own `UID` and `GID` anymore and the default value for both is `1000`! I have done this, to drop the root and sudo privileges completely. You should use a docker volume and just mount the `config` file into the container, [check out the docker-compose.yml](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/main/docker-compose.yml "docker compose.yml"), or when using bind mounts make sure that the folder is readable and writable!
-
-I will no longer push the `linux/arm/v7` docker image to the registry, because almost no one used this one.
-
 **Disclaimer:** I am just the maintainer of this docker container, I did not write the software. Visit the [Official Github Repository](https://github.com/pimutils/vdirsyncer "Vdirsyncer Github Repository") to thank the author(s)! :)
 
 Vdirsyncer is a command-line tool for synchronizing calendars and addressbooks between a variety of servers and the local filesystem. The most popular usecase is to synchronize a server with a local folder and use a set of other programs to change the local events and contacts. Vdirsyncer can then synchronize those changes back to the server.
@@ -68,7 +62,7 @@ There will always be two different versions:
 
 There are also several platforms supported:
 
-Platform:
+Platforms:
 * linux/amd64
 * linux/arm64 
 
@@ -76,7 +70,7 @@ Platform:
 
 ## Usage
 
-To start the container you can run `docker run -d -e AUTOSYNC=true -v /path/to/local/folder:/vdirsyncer bleala/vdirsyncer:latest`, but since docker compose is easier to maintain, I'll give you a valid docker compose example
+To start the container you can run `docker run -d -e AUTOSYNC=true -v /path/to/local/folder:/vdirsyncer bleala/vdirsyncer:latest`, but since docker compose is easier to maintain, I'll give you a valid docker compose example.
 
 
 ```docker-compose.yml
@@ -259,10 +253,10 @@ Vdirsyncer 0.19.3, Alpine 3.21.3, Python 3.12.10, Pip 25.1.1, Pipx 1.7.1
 
 **2.5.5 - 04.10.2024:** Updated Vdirsyncer to 0.19.3, Alpine to 3.20.3, Python to 3.12.6 and Pipx to 1.7.1. Fixed multiple cronjobs [Issue #29](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/29 "Issue #29")  - Vdirsyncer 0.19.3, Alpine 3.20.3, Python 3.12.6, Pip 24.2.0, Pipx 1.7.1
 
-**2.5.4 - 18.09.2024:** Fix rm parameter  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
-
 <details>
 <summary>Old Version History</summary><br>
+
+**2.5.4 - 18.09.2024:** Fix rm parameter  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
 
 **2.5.3 - 21.08.2024:** Dependencies update: Alpine to 3.20.2, Python to 3.12.3, Pip to 24.2.0, Pipx to 1.6.0  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
 
