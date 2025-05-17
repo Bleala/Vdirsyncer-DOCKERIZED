@@ -77,6 +77,7 @@ jobs:
           password: ${{ secrets.LOCAL_TOKEN }}
 
       # https://github.com/marketplace/actions/build-and-push-docker-images
+            # ${{ secrets.QUAY_URL }}/${{ secrets.QUAY_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:dev
       - name: Build And Push
         uses: docker/build-push-action@v6.11.0
         with:
@@ -86,7 +87,6 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:dev
             ${{ secrets.GHCR_URL }}/${{ secrets.GHCR_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:dev
-            ${{ secrets.QUAY_URL }}/${{ secrets.QUAY_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:dev
             ${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:dev
 
       # https://github.com/niniyas/ntfy-action
