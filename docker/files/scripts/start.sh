@@ -157,6 +157,24 @@ then
     } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 fi
 
+# Check, if PRE_SYNC_SCRIPT_FILE is set
+if [ -z "${PRE_SYNC_SCRIPT_FILE}" ]
+then
+    # Set Post Sync Snippet to nothing
+    PRE_SYNC_SNIPPET=""
+
+# Set PRE_SYNC_SNIPPET, if  PRE_SYNC_SCRIPT_FILE is set
+else
+    # User info
+    {
+        echo "Custom before script is enabled."
+        printf "\n"
+    } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+
+    # Set Post Sync Snippet to Post Sync File
+    PRE_SYNC_SNIPPET="${PRE_SYNC_SCRIPT_FILE} &&"
+fi
+
 # Check, if POST_SYNC_SCRIPT_FILE is set
 if [ -z "${POST_SYNC_SCRIPT_FILE}" ]
 then
@@ -167,12 +185,12 @@ then
 else
     # User info
     {
-        echo "Custom scripts are enabled."
+        echo "Custom after script is enabled."
         printf "\n"
     } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
 
     # Set Post Sync Snippet to Post Sync File
-    POST_SYNC_SNIPPET=" ${POST_SYNC_SCRIPT_FILE} || echo 'Error during Script'"
+    POST_SYNC_SNIPPET="&& ${POST_SYNC_SCRIPT_FILE}"
 fi
 
 ### Set up Cronjobs ###
@@ -180,7 +198,7 @@ fi
 if [[ "${AUTODISCOVER}" == "true" ]] && [[ "${AUTOSYNC}" == "true" ]]
 then
     # Write cronjob to file
-    echo "${CRON_TIME} yes | /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} discover \
+    echo "${CRON_TIME} yes | ${PRE_SYNC_SNIPPET} /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} discover \
     && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} metasync \
     && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync ${POST_SYNC_SNIPPET}" > "${CRON_FILE}"
 
@@ -203,7 +221,7 @@ then
 elif [[ "${AUTODISCOVER}" == "false" ]] && [[ "${AUTOSYNC}" == "true" ]]
 then
     # Write cronjob to file
-    echo "${CRON_TIME} /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} metasync \
+    echo "${CRON_TIME} ${PRE_SYNC_SNIPPET} /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} metasync \
     && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync ${POST_SYNC_SNIPPET}" > "${CRON_FILE}"
 
     # User info
@@ -225,7 +243,7 @@ then
 elif [[ "${AUTODISCOVER}" == "true" ]] && [[ "${AUTOSYNC}" == "false" ]]
 then
     # Write cronjob to file
-    echo "${CRON_TIME} yes | /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} discover ${POST_SYNC_SNIPPET}" > "${CRON_FILE}"
+    echo "${CRON_TIME} yes | ${PRE_SYNC_SNIPPET} /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} discover ${POST_SYNC_SNIPPET}" > "${CRON_FILE}"
 
     # User info
     echo 'Only Autodiscover is enabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"

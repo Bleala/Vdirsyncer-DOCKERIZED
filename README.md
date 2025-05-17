@@ -5,13 +5,9 @@
 
 Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED! 
 
+---
+
 ## About Vdirsyncer
-**New in `2.4.1`:** A Vdirsyncer autoupdate function has been added! :) If you set `AUTOUPDATE` to `true` then `Vdirsyncer` will update itself including all dependencies at container startup.
-
-Also you are not able to set your own `UID` and `GID` anymore and the default value for both is `1000`! I have done this, to drop the root and sudo privileges completely. You should use a docker volume and just mount the `config` file into the container, [check out the docker-compose.yml](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/main/docker-compose.yml "docker compose.yml"), or when using bind mounts make sure that the folder is readable and writable!
-
-I will no longer push the `linux/arm/v7` docker image to the registry, because almost no one used this one.
-
 **Disclaimer:** I am just the maintainer of this docker container, I did not write the software. Visit the [Official Github Repository](https://github.com/pimutils/vdirsyncer "Vdirsyncer Github Repository") to thank the author(s)! :)
 
 Vdirsyncer is a command-line tool for synchronizing calendars and addressbooks between a variety of servers and the local filesystem. The most popular usecase is to synchronize a server with a local folder and use a set of other programs to change the local events and contacts. Vdirsyncer can then synchronize those changes back to the server.
@@ -31,7 +27,9 @@ Vdirsyncer also support many different servers:
 * Radicale
 * Xandikos
 
-### Links
+---
+
+## Links
 
 Official Github Repository: https://github.com/pimutils/vdirsyncer
 
@@ -39,7 +37,9 @@ Docs: https://vdirsyncer.pimutils.org/en/stable/tutorial.html
 
 My Github Repository: https://github.com/Bleala/Vdirsyncer-DOCKERIZED
 
-### Downloads
+---
+
+## Downloads
 
 Docker Hub: https://hub.docker.com/r/bleala/vdirsyncer
 
@@ -48,6 +48,7 @@ Github Container Registry: https://github.com/-/bleala/packages/container/packag
 Quay.io: https://quay.io/repository/bleala/vdirsyncer
 
 ---
+
 ## Image, Versions and Architecture
 
 I built this image based on [Alpine Linux](https://hub.docker.com/_/alpine "Alpine Linux Image") and set up everything with python3, pip3 and pipx.
@@ -61,21 +62,18 @@ There will always be two different versions:
 
 There are also several platforms supported:
 
-Platform:
+Platforms:
 * linux/amd64
 * linux/arm64 
-
-Deprecated:
-* linux/arm/v7
 
 ---
 
 ## Usage
 
-To start the container you can run `docker run -d -e AUTOSYNC=true -v /path/to/local/folder:/vdirsyncer bleala/vdirsyncer:latest`, but since docker compose is easier to maintain, I'll give you a valid docker compose example
+To start the container you can run `docker run -d -e AUTOSYNC=true -v /path/to/local/folder:/vdirsyncer bleala/vdirsyncer:latest`, but since docker compose is easier to maintain, I'll give you a valid docker compose example.
 
 
-```docker compose.yml
+```docker-compose.yml
 networks:                                 
   vdirsyncer:
     driver: bridge
@@ -133,7 +131,9 @@ When everything is okay, you can adjust the `CRON_TIME` value to your desired ti
 
 Everything that is done by *Supercronic* will get written to the *log file* and to the docker logs! Run `docker logs -f vdirsyncer` or `docker compose logs -f` to watch the logs.
 
-### User
+---
+
+## User
 
 `Vdirsyncer` does run with an user called `vdirsyncer` inside the container and not as root.<br>
 The `UID` and `GID` for this user are `1000`, so be careful, if you use a bind mount instead of a docker volume.
@@ -143,7 +143,55 @@ If you need to set a custom `UID` and `GID` add the `user` key to your `docker-c
 Example:<br>
 `user: "your_UID:your_GID"`
 
-### Google specifics
+<details>
+<summary>Complete docker-compose.yml with the `user` key</summary><br>
+
+```docker-compose.yml
+networks:                                 
+  vdirsyncer:
+    driver: bridge
+
+volumes:
+  vdirsyncer:
+    name: vdirsyncer
+    driver: local
+
+services:
+  # Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED!
+  # https://hub.docker.com/r/bleala/vdirsyncer
+  app:
+    image: bleala/vdirsyncer:latest
+    container_name: vdirsyncer
+    restart: unless-stopped
+    user: "your_UID:your_GID"
+    networks:
+      vdirsyncer:
+    environment:
+      TZ: # set your timezone, for correct container and log time, default to Europe/Vienna
+      AUTODISCOVER: # set to true for automatic discover, default to false
+      AUTOSYNC: # set to true for automatic sync, default to false
+      AUTOUPDATE: # set to true for automatic Vdirsyncer and dependencies updates on container startup, default to false
+      CRON_TIME: # adjust autosync /-discover time, default to 15 minutes - */15 * * * * 
+      # Cron Time need to be set in Cron format - look here for generator https://crontab.guru/
+      # Set CRON_TIME like that --> */15 * * * *
+      # Optional
+      PRE_SYNC_SCRIPT_FILE: # optional,  set to script path to automatically run your custom script before the cronjob `vdirsyncer` command(s), default to nothing
+      POST_SYNC_SCRIPT_FILE: # optional,  set to script path to automatically run your custom script after the cronjob `vdirsyncer` command(s), default to nothing
+      LOG: # optional, default to /vdirsyncer/vdirsyncer.log
+      LOG_LEVEL: # optional, default is normal output from supercronic
+    volumes:
+      - vdirsyncer:/vdirsyncer              # Docker Volume
+      - /path/to/config:/vdirsyncer/config  # Vdirsyncer Config
+      # Optional
+      - /path/to/custom_before_script.sh:/vdirsyncer/custom_before_script.sh  # Custom Before Script
+      - /path/to/custom_after_script.sh:/vdirsyncer/custom_after_script.sh  # Custom After Script
+```
+
+</details>
+
+---
+
+## Google specifics
 
 **Attention for Google users:** As you can read in the [Docs](http://vdirsyncer.pimutils.org/en/stable/config.html#google "Google Docs Vdirsyncer") you have to specify a path for `token_file = "PATH"`. In order to work properly, use an **absolute path!** So for the carddav storage set the `token_file` like `token_file = "/vdirsyncer/google_carddav"`and for the caldav storage like `token_file = "/vdirsyncer/google_calendar"`.<br>
 The reason is, cron does not run the `vdirsyncer` command directly inside the `/vdirsyncer` folder, so if you use a relative path, `vdirsyncer` does not know where your google tokens are stored and the `AUTOSYNC` fails!
@@ -152,7 +200,9 @@ The reason is, cron does not run the `vdirsyncer` command directly inside the `/
 For `Vdirsyncer 0.19.x` you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500 "Google Instruction")<br>
 This has been tested and confirmed working for `Vdirsyncer 0.19.0`, `Vdirsyncer 0.19.1`, `Vdirsyncer 0.19.2` and `Vdirsyncer 0.19.3` from my side.<br>
 
-### Environment Variables
+---
+
+## Environment Variables
 
 You can set nine different environment variables if you want to:
 
@@ -166,7 +216,7 @@ You can set nine different environment variables if you want to:
 |   `PRE_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script before the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_before_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
 |   `POST_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script after the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_after_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
 |   `LOG`   |   if you want to adjust the log file destination   |   optional, default to `/vdirsyncer/vdirsyncer.log`   |
-|   `LOG_LEVEL`   |   if you want to adjust the log level   |   optional, default to `nothing` --> normal supercronic output <br> Can be `-quiet`, `-debug` or `no value` --> leave variable empty   |
+|   `LOG_LEVEL`   |   if you want to adjust the log level   |   optional, default to `nothing` --> normal supercronic output <br> Can be `-passthrough-logs`, `-quiet`, `-debug` or `no value` --> leave variable empty   |
 |   `VDIRSYNCER_CONFIG`   |   location, where *Vdirsyncer* reads the config from   |   default to /vdirsyncer/config **DON'T CHANGE!**   |
 
 ---
@@ -179,15 +229,34 @@ You can set nine different environment variables if you want to:
 
 ---
 
+## Contribution
+
+I'm glad, if you want to contribute something to the `Vdirsyncer` container.
+
+Feel free to create a PR with your changes and I will merge it, if it's ok.
+
+**Attention**: Please use the `dev` branch for pull requests, not the `main` branch!
+
+---
+
 ## Versions
+**2.5.7 - 17.05.2025:**<br>
+Added the `PRE_SYNC_SCRIPT_FILE` variable, to automatically run a custom script before the cronjob `vdirsyncer` command(s). Fix for [Issue #40](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/40 "Issue #40").<br>
+Changed crontab file to `666`. Fix for [Issue #20](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/20 "Issue #20").<br>
+Fixed the `POST_SYNC_SCRIPT_FILE` not executed problem. Fix for [Issue #39](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/39 "Issue #39").<br>
+Updated Alpine to 3.21.3, Python to 3.12.10 and Pip to 25.1.1.<br>
+
+Current Versions:<br>
+Vdirsyncer 0.19.3, Alpine 3.21.3, Python 3.12.10, Pip 25.1.1, Pipx 1.7.1
+
 **2.5.6 - 09.01.2025:** Updated Alpine to 3.21.2, Python to 3.12.8 and Pip to 24.3.1. - Vdirsyncer 0.19.3, Alpine 3.21.2, Python 3.12.8, Pip 24.3.1, Pipx 1.7.1
 
 **2.5.5 - 04.10.2024:** Updated Vdirsyncer to 0.19.3, Alpine to 3.20.3, Python to 3.12.6 and Pipx to 1.7.1. Fixed multiple cronjobs [Issue #29](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/29 "Issue #29")  - Vdirsyncer 0.19.3, Alpine 3.20.3, Python 3.12.6, Pip 24.2.0, Pipx 1.7.1
 
-**2.5.4 - 18.09.2024:** Fix rm parameter  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
-
 <details>
 <summary>Old Version History</summary><br>
+
+**2.5.4 - 18.09.2024:** Fix rm parameter  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
 
 **2.5.3 - 21.08.2024:** Dependencies update: Alpine to 3.20.2, Python to 3.12.3, Pip to 24.2.0, Pipx to 1.6.0  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
 
