@@ -61,12 +61,12 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       # https://github.com/marketplace/actions/docker-login#github-container-registry
-      - name: Login To Quay.io Container Registry
-        uses: docker/login-action@v3.3.0
-        with:
-          registry: ${{ secrets.QUAY_URL }}
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
+      # - name: Login To Quay.io Container Registry
+      #   uses: docker/login-action@v3.3.0
+      #   with:
+      #     registry: ${{ secrets.QUAY_URL }}
+      #     username: ${{ secrets.QUAY_USERNAME }}
+      #     password: ${{ secrets.QUAY_TOKEN }}
 
       # https://github.com/marketplace/actions/docker-login#github-container-registry
       - name: Login To Gitea
