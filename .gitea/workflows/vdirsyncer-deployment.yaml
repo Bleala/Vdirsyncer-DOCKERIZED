@@ -2,8 +2,6 @@ name: Vdirsyncer Deployment
 run-name: Vdirsyncer Deployment For Production Usage 🚀
 on:
   push:
-    branches:
-      - "main"
     tags:
       - "*.*.*"
 
