@@ -1,0 +1,52 @@
+# https://github.com/marketplace/actions/release-drafter
+# https://github.com/release-drafter/release-drafter#configuration
+
+name-template: '$RESOLVED_VERSION'
+tag-template: '$RESOLVED_VERSION'
+autolabeler:
+  - label: 'feature'
+    title:
+      - '/^feat(\(.*\))?!?:/i'
+  - label: 'bug'
+    title:
+      - '/^fix(\(.*\))?!?:/i'
+  - label: 'documentation'
+    title:
+      - '/^docs(\(.*\))?!?:/i'
+  - label: 'maintenance'
+    title:
+      - '/^(chore|build|ci|refactor|perf|style|test)(\(.*\))?!?:/i'
+categories:
+  - title: '✨ Features'
+    labels: 
+      - 'feature'
+  - title: '🐛 Bug Fixes'
+    labels: 
+      - 'bug'
+  - title: '📝 Documentation'
+    labels: 
+      - 'documentation'
+  - title: '🛠️ Maintenance'
+    labels: 
+      - 'maintenance'
+template: |
+  # 🎉 Vdirsyncer-DOCKERIZED Release $RESOLVED_VERSION!
+  A new version of Vdirsyncer-DOCKERIZED is available!
+
+  ## 📰 What's New/Changed
+
+  $CHANGES
+
+  ## 📦 Download
+  Download at Docker Hub: 
+  https://hub.docker.com/r/bleala/vdirsyncer
+
+  Download at Github Container Registry:
+  https://github.com/Bleala/Vdirsyncer-DOCKERIZED/pkgs/container/vdirsyncer
+
+  ## 🏷️ Versions
+  * Vdirsyncer 
+  * Alpine 
+  * Python 
+  * Pip 
+  * Pipx 
