@@ -1,0 +1,71 @@
+name: ✨ Feature Request
+description: Suggest an idea for this project
+title: "[FEATURE] - "
+labels: ["enhancement", "feature"]
+assignees:
+  - Bleala
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Thank you for taking the time to suggest a new feature!**
+        To help me understand and evaluate your suggestion, please provide as much detail as possible.
+
+  - type: checkboxes
+    id: pre-check
+    attributes:
+      label: Preliminary Checks
+      description: Please confirm the following before submitting your request.
+      options:
+        - label: I have searched the [existing issues](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues) and have not found a similar feature request.
+          required: true
+
+  - type: textarea
+    id: problem-description
+    attributes:
+      label: What is the problem you are trying to solve?
+      description: A clear and concise description of what the problem is. Why is the current situation frustrating or insufficient?
+      placeholder: e.g., I'm always frustrated when I have to manually edit a config file to add a new config because...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen. How would this feature work from a user's perspective?
+      placeholder: I imagine a new environment variable `VDIRSYNCER_XYZ` could be added that accepts a comma-separated list of configs...
+    validations:
+      required: true
+
+  - type: textarea
+    id: value-and-use-case
+    attributes:
+      label: What is the value of this feature?
+      description: Who would benefit from this feature? What new capabilities would it enable?
+      placeholder: This would greatly simplify the setup for users with multiple configs and allow for easier automation.
+
+  - type: textarea
+    id: alternatives-considered
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered.
+      placeholder: I've considered creating a custom entrypoint script, but this feels like a feature that should be built-in.
+
+  - type: dropdown
+    id: willingness-to-contribute
+    attributes:
+      label: Are you willing to contribute to this feature?
+      description: Open source projects thrive on community contributions. Are you interested in helping to implement this feature?
+      options:
+        - "Yes, I am willing to submit a Pull Request"
+        - "I'd like to help, but I would need some guidance"
+        - "No, I'm just suggesting the idea"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, mockups, or screenshots about the feature request here. You can drag and drop images.
