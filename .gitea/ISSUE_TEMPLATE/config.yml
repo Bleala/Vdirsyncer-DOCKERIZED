@@ -1,0 +1,13 @@
+blank_issues_enabled: false
+contact_links:
+  - name: ❓ Ask a question / Start a discussion
+    url: https://github.com/Bleala/Vdirsyncer-DOCKERIZED/discussions/new
+    about: Please use GitHub Discussions for questions, suggestions, and general discussions.
+
+  - name: 📖 Read the Documentation
+    url: https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/master/README.md
+    about: Please check the documentation first for setup instructions and configuration details.
+
+  - name: 🛡️ Report a Security Vulnerability
+    url: https://github.com/Bleala/Vdirsyncer-DOCKERIZED/security/advisories/new
+    about: Please report security vulnerabilities privately. Do not create a public issue.
