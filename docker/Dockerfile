@@ -49,9 +49,9 @@ RUN apk add --no-cache apk-tools=~2.14.6 \
         # Install Pip
         && apk add --no-cache py3-pip=~24.3.1 \
         # Update Pip
-        && pip install --upgrade --break-system-packages pip==25.1.1 \
+        && pip install --upgrade --no-cache-dir --break-system-packages pip==25.1.1 \
         # Install Pipx
-        && pip install --upgrade --break-system-packages pipx==1.7.1 \
+        && pip install --upgrade --no-cache-dir --break-system-packages pipx==1.7.1 \
         # For Curl Commands
         && apk add --no-cache curl=~8.12.1 \                    
         # For TS
