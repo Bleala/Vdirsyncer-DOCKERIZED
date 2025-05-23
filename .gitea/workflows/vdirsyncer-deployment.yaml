@@ -6,8 +6,8 @@ on:
       - "*.*.*"
 
 jobs:
-  Vdirsyncer-Deployment:
-    name: Vdirsyncer Deployment
+  Vdirsyncer-Deployment-Production:
+    name: Vdirsyncer Deployment Production
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -16,6 +16,12 @@ jobs:
       # https://github.com/marketplace/actions/checkout
       - name: Check Out Repository Code
         uses: actions/checkout@v4.2.2
+
+      # https://github.com/marketplace/actions/hadolint-action
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ./docker/Dockerfile
 
       # https://github.com/marketplace/actions/docker-hub-description
       - name: Docker Hub Description
@@ -26,15 +32,7 @@ jobs:
           repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
           short-description: "Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED!"
 
-      # https://docs.docker.com/engine/install/ubuntu/
-      # https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script
-      - name: Install Docker Engine
-        run: | 
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sh ./get-docker.sh
-
       # https://github.com/marketplace/actions/docker-metadata-action
-            # ${{ secrets.QUAY_URL }}/${{ secrets.QUAY_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
       - name: Docker Metadata (Tagging)
         id: meta
         uses: docker/metadata-action@v5.7.0
@@ -44,6 +42,8 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
             ${{ secrets.GHCR_URL }}/${{ secrets.GHCR_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
             ${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
+          flavor: |
+            latest=true
           # generate Docker tags based on the following events/attributes
           tags: |
             type=semver,pattern={{version}}
@@ -74,14 +74,6 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       # https://github.com/marketplace/actions/docker-login#github-container-registry
-      # - name: Login To Quay.io Container Registry
-      #   uses: docker/login-action@v3.4.0
-      #   with:
-      #     registry: ${{ secrets.QUAY_URL }}
-      #     username: ${{ secrets.QUAY_USERNAME }}
-      #     password: ${{ secrets.QUAY_TOKEN }}
-
-      # https://github.com/marketplace/actions/docker-login#github-container-registry
       - name: Login To Gitea
         uses: docker/login-action@v3.4.0
         with:
@@ -90,7 +82,40 @@ jobs:
           password: ${{ secrets.LOCAL_TOKEN }}
 
       # https://github.com/marketplace/actions/build-and-push-docker-images
-      - name: Build And Push
+      - name: Build And Push Pre Release Image For Scanning
+        uses: docker/build-push-action@v6.17.0
+        with:
+          context: ./docker
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:pre-release
+          cache-from: type=registry,ref=${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:buildcache,mode=max
+
+      # # Set up Tricy and scan pre-release-dev image from Registry
+      # Normal GitHub Action does not work with Gitea Actions, because Trivy wants to login to GitHub
+      # # https://github.com/marketplace/actions/aqua-security-trivy
+      - name: Install Trivy And Scan Image For Vulnerabilities
+        run: |
+          # Schritt 1: Trivy-Binary installieren
+          # Wir laden die neueste Version direkt herunter
+          export TRIVY_VERSION=$(curl -s "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+          echo "Installing Trivy version: $TRIVY_VERSION"
+          curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.deb" -o trivy.deb
+          sudo dpkg -i trivy.deb
+
+          # Schritt 2: Trivy-Scan mit exakt deinen gewünschten Parametern ausführen
+          # Der Befehl ist: trivy image [optionen] [image-name]
+          trivy image \
+            --format table \
+            --exit-code 1 \
+            --ignore-unfixed \
+            --pkg-types os,library \
+            --severity CRITICAL,HIGH \
+            ${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:pre-release
+
+      # https://github.com/marketplace/actions/build-and-push-docker-images
+      - name: Build And Push Final Image
         uses: docker/build-push-action@v6.17.0
         with:
           context: ./docker
@@ -98,6 +123,22 @@ jobs:
           push: true
           tags: |
             ${{ steps.meta.outputs.tags }}
+          cache-from: type=registry,ref=${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:buildcache,mode=max
+
+      # https://github.com/regclient/regclient
+      - name: Clean Up 'pre-release' Image
+        if: success()
+        run: |
+          echo "Installing regctl."
+          curl -sL "https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64" -o regctl
+          chmod +x ./regctl
+
+          # regctl automatically uses the Docker Login credentials from the Docker Login Action
+          echo "Deleting pre-release tag from Docker Hub."
+          ./regctl tag rm ${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:pre-release
+
+          echo "Cleanup successful."
 
       # https://github.com/niniyas/ntfy-action
       - name: Ntfy Notification
