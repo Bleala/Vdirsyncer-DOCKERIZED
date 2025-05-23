@@ -1,0 +1,126 @@
+name: 🐞 Bug Report
+description: Report an issue to help me improve
+title: "[BUG] - "
+labels: ["bug", "triage"]
+assignees:
+  - Bleala
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Thanks for taking the time to fill out this bug report!**
+        Please ensure your issue hasn't already been reported by searching through the open issues.
+
+  - type: checkboxes
+    id: pre-check
+    attributes:
+      label: Preliminary Checks
+      description: Please confirm the following before submitting the report.
+      options:
+        - label: I have read the [documentation](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/master/README.md) and could not solve the problem with it.
+          required: true
+        - label: I have searched the [existing issues](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues) for a similar problem and found none.
+          required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: |
+        Please provide a clear and concise description of what the bug is.
+        Include full error messages as text, not as screenshots.
+      placeholder: e.g., When running Vdirsyncer, the following error occurs...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: How can we reproduce the issue? A minimal, reproducible configuration is most helpful here.
+      placeholder: |
+        1. Used configuration '...'
+        2. Executed command '...'
+        3. Observed log output '...'
+        4. Error occurs
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Known Workarounds
+      description: Is there a temporary solution or workaround you have found that allows you to bypass the issue?
+      placeholder: e.g., I can avoid this by restarting the container...
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: |
+        Please include relevant log output. Use proper formatting for code and logs.
+        Please remove sensitive data before pasting the logs here!
+      render: shell
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How critical is this bug for you?
+      options:
+        - Blocker - Prevents core functionality
+        - High - A major feature is impaired
+        - Medium - A minor feature is impaired or a workaround exists
+        - Low - A cosmetic issue or minor inconvenience
+    validations:
+      required: true
+
+  - type: input
+    id: vdirsyncer-version
+    attributes:
+      label: Vdirsyncer Version (inside the container)
+      description: What version of Vdirsyncer are you using? (e.g., `vdirsyncer --version`)
+      placeholder: e.g. 3.9.3
+
+  - type: input
+    id: docker-version
+    attributes:
+      label: Docker Version
+      description: What version of Docker are you using? (e.g., `docker --version`)
+      placeholder: e.g. Docker version 20.10.7, build f0df350
+
+  - type: dropdown
+    id: host-os
+    attributes:
+      label: Host Operating System
+      description: On which operating system is your Docker host running?
+      options:
+        - Linux
+        - macOS
+        - Windows
+    validations:
+      required: true
+  
+  - type: input
+    id: host-architecture
+    attributes:
+      label: Host Architecture
+      description: What is the architecture of your host system? (e.g., `uname -a` or `arch`)
+      placeholder: e.g. x86_64, arm64
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context & Screenshots
+      description: |
+        Is there anything else we should know?
+        Add screenshots, configuration details (please remove sensitive data!), or any other relevant information here.
+        You can simply drag and drop images into this text field.
