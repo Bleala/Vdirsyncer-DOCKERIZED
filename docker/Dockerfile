@@ -12,9 +12,9 @@ ARG ALPINE_VERSION="3.21.3" \
 
 # Set up Environment
     # Set Vdirsyncer config location
-ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
+ENV VDIRSYNCER_CONFIG="/vdirsyncer/config" \
         # Set log file
-        LOG=/vdirsyncer/vdirsyncer.log \
+        LOG="/vdirsyncer/vdirsyncer.log" \
         # Set Autodiscover
         AUTODISCOVER=false \
         # Set Autosync
@@ -24,7 +24,7 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
         # Set Cron Time
         CRON_TIME='*/15 * * * *' \
         # Set Timezone
-        TZ=Europe/Vienna \
+        TZ="Europe/Vienna" \
         # Set UID
         UID="1000" \
         # Set GID
@@ -34,46 +34,42 @@ ENV VDIRSYNCER_CONFIG=/vdirsyncer/config \
         # Set cron file
         CRON_FILE="/etc/crontabs/vdirsyncer" \
         # Set script path to run before vdirsyncer commands
-        PRE_SYNC_SCRIPT_FILE= \
+        PRE_SYNC_SCRIPT_FILE="" \
         # Set script path to run after vdirsyncer commands
-        POST_SYNC_SCRIPT_FILE= \
+        POST_SYNC_SCRIPT_FILE="" \
         # Set Pipx home
         PIPX_HOME="/opt/pipx" \
         # Set Pipx bin dir
         PIPX_BIN_DIR="/usr/local/bin" \
         # Supercronic log level
-        LOG_LEVEL=
+        LOG_LEVEL=""
 
-# Update and install packages
-RUN apk update \
-        && apk add --no-cache --upgrade apk-tools \
-        && apk upgrade --no-cache --available \
+# Install packages and dependencies
+RUN apk add --no-cache apk-tools=~2.14.6 \
         # Install Pip
-        && apk add --no-cache py3-pip \
+        && apk add --no-cache py3-pip=~24.3.1 \
         # Update Pip
-        && pip install --upgrade --break-system-packages pip \
+        && pip install --upgrade --break-system-packages pip==25.1.1 \
         # Install Pipx
-        && pip install --upgrade --break-system-packages pipx \
+        && pip install --upgrade --break-system-packages pipx==1.7.1 \
         # For Curl Commands
-        && apk add --no-cache curl \                    
+        && apk add --no-cache curl=~8.12.1 \                    
         # For TS
-        && apk add --no-cache moreutils \               
+        && apk add --no-cache moreutils=~0.69 \               
         # For Timezone
-        && apk add --no-cache tzdata \                  
+        && apk add --no-cache tzdata=~2025b \                  
         # For Sudo Commands
         #&& apk add --no-cache sudo \                    
         # For Usermod                                
         #&& apk add --no-cache shadow \
         # For Scripts and Shell
-        && apk add --no-cache bash \
+        && apk add --no-cache bash=~5.2.37 \
         # Nano Editor
-        && apk add --no-cache nano \
+        && apk add --no-cache nano=~8.2 \
         # Cron Update
-        #&& apk add --update busybox-suid \
+        #&& apk add --no-cache busybox-suid \
         # Supercronic instead of Cron (for cronjobs)
-        && apk add --no-cache supercronic \
-        # Clear cache
-        && rm -rf /var/cache/apk/*
+        && apk add --no-cache supercronic=~0.2.33
 
 # Set up User
     # Set up Group
@@ -102,8 +98,8 @@ RUN addgroup -g "${GID}" "${VDIRSYNCER_USER}" \
 # Set up Workdir
 WORKDIR /vdirsyncer
 
-# Add Files
-ADD files /files/
+# Copy Files
+COPY files /files/
 
 # Set up Timezone
 RUN cp "/usr/share/zoneinfo/${TZ}" /etc/localtime \
@@ -129,7 +125,7 @@ RUN PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx install "vdirsy
         #&& pip install vdirsyncer[google] \
         # For Vdirsyncer 0.19.x (Pipx install)
         && PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx inject vdirsyncer aiohttp-oauthlib \
-        && PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx inject vdirsyncer vdirsyncer[google] \
+        && PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx inject vdirsyncer "vdirsyncer[google]" \
         # Update Path for Pipx
         && PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx ensurepath
 
