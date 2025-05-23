@@ -1,0 +1,59 @@
+# https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
+version: 2
+
+updates:
+  # Configuration for Docker dependencies
+  - package-ecosystem: "docker"
+    directory: "/docker"
+    schedule:
+      # Options: "daily", "weekly", "monthly"
+      interval: "weekly"
+    assignees:
+      - "Bleala"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "automated"
+      - "docker"
+
+  # Configuration for GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      # Options: "daily", "weekly", "monthly"
+      interval: "weekly"
+    assignees:
+      - "Bleala"
+    groups:
+      all-github-gitea-actions:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "automated"
+      - "ci"
+      - "github"
+
+  # Configuration for Gitea Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/.gitea/workflows"
+    schedule:
+      # Options: "daily", "weekly", "monthly"
+      interval: "weekly"
+    assignees:
+      - "Bleala"
+    groups:
+      all-github-gitea-actions:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "automated"
+      - "ci"
+      - "gitea"
