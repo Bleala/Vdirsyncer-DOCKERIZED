@@ -1,0 +1,46 @@
+name: CI - Docker Build Check
+run-name: Vdirsyncer Container Docker Build Check ✅
+on:
+  push:
+    branches:
+      - "main"
+      - "dev"
+  pull_request:
+    branches: 
+      - "main"
+      - "dev"
+
+jobs:
+  CI-Docker-Build-Check:
+    name: CI - Docker Build Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      # https://github.com/marketplace/actions/checkout
+      - name: Check Out Repository Code
+        uses: actions/checkout@v4.2.2
+
+      # https://github.com/marketplace/actions/hadolint-action
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ./docker/Dockerfile
+
+      # https://github.com/marketplace/actions/docker-setup-qemu
+      - name: Set Up QEMU
+        uses: docker/setup-qemu-action@v3.6.0
+
+      # https://github.com/marketplace/actions/docker-setup-buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.10.0
+
+      # This step is only executed for PRs, not for pushes to the main branch (without cache)
+      # https://github.com/marketplace/actions/build-and-push-docker-images
+      - name: Build Docker Image For Validation
+        uses: docker/build-push-action@v6.17.0
+        with:
+          context: ./docker
+          platforms: linux/amd64,linux/arm64
+          push: false

@@ -2,6 +2,7 @@
 [![Docker Image Version](https://img.shields.io/docker/v/bleala/vdirsyncer/latest?style=flat&label=Version)](https://hub.docker.com/r/bleala/vdirsyncer)
 [![Docker Stars](https://img.shields.io/docker/stars/bleala/vdirsyncer?style=flat&label=Docker%20Stars)](https://hub.docker.com/r/bleala/vdirsyncer)
 [![Docker Pulls](https://img.shields.io/docker/pulls/bleala/vdirsyncer?style=flat&label=Docker%20Pulls)](https://hub.docker.com/r/bleala/vdirsyncer)
+[![CI Status](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/actions/workflows/ci-docker-build.yaml/badge.svg)](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/)
 
 Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED! 
 
