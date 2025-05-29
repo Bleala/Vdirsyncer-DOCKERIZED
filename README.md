@@ -2,7 +2,7 @@
 [![Docker Image Version](https://img.shields.io/docker/v/bleala/vdirsyncer/latest?style=flat&label=Version)](https://hub.docker.com/r/bleala/vdirsyncer)
 [![Docker Stars](https://img.shields.io/docker/stars/bleala/vdirsyncer?style=flat&label=Docker%20Stars)](https://hub.docker.com/r/bleala/vdirsyncer)
 [![Docker Pulls](https://img.shields.io/docker/pulls/bleala/vdirsyncer?style=flat&label=Docker%20Pulls)](https://hub.docker.com/r/bleala/vdirsyncer)
-[![CI Status](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/actions/workflows/ci-docker-build.yaml/badge.svg)](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/)
+[![CI - Docker Build Check](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/actions/workflows/ci-docker-build.yaml/badge.svg?branch=main)](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/actions/workflows/ci-docker-build.yaml)
 
 Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED! 
 
@@ -236,19 +236,19 @@ I'm glad, if you want to contribute something to the `Vdirsyncer` container.
 
 Feel free to create a PR with your changes and I will merge it, if it's ok.
 
-**Attention**: Please use the `dev` branch for pull requests, not the `main` branch!
+**Attention**: Please use the `main` branch for pull requests, not the `dev` branch!
 
 ---
 
 ## Versions
 **2.5.7 - 17.05.2025:**<br>
-Added the `PRE_SYNC_SCRIPT_FILE` variable, to automatically run a custom script before the cronjob `vdirsyncer` command(s). Fix for [Issue #40](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/40 "Issue #40").<br>
-Changed crontab file to `666`. Fix for [Issue #20](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/20 "Issue #20").<br>
-Fixed the `POST_SYNC_SCRIPT_FILE` not executed problem. Fix for [Issue #39](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/39 "Issue #39").<br>
-Updated Alpine to 3.21.3, Python to 3.12.10 and Pip to 25.1.1.<br>
+* Added the `PRE_SYNC_SCRIPT_FILE` variable, to automatically run a custom script before the cronjob `vdirsyncer` command(s). Fix for [Issue #40](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/40 "Issue #40").<br>
+* Changed crontab file to `666`. Fix for [Issue #20](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/20 "Issue #20").<br>
+* Fixed the `POST_SYNC_SCRIPT_FILE` not executed problem. Fix for [Issue #39](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/39 "Issue #39").<br>
+* Updated Alpine to 3.21.3, Python to 3.12.10 and Pip to 25.1.1.<br>
 
-Current Versions:<br>
-Vdirsyncer 0.19.3, Alpine 3.21.3, Python 3.12.10, Pip 25.1.1, Pipx 1.7.1
+**Current Versions:**<br>
+* Vdirsyncer 0.19.3, Alpine 3.21.3, Python 3.12.10, Pip 25.1.1, Pipx 1.7.1
 
 **2.5.6 - 09.01.2025:** Updated Alpine to 3.21.2, Python to 3.12.8 and Pip to 24.3.1. - Vdirsyncer 0.19.3, Alpine 3.21.2, Python 3.12.8, Pip 24.3.1, Pipx 1.7.1
 
