@@ -11,8 +11,8 @@ on:
 
 env:
   IMAGE_NAME: vdirsyncer
-  REGISTRY_GHCR: ghcr.io
-  USERNAME_GHCR: bleala
+  REGISTRY_GITHUB: ${{ vars.REGISTRY_GITHUB }}
+  USERNAME_GITHUB: ${{ vars.USERNAME_GITHUB }}
 
 jobs:
   CI-Docker-Build-Check:
@@ -66,8 +66,8 @@ jobs:
         id: docker-login-ghcr
         uses: docker/login-action@v3.4.0
         with:
-          registry: ${{ env.REGISTRY_GHCR }}
-          username: ${{ env.USERNAME_GHCR}}
+          registry: ${{ env.REGISTRY_GITHUB }}
+          username: ${{ env.USERNAME_GITHUB}}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # https://github.com/marketplace/actions/build-and-push-docker-images
@@ -78,16 +78,16 @@ jobs:
           context: ./docker
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ env.REGISTRY_GHCR }}/${{ env.USERNAME_GHCR}}/${{ env.IMAGE_NAME}}:ci-docker-build
-          cache-from: type=registry,ref=${{ env.REGISTRY_GHCR }}/${{ env.USERNAME_GHCR}}/${{ env.IMAGE_NAME}}:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY_GHCR }}/${{ env.USERNAME_GHCR}}/${{ env.IMAGE_NAME}}:buildcache,mode=max
+          tags: ${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.IMAGE_NAME}}:ci-docker-build
+          cache-from: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.IMAGE_NAME}}:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.IMAGE_NAME}}:buildcache,mode=max
 
       # # https://github.com/marketplace/actions/aqua-security-trivy
       - name: Scan Image For Vulnerabilities
         id: trivy-scan
         uses: aquasecurity/trivy-action@0.30.0
         with:
-          image-ref: ${{ env.REGISTRY_GHCR }}/${{ env.USERNAME_GHCR}}/${{ env.IMAGE_NAME}}:ci-docker-build
+          image-ref: ${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.IMAGE_NAME}}:ci-docker-build
           format: sarif
           output: trivy-results.sarif
           exit-code: '1'
@@ -110,7 +110,7 @@ jobs:
         if: always()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          owner: ${{ env.USERNAME_GHCR }}
+          owner: ${{ env.USERNAME_GITHUB }}
           packages: ${{ env.IMAGE_NAME }}
           delete-tags: ci-docker-build
           # delete-untagged: true
