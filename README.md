@@ -236,19 +236,19 @@ I'm glad, if you want to contribute something to the `Vdirsyncer` container.
 
 Feel free to create a PR with your changes and I will merge it, if it's ok.
 
-**Attention**: Please use the `dev` branch for pull requests, not the `main` branch!
+**Attention**: Please use the `main` branch for pull requests, not the `dev` branch!
 
 ---
 
 ## Versions
 **2.5.7 - 17.05.2025:**<br>
-Added the `PRE_SYNC_SCRIPT_FILE` variable, to automatically run a custom script before the cronjob `vdirsyncer` command(s). Fix for [Issue #40](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/40 "Issue #40").<br>
-Changed crontab file to `666`. Fix for [Issue #20](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/20 "Issue #20").<br>
-Fixed the `POST_SYNC_SCRIPT_FILE` not executed problem. Fix for [Issue #39](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/39 "Issue #39").<br>
-Updated Alpine to 3.21.3, Python to 3.12.10 and Pip to 25.1.1.<br>
+* Added the `PRE_SYNC_SCRIPT_FILE` variable, to automatically run a custom script before the cronjob `vdirsyncer` command(s). Fix for [Issue #40](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/40 "Issue #40").<br>
+* Changed crontab file to `666`. Fix for [Issue #20](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/20 "Issue #20").<br>
+* Fixed the `POST_SYNC_SCRIPT_FILE` not executed problem. Fix for [Issue #39](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/39 "Issue #39").<br>
+* Updated Alpine to 3.21.3, Python to 3.12.10 and Pip to 25.1.1.<br>
 
-Current Versions:<br>
-Vdirsyncer 0.19.3, Alpine 3.21.3, Python 3.12.10, Pip 25.1.1, Pipx 1.7.1
+**Current Versions:**<br>
+* Vdirsyncer 0.19.3, Alpine 3.21.3, Python 3.12.10, Pip 25.1.1, Pipx 1.7.1
 
 **2.5.6 - 09.01.2025:** Updated Alpine to 3.21.2, Python to 3.12.8 and Pip to 24.3.1. - Vdirsyncer 0.19.3, Alpine 3.21.2, Python 3.12.8, Pip 24.3.1, Pipx 1.7.1
 
