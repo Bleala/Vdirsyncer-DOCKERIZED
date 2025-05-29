@@ -4,22 +4,14 @@ on:
     # branches to consider in the event; optional, defaults to all
     branches:
       - main
-  # pull_request event is required only for autolabeler
-  pull_request:
-    # Only following types are handled by the action, but one can default to all as well
-    types: 
-      - opened
-      - reopened
-      - synchronize
   # pull_request_target event is required for autolabeler to support PRs from forks
   pull_request_target:
     types:
       - opened
       - reopened
       - synchronize
-
-permissions:
-  contents: read
+    branches:
+      - main
 
 jobs:
   Draft-Release-Notes:
@@ -38,5 +30,6 @@ jobs:
       # Drafts your next Release notes as Pull Requests are merged into "master"
       # https://github.com/marketplace/actions/release-drafter
       - uses: release-drafter/release-drafter@v6.1.0
+        id: release-drafter
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_DRAFTER_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

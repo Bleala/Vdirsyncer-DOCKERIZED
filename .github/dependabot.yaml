@@ -28,6 +28,7 @@ updates:
       all-github-gitea-actions:
         applies-to: version-updates
         update-types:
+          - "major"
           - "minor"
           - "patch"
     target-branch: "main"
@@ -49,6 +50,7 @@ updates:
       all-github-gitea-actions:
         applies-to: version-updates
         update-types:
+          - "major"
           - "minor"
           - "patch"
     target-branch: "main"
