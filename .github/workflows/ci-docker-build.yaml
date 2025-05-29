@@ -3,12 +3,16 @@ run-name: Vdirsyncer Container Docker Build Check ✅
 on:
   push:
     branches:
-      - "main"
-      - "dev"
-  pull_request:
+      - main
+  pull_request_target:
     branches: 
-      - "main"
-      - "dev"
+      - main
+      - dev
+
+env:
+  IMAGE_NAME: vdirsyncer
+  REGISTRY_GHCR: ghcr.io
+  USERNAME_GHCR: bleala
 
 jobs:
   CI-Docker-Build-Check:
@@ -17,30 +21,97 @@ jobs:
     defaults:
       run:
         shell: bash
+    # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
+    permissions:
+      # for actions/checkout to fetch code
+      contents: read
+      # for github/codeql-action/upload-sarif to upload SARIF results
+      security-events: write
+      # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+      actions: read
+      # for docker/build-push-action to push the Docker image to GitHub Container Registry
+      packages: write
     steps:
       # https://github.com/marketplace/actions/checkout
       - name: Check Out Repository Code
+        id: checkout
         uses: actions/checkout@v4.2.2
 
       # https://github.com/marketplace/actions/hadolint-action
       - name: Lint Dockerfile
+        id: dockerfile-linter
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ./docker/Dockerfile
+      
+      # https://github.com/marketplace/actions/shell-linter
+      - name: Lint Shell Scripts
+        id: shell-linter
+        uses: Azbagheri/shell-linter@v0.8.0
+        with:
+          exclude-paths: "LICENSE,docker/Dockerfile"
 
       # https://github.com/marketplace/actions/docker-setup-qemu
       - name: Set Up QEMU
+        id: setup-qemu
         uses: docker/setup-qemu-action@v3.6.0
 
       # https://github.com/marketplace/actions/docker-setup-buildx
       - name: Set up Docker Buildx
+        id: setup-buildx
         uses: docker/setup-buildx-action@v3.10.0
 
-      # This step is only executed for PRs, not for pushes to the main branch (without cache)
+      # https://github.com/marketplace/actions/docker-login
+      - name: Login To GitHub Container Registry
+        id: docker-login-ghcr
+        uses: docker/login-action@v3.4.0
+        with:
+          registry: ${{ env.REGISTRY_GHCR }}
+          username: ${{ env.USERNAME_GHCR}}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       # https://github.com/marketplace/actions/build-and-push-docker-images
-      - name: Build Docker Image For Validation
-        uses: docker/build-push-action@v6.17.0
+      - name: Build Docker Image For Validation And Scanning
+        id: build-and-push
+        uses: docker/build-push-action@v6.18.0
         with:
           context: ./docker
           platforms: linux/amd64,linux/arm64
-          push: false
+          push: true
+          tags: ${{ env.REGISTRY_GHCR }}/${{ env.USERNAME_GHCR}}/${{ env.IMAGE_NAME}}:ci-docker-build
+          cache-from: type=registry,ref=${{ env.REGISTRY_GHCR }}/${{ env.USERNAME_GHCR}}/${{ env.IMAGE_NAME}}:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY_GHCR }}/${{ env.USERNAME_GHCR}}/${{ env.IMAGE_NAME}}:buildcache,mode=max
+
+      # # https://github.com/marketplace/actions/aqua-security-trivy
+      - name: Scan Image For Vulnerabilities
+        id: trivy-scan
+        uses: aquasecurity/trivy-action@0.30.0
+        with:
+          image-ref: ${{ env.REGISTRY_GHCR }}/${{ env.USERNAME_GHCR}}/${{ env.IMAGE_NAME}}:ci-docker-build
+          format: sarif
+          output: trivy-results.sarif
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
+      # https://github.com/github/codeql-action
+      # https://github.com/github/codeql-action/blob/main/upload-sarif/action.yml
+      - name: Upload Trivy Scan Results To GitHub Security Tab
+        id: upload-trivy-results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+
+      # https://github.com/marketplace/actions/ghcr-io-cleanup-action
+      - name: GHCR Clean Up 'ci-docker-build' Image Tag
+        id: ghcr-clean-up-ci-docker-build
+        uses: dataaxiom/ghcr-cleanup-action@v1.0.16
+        if: always()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          owner: ${{ env.USERNAME_GHCR }}
+          packages: ${{ env.IMAGE_NAME }}
+          delete-tags: ci-docker-build
+          # delete-untagged: true
+          keep-n-untagged: 10

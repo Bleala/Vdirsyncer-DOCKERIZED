@@ -8,14 +8,23 @@ on:
     inputs:
       tag:
         description: 'Custom tag (optional, defaults to dev)'
-        required: false
+        required: true
         default: 'dev'
         type: string
       branch:
         description: 'Custom branch (optional, defaults to dev)'
-        required: false
+        required: true
         default: 'dev'
         type: string 
+
+env:
+  IMAGE_NAME: vdirsyncer
+  REGISTRY_DOCKERHUB: ${{ vars.REGISTRY_DOCKERHUB }}
+  REGISTRY_GITHUB: ${{ vars.REGISTRY_GITHUB }}
+  REGISTRY_GITEA: ${{ secrets.REGISTRY_GITEA }}
+  USERNAME_DOCKERHUB: ${{ vars.USERNAME_DOCKERHUB }}
+  USERNAME_GITHUB: ${{ vars.USERNAME_GITHUB }}
+  USERNAME_GITEA: ${{ vars.USERNAME_GITEA }}
 
 jobs:
   Vdirsyncer-Deployment-Development:
@@ -27,33 +36,43 @@ jobs:
     steps:
       # https://github.com/marketplace/actions/checkout
       - name: Check Out Repository Code
+        id: checkout
         uses: actions/checkout@v4.2.2
 
       # https://github.com/marketplace/actions/hadolint-action
       - name: Lint Dockerfile
+        id: dockerfile-linter
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ./docker/Dockerfile
 
+      # https://github.com/marketplace/actions/shell-linter
+      - name: Lint Shell Scripts
+        id: shell-linter
+        uses: Azbagheri/shell-linter@v0.8.0
+        with:
+          exclude-paths: "LICENSE,docker/Dockerfile"
+
       # https://github.com/marketplace/actions/docker-hub-description
       - name: Docker Hub Description
+        id: dockerhub-description
         uses: peter-evans/dockerhub-description@v4.0.2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
+          username: ${{ env.USERNAME_DOCKERHUB }}
+          password: ${{ secrets.TOKEN_DOCKERHUB }}
+          repository: ${{ env.USERNAME_DOCKERHUB }}/${{ env.IMAGE_NAME }}
           short-description: "Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED!"
 
       # https://github.com/marketplace/actions/docker-metadata-action
       - name: Docker Metadata (Tagging)
-        id: meta
+        id: metadata
         uses: docker/metadata-action@v5.7.0
         with:
           # list of Docker images to use as base name for tags
           images: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
-            ${{ secrets.GHCR_URL }}/${{ secrets.GHCR_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
-            ${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}
+            ${{ env.REGISTRY_DOCKERHUB }}/${{ env.USERNAME_DOCKERHUB }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_GITEA }}/${{ env.USERNAME_GITEA }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=false
           # generate Docker tags based on the following events/attributes
@@ -62,50 +81,60 @@ jobs:
 
       # https://github.com/marketplace/actions/docker-setup-qemu
       - name: Set Up QEMU
+        id: setup-qemu
         uses: docker/setup-qemu-action@v3.6.0
 
       # https://github.com/marketplace/actions/docker-setup-buildx
       - name: Set Up Docker Buildx
+        id: setup-buildx
         uses: docker/setup-buildx-action@v3.10.0
 
-      # https://github.com/marketplace/actions/docker-login#github-container-registry
+      # https://github.com/marketplace/actions/docker-login
       - name: Login To Docker Hub
+        id: docker-login-dockerhub
         uses: docker/login-action@v3.4.0
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ${{ env.REGISTRY_DOCKERHUB }}
+          username: ${{ env.USERNAME_DOCKERHUB }}
+          password: ${{ secrets.TOKEN_DOCKERHUB }}
 
-      # https://github.com/marketplace/actions/docker-login#github-container-registry
+      # https://github.com/marketplace/actions/docker-login
       - name: Login To GitHub Container Registry
+        id: docker-login-ghcr
         uses: docker/login-action@v3.4.0
         with:
-          registry: ${{ secrets.GHCR_URL }}
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_TOKEN }}
+          registry: ${{ env.REGISTRY_GITHUB }}
+          username: ${{ env.USERNAME_GITHUB }}
+          password: ${{ secrets.TOKEN_GITHUB }}
 
-      # https://github.com/marketplace/actions/docker-login#github-container-registry
+      # https://github.com/marketplace/actions/docker-login
       - name: Login To Gitea
+        id: docker-login-gitea
         uses: docker/login-action@v3.4.0
         with:
-          registry: ${{ secrets.LOCAL_URL }}
-          username: ${{ secrets.LOCAL_USERNAME }}
-          password: ${{ secrets.LOCAL_TOKEN }}
+          registry: ${{ env.REGISTRY_GITEA }}
+          username: ${{ env.USERNAME_GITEA }}
+          password: ${{ secrets.TOKEN_GITEA }}
 
       # https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Build And Push Pre Release Dev Image For Scanning
-        uses: docker/build-push-action@v6.17.0
+        id: build-and-push-pre-release-dev
+        uses: docker/build-push-action@v6.18.0
         with:
           context: ./docker
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:pre-release-dev
-          cache-from: type=registry,ref=${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:buildcache,mode=max
+          provenance: false
+          sbom: false
+          tags: ${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.IMAGE_NAME}}:pre-release-dev
+          cache-from: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.IMAGE_NAME}}:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.IMAGE_NAME}}:buildcache,mode=max
 
-      # # Set up Tricy and scan pre-release-dev image from Registry
+      # Set up Tricy and scan pre-release-dev image from Registry
       # Normal GitHub Action does not work with Gitea Actions, because Trivy wants to login to GitHub
-      # # https://github.com/marketplace/actions/aqua-security-trivy
+      # https://github.com/marketplace/actions/aqua-security-trivy
       - name: Install Trivy And Scan Image For Vulnerabilities
+        id: trivy-scan
         run: |
           # Schritt 1: Trivy-Binary installieren
           # Wir laden die neueste Version direkt herunter
@@ -122,36 +151,39 @@ jobs:
             --ignore-unfixed \
             --pkg-types os,library \
             --severity CRITICAL,HIGH \
-            ${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:pre-release-dev
+            ${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.IMAGE_NAME}}:pre-release-dev
 
       # https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Build And Push Final Dev Image
-        uses: docker/build-push-action@v6.17.0
+        id: build-and-push-final-dev
+        uses: docker/build-push-action@v6.18.0
         with:
           context: ./docker
           platforms: linux/amd64,linux/arm64
           push: true
+          provenance: false
+          sbom: false
           tags: |
-            ${{ steps.meta.outputs.tags }}
-          cache-from: type=registry,ref=${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:buildcache,mode=max
+            ${{ steps.metadata.outputs.tags }}
+          cache-from: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.IMAGE_NAME}}:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.IMAGE_NAME}}:buildcache,mode=max
 
-      # https://github.com/regclient/regclient
-      - name: Clean Up 'pre-release-dev' Image
-        if: success()
-        run: |
-          echo "Installing regctl."
-          curl -sL "https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64" -o regctl
-          chmod +x ./regctl
-
-          # regctl automatically uses the Docker Login credentials from the Docker Login Action
-          echo "Deleting pre-release-dev tag from Docker Hub."
-          ./regctl tag rm ${{ secrets.LOCAL_URL }}/${{ secrets.LOCAL_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:pre-release-dev
-
-          echo "Cleanup successful."
+      # https://github.com/marketplace/actions/ghcr-io-cleanup-action
+      - name: GHCR Clean Up 'pre-release-dev' Image Tag
+        id: ghcr-clean-up-pre-release-dev
+        uses: dataaxiom/ghcr-cleanup-action@v1.0.16
+        if: always()
+        with:
+          token: ${{ secrets.TOKEN_GITHUB }}
+          owner: ${{ env.USERNAME_GITHUB }}
+          packages: ${{ env.IMAGE_NAME }}
+          delete-tags: pre-release-dev
+          # delete-untagged: true
+          keep-n-untagged: 10
 
       # https://github.com/niniyas/ntfy-action
       - name: Ntfy Notification
+        id: ntfy-notification
         uses: niniyas/ntfy-action@v1.0.4
         if: always()  # Wird immer ausgeführt, egal ob success, failure oder cancelled
         env:
