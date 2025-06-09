@@ -186,7 +186,7 @@ jobs:
       # https://github.com/niniyas/ntfy-action
       - name: Ntfy Notification
         id: ntfy-notification
-        uses: niniyas/ntfy-action@v1.0.4
+        uses: niniyas/ntfy-action@V1.0.5
         if: always()  # Wird immer ausgeführt, egal ob success, failure oder cancelled
         env:
           STATUS: ${{ job.status }}
