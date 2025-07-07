@@ -74,7 +74,7 @@ jobs:
       # https://github.com/marketplace/actions/docker-setup-buildx
       - name: Set Up Docker Buildx 🐳🧱
         id: setup-buildx
-        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
+        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
 
       # https://github.com/marketplace/actions/docker-login
       - name: Login To GitHub Container Registry 🔑📦
@@ -100,7 +100,7 @@ jobs:
       # # https://github.com/marketplace/actions/aqua-security-trivy
       - name: Scan Image For Vulnerabilities 🛡️🔍
         id: trivy-scan
-        uses: aquasecurity/trivy-action@76071ef0d7ec797419534a183b498b4d6366cf37 # 0.31.0
+        uses: aquasecurity/trivy-action@dc5a429b52fcf669ce959baa2c2dd26090d2a6c4 # 0.32.0
         with:
           image-ref: ${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.IMAGE_NAME}}:ci-docker-build
           format: sarif
@@ -115,7 +115,7 @@ jobs:
       # https://github.com/github/codeql-action/blob/main/upload-sarif/action.yml
       - name: Upload Trivy Scan Results To GitHub Security Tab 🛡️⬆️
         id: upload-trivy-results
-        uses: github/codeql-action/upload-sarif@fca7ace96b7d713c7035871441bd52efbe39e27e # v3.28.19
+        uses: github/codeql-action/upload-sarif@181d5eefc20863364f96762470ba6f862bdef56b # v3.29.2
         if: always()
         with:
           sarif_file: trivy-results.sarif
