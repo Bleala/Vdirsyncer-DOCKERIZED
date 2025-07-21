@@ -1,5 +1,5 @@
 # Alpine Image
-FROM alpine:3.21.3
+FROM alpine:3.22.1
 
 # Build Arguments
 ARG ALPINE_VERSION="3.21.3" \
