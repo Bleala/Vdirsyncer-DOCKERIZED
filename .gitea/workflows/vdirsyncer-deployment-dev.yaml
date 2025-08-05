@@ -74,7 +74,7 @@ jobs:
       # https://github.com/marketplace/actions/docker-metadata-action
       - name: Docker Metadata (Tagging) 🏷️
         id: metadata
-        uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5.7.0
+        uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
         with:
           # list of Docker images to use as base name for tags
           images: |
@@ -96,17 +96,17 @@ jobs:
       # https://github.com/marketplace/actions/docker-setup-buildx
       - name: Set Up Docker Buildx 🐳🧱
         id: setup-buildx
-        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
+        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
 
       # https://github.com/marketplace/actions/cosign-installer
       - name: Set Up Cosign ✍️
         id: setup-cosign
-        uses: sigstore/cosign-installer@3454372f43399081ed03b604cb2d021dabca52bb # v3.8.2
+        uses: sigstore/cosign-installer@d58896d6a1865668819e1d91763c7751a165e159 # v3.9.2
 
       # https://github.com/marketplace/actions/docker-login
       - name: Login To Docker Hub 🔑🐳
         id: docker-login-dockerhub
-        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
+        uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
         with:
           registry: ${{ env.REGISTRY_DOCKERHUB }}
           username: ${{ env.USERNAME_DOCKERHUB }}
@@ -115,7 +115,7 @@ jobs:
       # https://github.com/marketplace/actions/docker-login
       - name: Login To GitHub Container Registry 🔑📦
         id: docker-login-ghcr
-        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
+        uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
         with:
           registry: ${{ env.REGISTRY_GITHUB }}
           username: ${{ env.USERNAME_GITHUB }}
@@ -124,7 +124,7 @@ jobs:
       # https://github.com/marketplace/actions/docker-login
       - name: Login To Gitea 🔑🌐
         id: docker-login-gitea
-        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
+        uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
         with:
           registry: ${{ env.REGISTRY_GITEA }}
           username: ${{ env.USERNAME_GITEA }}
