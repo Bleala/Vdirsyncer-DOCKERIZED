@@ -2,12 +2,12 @@
 FROM alpine:3.22.1
 
 # Build Arguments
-ARG ALPINE_VERSION="3.21.3" \
+ARG ALPINE_VERSION="3.22.1" \
         IMAGE_VERSION="2.5.7" \
-        PIP_VERSION="25.1.1" \
-        PIPX_VERSION="1.7.1" \
-        PYTHON_VERSION="3.12.10" \
+        PYTHON_VERSION="3.12.11" \
         PYTHON_VERSION_SHORT="3.12" \
+        PIP_VERSION="25.2" \
+        PIPX_VERSION="1.7.1" \
         VDIRSYNCER_VERSION="0.19.3"
 
 # Set up Environment
@@ -45,17 +45,17 @@ ENV VDIRSYNCER_CONFIG="/vdirsyncer/config" \
         LOG_LEVEL=""
 
 # Install packages and dependencies
-RUN apk add --no-cache apk-tools=~2.14.6 \
+RUN apk add --no-cache apk-tools=~2.14.9 \
         # Install Pip
-        && apk add --no-cache py3-pip=~24.3.1 \
+        && apk add --no-cache py3-pip=~25.1.1 \
         # Update Pip
-        && pip install --upgrade --no-cache-dir --break-system-packages pip==25.1.1 \
+        && pip install --upgrade --no-cache-dir --break-system-packages pip=="${PIP_VERSION}" \
         # Install Pipx
-        && pip install --upgrade --no-cache-dir --break-system-packages pipx==1.7.1 \
+        && pip install --upgrade --no-cache-dir --break-system-packages pipx="${PIPX_VERSION}" \
         # For Curl Commands
-        && apk add --no-cache curl=~8.12.1 \                    
+        && apk add --no-cache curl=~8.14.1 \                    
         # For TS
-        && apk add --no-cache moreutils=~0.69 \               
+        && apk add --no-cache moreutils=~0.70 \               
         # For Timezone
         && apk add --no-cache tzdata=~2025b \                  
         # For Sudo Commands
@@ -65,7 +65,7 @@ RUN apk add --no-cache apk-tools=~2.14.6 \
         # For Scripts and Shell
         && apk add --no-cache bash=~5.2.37 \
         # Nano Editor
-        && apk add --no-cache nano=~8.2 \
+        && apk add --no-cache nano=~8.4 \
         # Cron Update
         #&& apk add --no-cache busybox-suid \
         # Supercronic instead of Cron (for cronjobs)
@@ -111,7 +111,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=1 \
 # Labeling
 LABEL maintainer="Bleala" \
         version="${IMAGE_VERSION}" \
-        description="Vdirsyncer ${VDIRSYNCER_VERSION} on Alpine ${ALPINE_VERSION}, Pip ${PIP_VERSION}, Pipx ${PIPX_VERSION}, Python ${PYTHON_VERSION}" \
+        description="Vdirsyncer ${VDIRSYNCER_VERSION} on Alpine ${ALPINE_VERSION}, Python ${PYTHON_VERSION}, Pip ${PIP_VERSION} and Pipx ${PIPX_VERSION}" \
         org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED" \
         org.opencontainers.image.url="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
 
