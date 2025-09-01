@@ -1,0 +1,36 @@
+name: Lint Actions 🧐📜🔍
+run-name: Lint Actions 🧐📜🔍
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - '.github/workflows/*.yaml'
+      - '.gitea/workflows/*.yaml'
+  workflow_dispatch:
+    inputs:
+      source:
+        description: 'Specify the branch/tag to checkout (default: main)'
+        required: true
+        type: string 
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-actions:
+    name: Lint Actions 🧐📜🔍
+    uses: Bleala/Reusable-Workflows/.github/workflows/reusable-actions-linter.yaml@main
+    with:
+      ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.source || github.ref }}
+    permissions:
+      # for actions/checkout to fetch code
+      contents: read
+      # required to upload results to advanced security.
+      security-events: write
+      # only required for a private repository by zizmorcore/zizmor-action to get the Action run status
+      actions: read
+    secrets:
+      GITHUB_WORKFLOW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
