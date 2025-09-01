@@ -69,6 +69,58 @@ Platforms:
 
 ---
 
+## Image Signing & Verification
+
+To ensure the authenticity and integrity of my images, all `bleala/vdirsyncer` images pushed to `Docker Hub` and `GitHub Container Registry` (and maybe more in the future) are signed using [Cosign](https://github.com/sigstore/cosign "Cosign").
+
+I use a static key pair for signing. The public key required for verification, `cosign.pub`, is available in the root of this GitHub repository:
+* **Public Key:** [`cosign.pub`](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/main/cosign.pub "cosign.pub")
+
+### How to Verify an Image
+
+You can verify the signature of an image to ensure it hasn't been tampered with and originates from me.
+
+1.  **Install Cosign:**
+    If you don't have Cosign installed, follow the official installation instructions: [Cosign Installation Guide](https://docs.sigstore.dev/cosign/system_config/installation/ "Cosign Installation Guide").
+
+2.  **Obtain the Public Key:**
+    Download the [`cosign.pub`](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/main/cosign.pub "cosign.pub") file from this repository or clone the repository to access it locally.
+
+3.  **Verify the Image:**
+    Use the `cosign verify` command. It is highly recommended to verify against the image **digest** (e.g., `sha256:...`) rather than a mutable tag (like `latest` or `1.23.0`). You can find image digests on Docker Hub or GitHub Container Registry.
+
+    ```bash
+    # Ensure 'cosign.pub' is in your current directory, or provide the full path to it.
+    # Replace <registry>/bleala/vdirsyncer@sha256:<image-digest> with the actual image reference and its digest.
+
+    # Example for an image on Docker Hub:
+    cosign verify --key cosign.pub docker.io/bleala/vdirsyncer@sha256:<ACTUAL_IMAGE_DIGEST_HERE>
+
+    # Example for an image on GitHub Container Registry:
+    cosign verify --key cosign.pub ghcr.io/bleala/vdirsyncer@sha256:<ACTUAL_IMAGE_DIGEST_HERE>
+    ```
+
+    For instance, to verify the `dev` tag with the following digest `sha256:c31bfe88a1922ca891762803011e3bd55ad86fd12192b56100ed52de1050af4b`:
+    ```bash
+    cosign verify --key cosign.pub docker.io/bleala/vdirsyncer@sha256:c31bfe88a1922ca891762803011e3bd55ad86fd12192b56100ed52de1050af4b
+    ```
+
+    A successful verification will output information like this:
+
+    ```
+    cosign verify --key cosign.pub docker.io/bleala/vdirsyncer@sha256:c31bfe88a1922ca891762803011e3bd55ad86fd12192b56100ed52de1050af4b
+
+    Verification for index.docker.io/bleala/vdirsyncer@sha256:c31bfe88a1922ca891762803011e3bd55ad86fd12192b56100ed52de1050af4b --
+    The following checks were performed on each of these signatures:
+      - The cosign claims were validated
+      - Existence of the claims in the transparency log was verified offline
+      - The signatures were verified against the specified public key
+
+    [{"critical":{"identity":{"docker-reference":"index.docker.io/bleala/vdirsyncer"},"image":{"docker-manifest-digest":"sha256:c31bfe88a1922ca891762803011e3bd55ad86fd12192b56100ed52de1050af4b"},"type":"cosign container image signature"},"optional":{"Bundle":{"SignedEntryTimestamp":"MEYCIQCbmNMsqDS+YNSKcAEk7duy99v2E/FjA5Vrxgv43wAs8wIhANjKTRUkDof9P0w0otdcNwmgHOr1q/MaC52Zk7qk+x81","Payload":{"body":"eyJhcGlWZXJzaW9uIjoiMC4wLjEiLCJraW5kIjoiaGFzaGVkcmVrb3JkIiwic3BlYyI6eyJkYXRhIjp7Imhhc2giOnsiYWxnb3JpdGhtIjoic2hhMjU2IiwidmFsdWUiOiI2ZGRmMDY0ZDE0MzJmNDcwZjYyNTE0NzIzZTM0YWNhMjljNDJmMTY2ZWI2MWRlMTA3ZjFlZDEwODQ0OTJiMzAzIn19LCJzaWduYXR1cmUiOnsiY29udGVudCI6Ik1FUUNJQi9idDZaR0dKYjVkQW9WcGxSVDdYVmZaei96eCtCbllYN25YTElNNE1kb0FpQjNENUlvWlk4YnBQMnhlcDZlSHJZN1dFdjMwcUhxSkk1VldpWFNpWHRRdXc9PSIsInB1YmxpY0tleSI6eyJjb250ZW50IjoiTFMwdExTMUNSVWRKVGlCUVZVSk1TVU1nUzBWWkxTMHRMUzBLVFVacmQwVjNXVWhMYjFwSmVtb3dRMEZSV1VsTGIxcEplbW93UkVGUlkwUlJaMEZGU0VWWFRFYzVjVVI2VFdGdlJ6TlJTSGxXTUhoVFRVZzNRblF3VGdvMVRVWkRNWEV3VFhabE5DOHZVMmwxZVZWbU5VRnBaRVJZY2s5S1kwaEdSalYxZERWUVMyNVViMUZ6YjNWNWRGVTBXVmhoWlM5bU1UQlJQVDBLTFMwdExTMUZUa1FnVUZWQ1RFbERJRXRGV1MwdExTMHRDZz09In19fX0=","integratedTime":1756728100,"logIndex":456084926,"logID":"c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d"}}}}]
+    ```
+
+---
+
 ## Usage
 
 To start the container you can run `docker run -d -e AUTOSYNC=true -v /path/to/local/folder:/vdirsyncer bleala/vdirsyncer:latest`, but since docker compose is easier to maintain, I'll give you a valid docker compose example.
