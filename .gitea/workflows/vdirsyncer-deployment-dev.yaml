@@ -42,7 +42,7 @@ jobs:
       # https://github.com/marketplace/actions/checkout
       - name: Check Out Repository Code 🛒
         id: checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
         with:
           # use custom branch/tag on workflow_dispatch event, otherwise use github.ref
           ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.source || github.ref }}
@@ -152,7 +152,8 @@ jobs:
         run: |
           # Schritt 1: Trivy-Binary installieren
           # Wir laden die neueste Version direkt herunter
-          export TRIVY_VERSION=$(curl -s "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+          TRIVY_VERSION=$(curl -s "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+          export TRIVY_VERSION
           echo "Installing Trivy version: $TRIVY_VERSION"
           curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.deb" -o trivy.deb
           sudo dpkg -i trivy.deb
@@ -192,11 +193,12 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push-final-dev.outputs.digest }}
         run: |
-          images=""
-          for tag in ${TAGS}; do
-            images+="${tag}@${DIGEST} "
+          images=()
+          for tag in ${TAGS}
+          do
+            images+=("${tag}@${DIGEST}")
           done
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${images}
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${images[@]}"
 
       # https://github.com/marketplace/actions/ghcr-io-cleanup-action
       - name: GHCR Clean Up 'pre-release-dev' Image Tag 🧹🏷️
