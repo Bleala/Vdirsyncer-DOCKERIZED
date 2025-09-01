@@ -38,6 +38,8 @@ ENV VDIRSYNCER_CONFIG="/vdirsyncer/config" \
         PRE_SYNC_SCRIPT_FILE="" \
         # Set script path to run after vdirsyncer commands
         POST_SYNC_SCRIPT_FILE="" \
+        # Vdirsyncer sync flags
+        VDIRSYNCER_SYNC_FLAGS="" \
         # Set Pipx home
         PIPX_HOME="/opt/pipx" \
         # Set Pipx bin dir

@@ -200,7 +200,7 @@ then
     # Write cronjob to file
     echo "${CRON_TIME} yes | ${PRE_SYNC_SNIPPET} /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} discover \
     && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} metasync \
-    && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync ${POST_SYNC_SNIPPET}" > "${CRON_FILE}"
+    && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync ${VDIRSYNCER_SYNC_FLAGS} ${POST_SYNC_SNIPPET}" > "${CRON_FILE}"
 
     # User info
     echo 'Autodiscover and Autosync are enabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
@@ -222,7 +222,7 @@ elif [[ "${AUTODISCOVER}" == "false" ]] && [[ "${AUTOSYNC}" == "true" ]]
 then
     # Write cronjob to file
     echo "${CRON_TIME} ${PRE_SYNC_SNIPPET} /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} metasync \
-    && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync ${POST_SYNC_SNIPPET}" > "${CRON_FILE}"
+    && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync ${VDIRSYNCER_SYNC_FLAGS} ${POST_SYNC_SNIPPET}" > "${CRON_FILE}"
 
     # User info
     echo 'Only Autosync is enabled.' 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
