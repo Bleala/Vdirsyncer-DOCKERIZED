@@ -1,0 +1,22 @@
+name: Validate Pull Requests 🏷️✅
+run-name: Validate Pull Requests 🏷️✅
+
+on:
+  pull_request:
+    branches: 
+      - main
+      - dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-pull-requests:
+    name: Validate Pull Request Title 🏷️✅
+    uses: Bleala/Reusable-Workflows/.github/workflows/reusable-pull-requests-linter.yaml@main
+    permissions:
+      # required to read pull requests
+      pull-requests: read
+    secrets:
+      GITHUB_WORKFLOW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
