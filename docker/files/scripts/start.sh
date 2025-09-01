@@ -193,6 +193,25 @@ else
     POST_SYNC_SNIPPET="&& ${POST_SYNC_SCRIPT_FILE}"
 fi
 
+# Check, if POST_SYNC_SCRIPT_FILE is set
+if [ -z "${VDIRSYNCER_SYNC_FLAGS}" ]
+then
+    # User info
+    {
+        echo "\"vdirsyncer sync\" flags are not enabled."
+        printf "\n"
+    } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+
+# Set POST_SYNC_SNIPPET, if  POST_SYNC_SCRIPT_FILE is set
+else
+    # User info
+    {
+        echo "\"vdirsyncer sync\" flags are enabled."
+        printf "\n"
+    } 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a "${LOG}"
+fi
+
+
 ### Set up Cronjobs ###
 # Append to crontab file if autodiscover and autosync are true
 if [[ "${AUTODISCOVER}" == "true" ]] && [[ "${AUTOSYNC}" == "true" ]]
