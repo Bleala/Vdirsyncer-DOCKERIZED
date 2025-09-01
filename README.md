@@ -205,7 +205,7 @@ This has been tested and confirmed working for `Vdirsyncer 0.19.0`, `Vdirsyncer 
 
 ## Environment Variables
 
-You can set nine different environment variables if you want to:
+You can set eleven different environment variables if you want to:
 
 | **Variable** | **Info** | **Value** |
 |:----:|:----:|:----:|
@@ -216,6 +216,7 @@ You can set nine different environment variables if you want to:
 |   `CRON_TIME`   |   for `Supercronic`, you can adjust it to whatever time you want to   |   default to `*/15 * * * *`, look [here](https://crontab.guru/ "Crontab Generator") for crontab generator   |
 |   `PRE_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script before the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_before_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
 |   `POST_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script after the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_after_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
+|   `VDIRSYNCER_SYNC_FLAGS`   |   if you want to enable flags for the `vdirsyncer sync` command   |   optional, default to `nothing` <br> Example: --force-delete <br>   |
 |   `LOG`   |   if you want to adjust the log file destination   |   optional, default to `/vdirsyncer/vdirsyncer.log`   |
 |   `LOG_LEVEL`   |   if you want to adjust the log level   |   optional, default to `nothing` --> normal supercronic output <br> Can be `-passthrough-logs`, `-quiet`, `-debug` or `no value` --> leave variable empty   |
 |   `VDIRSYNCER_CONFIG`   |   location, where *Vdirsyncer* reads the config from   |   default to /vdirsyncer/config **DON'T CHANGE!**   |
@@ -241,21 +242,25 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 ---
 
 ## Versions
+**2.5.8 - 01.09.2025:**<br>
+* Added the `VDIRSYNCER_SYNC_FLAGS` variable, to set a flag for the `vdirsyncer sync` command. Fix for [Issue #54](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/54#issuecomment-2919516303 "Issue #54").<br>
+* Updated Alpine to Alpine 3.22.1, Python to 3.12.11 and Pip to 25.2.<br>
+
+**Current Versions:**<br>
+* Vdirsyncer 0.19.3, Alpine 3.22.1, Python 3.12.11, Pip 25.2, Pipx 1.7.1
+
+<details>
+<summary>Old Version History</summary><br>
+
 **2.5.7 - 17.05.2025:**<br>
 * Added the `PRE_SYNC_SCRIPT_FILE` variable, to automatically run a custom script before the cronjob `vdirsyncer` command(s). Fix for [Issue #40](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/40 "Issue #40").<br>
 * Changed crontab file to `666`. Fix for [Issue #20](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/20 "Issue #20").<br>
 * Fixed the `POST_SYNC_SCRIPT_FILE` not executed problem. Fix for [Issue #39](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/39 "Issue #39").<br>
 * Updated Alpine to 3.21.3, Python to 3.12.10 and Pip to 25.1.1.<br>
 
-**Current Versions:**<br>
-* Vdirsyncer 0.19.3, Alpine 3.21.3, Python 3.12.10, Pip 25.1.1, Pipx 1.7.1
-
 **2.5.6 - 09.01.2025:** Updated Alpine to 3.21.2, Python to 3.12.8 and Pip to 24.3.1. - Vdirsyncer 0.19.3, Alpine 3.21.2, Python 3.12.8, Pip 24.3.1, Pipx 1.7.1
 
 **2.5.5 - 04.10.2024:** Updated Vdirsyncer to 0.19.3, Alpine to 3.20.3, Python to 3.12.6 and Pipx to 1.7.1. Fixed multiple cronjobs [Issue #29](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/29 "Issue #29")  - Vdirsyncer 0.19.3, Alpine 3.20.3, Python 3.12.6, Pip 24.2.0, Pipx 1.7.1
-
-<details>
-<summary>Old Version History</summary><br>
 
 **2.5.4 - 18.09.2024:** Fix rm parameter  - Vdirsyncer 0.19.2, Alpine 3.20.2, Python 3.12.3, Pip 24.2.0, Pipx 1.6.0
 
