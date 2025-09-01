@@ -45,8 +45,8 @@ template: |
   https://github.com/Bleala/Vdirsyncer-DOCKERIZED/pkgs/container/vdirsyncer
 
   ## 🏷️ Versions
-  * Vdirsyncer 
-  * Alpine 
-  * Python 
-  * Pip 
-  * Pipx 
+  * Vdirsyncer: 
+  * Alpine: 
+  * Python: 
+  * Pip: 
+  * Pipx: 
