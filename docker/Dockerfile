@@ -69,6 +69,8 @@ RUN apk add --no-cache apk-tools=~2.14.9 \
         && apk add --no-cache bash=~5.2.37 \
         # Nano Editor
         && apk add --no-cache nano=~8.4 \
+        # File Command (Issue #40)
+        && apk add --no-cache file=~5.46 \
         # Cron Update
         #&& apk add --no-cache busybox-suid \
         # Supercronic instead of Cron (for cronjobs)
