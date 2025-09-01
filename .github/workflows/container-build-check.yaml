@@ -1,0 +1,143 @@
+name: Container Build Check 🐳✅
+run-name: Container Build Check 🐳✅
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docker/**'
+  pull_request:
+    branches: 
+      - main
+      - dev
+    paths:
+      - 'docker/**'
+  workflow_dispatch:
+    inputs:
+      source:
+        description: 'Specify the branch/tag to build (default: main)'
+        required: true
+        type: string 
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  BUILDCACHE_NAME: ${{ vars.BUILDCACHE_NAME }}
+  BUILDCACHE_TAG: ${{ vars.BUILDCACHE_TAG }}
+  DOCKERFILE_PATH: ${{ vars.DOCKERFILE_PATH }}
+  IMAGE_NAME: ${{ vars.IMAGE_NAME }}
+  IMAGE_TAG_CI_CONTAINER_BUILD: ${{ vars.IMAGE_TAG_CI_CONTAINER_BUILD }}
+  PLATFORMS_TO_BUILD: ${{ vars.PLATFORMS_TO_BUILD }}
+  REGISTRY_GITHUB: ${{ vars.REGISTRY_GITHUB }}
+  SHELLCHECK_EXCLUDE_PATHS: ${{ vars.SHELLCHECK_EXCLUDE_PATHS }}
+  USERNAME_GITHUB: ${{ vars.USERNAME_GITHUB }}
+
+jobs:
+  lint-dockerfile:
+    name: Lint Dockerfile 🐳📄🔍
+    uses: Bleala/Reusable-Workflows/.github/workflows/reusable-dockerfile-linter.yaml@main
+    with:
+      dockerfile: ${{ vars.DOCKERFILE_PATH }}
+      ref: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.sha) || (github.event_name == 'workflow_dispatch' && github.event.inputs.source) || github.ref }}
+    permissions:
+      # for actions/checkout to fetch code
+      contents: read
+    secrets:
+      GITHUB_WORKFLOW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  lint-shell-scripts:
+    name: Lint Shell Scripts 📜🔍
+    uses: Bleala/Reusable-Workflows/.github/workflows/reusable-shell-scripts-linter.yaml@main
+    with:
+      exclude_paths:  ${{ vars.SHELLCHECK_EXCLUDE_PATHS }}
+      ref: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.sha) || (github.event_name == 'workflow_dispatch' && github.event.inputs.source) || github.ref }}
+    permissions:
+      # for actions/checkout to fetch code
+      contents: read
+    secrets:
+      GITHUB_WORKFLOW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-test-container:
+    name: Build Test Container 🛠️ ✅ 🐳
+    needs:
+      - lint-dockerfile
+      - lint-shell-scripts
+    uses: Bleala/Reusable-Workflows/.github/workflows/reusable-build-test-container.yaml@main
+    with:
+      buildcache_name: ${{ vars.BUILDCACHE_NAME }}
+      buildcache_tag: ${{ vars.BUILDCACHE_TAG }}
+      image_name: ${{ vars.IMAGE_NAME }}
+      image_tag: ${{ vars.IMAGE_TAG_CI_CONTAINER_BUILD }}
+      platforms: ${{ vars.PLATFORMS_TO_BUILD }}
+      push: true
+      ref: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.sha) || (github.event_name == 'workflow_dispatch' && github.event.inputs.source) || github.ref }}
+      registry: ${{ vars.REGISTRY_GITHUB }}
+      username: ${{ vars.USERNAME_GITHUB }}
+    permissions:
+      # for actions/checkout to fetch code
+      contents: read
+      # for docker/build-push-action to push the Docker image to GitHub Container Registry
+      packages: write
+    secrets:
+      GITHUB_WORKFLOW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  trivy-scan-and-upload:
+    name: Scan Image For Vulnerabilities 🛡️🔍
+    needs:
+      - build-test-container
+    uses: Bleala/Reusable-Workflows/.github/workflows/reusable-trivy-scan-and-upload.yaml@main
+    with:
+      image_name: ${{ vars.IMAGE_NAME }}
+      image_tag: ${{ vars.IMAGE_TAG_CI_CONTAINER_BUILD }}
+      registry: ${{ vars.REGISTRY_GITHUB }}
+      username: ${{ vars.USERNAME_GITHUB }}
+    permissions:
+      # for actions/checkout to fetch code
+      contents: read
+      # for github/codeql-action/upload-sarif to upload SARIF results
+      security-events: write
+      # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+      actions: read
+    secrets:
+      GITHUB_WORKFLOW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  cleanup-buildcache-image-tag:
+    name: GHCR Clean Up 'buildcache' Image Tag 🧹🏷️
+    needs:
+      - trivy-scan-and-upload
+    uses: Bleala/Reusable-Workflows/.github/workflows/reusable-cleanup-ghcr.yaml@main
+    if: always()
+    with:
+      cleanup_strategy: 'buildcache'
+      image_name: ${{ vars.BUILDCACHE_NAME }}
+      image_tag: ${{ vars.BUILDCACHE_TAG }}
+      username: ${{ vars.USERNAME_GITHUB }}
+    permissions:
+      # for actions/checkout to fetch code
+      contents: read
+      # for ghcr-io-cleanup-action to clean up the image tag
+      packages: write
+    secrets:
+      GITHUB_WORKFLOW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  cleanup-ci-container-build-tag:
+    name: GHCR Clean Up 'ci-container-build' Image Tag 🧹🏷️
+    needs:
+      - trivy-scan-and-upload
+    uses: Bleala/Reusable-Workflows/.github/workflows/reusable-cleanup-ghcr.yaml@main
+    if: always()
+    with:
+      cleanup_strategy: 'ci-container-build'
+      image_name: ${{ vars.IMAGE_NAME }}
+      image_tag: ${{ vars.IMAGE_TAG_CI_CONTAINER_BUILD }}
+      username: ${{ vars.USERNAME_GITHUB }}
+    permissions:
+      # for actions/checkout to fetch code
+      contents: read
+      # for ghcr-io-cleanup-action to clean up the image tag
+      packages: write
+    secrets:
+      GITHUB_WORKFLOW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
