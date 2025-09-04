@@ -24,6 +24,7 @@ If you discover a security vulnerability, please report it privately through **G
 **[➡️ Report a Security Vulnerability Here](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/security/advisories/new)**
 
 I will do my best to:
+
 * Acknowledge receipt of your report.
 * Provide an initial assessment.
 * Keep you updated on the progress of a fix.
@@ -41,6 +42,7 @@ The public key and verification instructions are available in the project's [**R
 ### CI/CD Security Scanning
 
 The CI/CD pipeline for this project includes several automated security checks:
+
 * **Secret Scanning**: The repository is scanned by **Gitleaks** to prevent accidental exposure of secrets.
 * **Image Vulnerability Scanning**: Each container image is scanned for known vulnerabilities in its OS packages and libraries using **Trivy** before a release.
 * **Workflow Linting**: All GitHub Actions workflows are linted for correctness and best practices using **Actionlint** and **Zizmor**.

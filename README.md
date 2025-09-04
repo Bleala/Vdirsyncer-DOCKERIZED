@@ -1,14 +1,16 @@
 # [Vdirsyncer](https://vdirsyncer.pimutils.org/en/stable/index.html "Official Documentation")-DOCKERIZED
+
 [![GitHub Release](https://img.shields.io/github/v/release/Bleala/Vdirsyncer-DOCKERIZED?style=flat&label=Version)](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/releases)
 [![Docker Stars](https://img.shields.io/docker/stars/bleala/vdirsyncer?style=flat&label=Docker%20Stars)](https://hub.docker.com/r/bleala/vdirsyncer)
 [![Docker Pulls](https://img.shields.io/docker/pulls/bleala/vdirsyncer?style=flat&label=Docker%20Pulls)](https://hub.docker.com/r/bleala/vdirsyncer)
 [![Container Build Check 🐳✅](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/actions/workflows/container-build-check.yaml/badge.svg)](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/actions/workflows/container-build-check.yaml)
 
-Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED! 
+Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED!
 
 ---
 
 ## About Vdirsyncer
+
 **Disclaimer:** I am just the maintainer of this docker container, I did not write the software. Visit the [Official Github Repository](https://github.com/pimutils/vdirsyncer "Vdirsyncer Github Repository") to thank the author(s)! :)
 
 Vdirsyncer is a command-line tool for synchronizing calendars and addressbooks between a variety of servers and the local filesystem. The most popular usecase is to synchronize a server with a local folder and use a set of other programs to change the local events and contacts. Vdirsyncer can then synchronize those changes back to the server.
@@ -18,6 +20,7 @@ However, vdirsyncer is not limited to synchronizing between clients and servers.
 It aims to be for calendars and contacts what [OfflineIMAP](https://github.com/OfflineIMAP/offlineimap "OfflineIMAP Github Repository") is for emails.
 
 Vdirsyncer also support many different servers:
+
 * Baikal
 * DavMail (Exchange, Outlook)
 * FastMail
@@ -32,21 +35,21 @@ Vdirsyncer also support many different servers:
 
 ## Links
 
-Official Github Repository: https://github.com/pimutils/vdirsyncer
+Official Github Repository: <https://github.com/pimutils/vdirsyncer>
 
-Docs: https://vdirsyncer.pimutils.org/en/stable/tutorial.html
+Docs: <https://vdirsyncer.pimutils.org/en/stable/tutorial.html>
 
-My Github Repository: https://github.com/Bleala/Vdirsyncer-DOCKERIZED
+My Github Repository: <https://github.com/Bleala/Vdirsyncer-DOCKERIZED>
 
 ---
 
 ## Downloads
 
-Docker Hub: https://hub.docker.com/r/bleala/vdirsyncer
+Docker Hub: <https://hub.docker.com/r/bleala/vdirsyncer>
 
-Github Container Registry: https://github.com/-/bleala/packages/container/package/vdirsyncer
+Github Container Registry: <https://github.com/-/bleala/packages/container/package/vdirsyncer>
 
-Quay.io: https://quay.io/repository/bleala/vdirsyncer
+Quay.io: <https://quay.io/repository/bleala/vdirsyncer>
 
 ---
 
@@ -59,13 +62,14 @@ There will always be two different versions:
 | Tag | Content |
 | ------------- |:-------------:|
 | Latest    | Contains the latest stable version |
-| 2.x     | Contains the Vdirsyncer, Python and Alpine versions mentioned at the bottom of the page | 
+| 2.x     | Contains the Vdirsyncer, Python and Alpine versions mentioned at the bottom of the page |
 
 There are also several platforms supported:
 
 Platforms:
+
 * linux/amd64
-* linux/arm64 
+* linux/arm64
 
 ---
 
@@ -74,19 +78,20 @@ Platforms:
 To ensure the authenticity and integrity of my images, all `bleala/vdirsyncer` images pushed to `Docker Hub` and `GitHub Container Registry` (and maybe more in the future) are signed using [Cosign](https://github.com/sigstore/cosign "Cosign").
 
 I use a static key pair for signing. The public key required for verification, `cosign.pub`, is available in the root of this GitHub repository:
+
 * **Public Key:** [`cosign.pub`](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/main/cosign.pub "cosign.pub")
 
 ### How to Verify an Image
 
 You can verify the signature of an image to ensure it hasn't been tampered with and originates from me.
 
-1.  **Install Cosign:**
+1. **Install Cosign:**
     If you don't have Cosign installed, follow the official installation instructions: [Cosign Installation Guide](https://docs.sigstore.dev/cosign/system_config/installation/ "Cosign Installation Guide").
 
-2.  **Obtain the Public Key:**
+2. **Obtain the Public Key:**
     Download the [`cosign.pub`](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/blob/main/cosign.pub "cosign.pub") file from this repository or clone the repository to access it locally.
 
-3.  **Verify the Image:**
+3. **Verify the Image:**
     Use the `cosign verify` command. It is highly recommended to verify against the image **digest** (e.g., `sha256:...`) rather than a mutable tag (like `latest` or `1.23.0`). You can find image digests on Docker Hub or GitHub Container Registry.
 
     ```bash
@@ -101,13 +106,14 @@ You can verify the signature of an image to ensure it hasn't been tampered with 
     ```
 
     For instance, to verify the `dev` tag with the following digest `sha256:c31bfe88a1922ca891762803011e3bd55ad86fd12192b56100ed52de1050af4b`:
+
     ```bash
     cosign verify --key cosign.pub docker.io/bleala/vdirsyncer@sha256:c31bfe88a1922ca891762803011e3bd55ad86fd12192b56100ed52de1050af4b
     ```
 
     A successful verification will output information like this:
 
-    ```
+    ```bash
     cosign verify --key cosign.pub docker.io/bleala/vdirsyncer@sha256:c31bfe88a1922ca891762803011e3bd55ad86fd12192b56100ed52de1050af4b
 
     Verification for index.docker.io/bleala/vdirsyncer@sha256:c31bfe88a1922ca891762803011e3bd55ad86fd12192b56100ed52de1050af4b --
@@ -124,7 +130,6 @@ You can verify the signature of an image to ensure it hasn't been tampered with 
 ## Usage
 
 To start the container you can run `docker run -d -e AUTOSYNC=true -v /path/to/local/folder:/vdirsyncer bleala/vdirsyncer:latest`, but since docker compose is easier to maintain, I'll give you a valid docker compose example.
-
 
 ```docker-compose.yml
 networks:                                 
@@ -261,11 +266,11 @@ You can set eleven different environment variables if you want to:
 
 | **Variable** | **Info** | **Value** |
 |:----:|:----:|:----:|
-|   `TZ`   |   to set the corrent container and log time   |   default to `Europe/Vienna`, look [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones "Timezones") for possible values  |
+|   `TZ`   |   to set the corrent container and log time   |   default to `Europe/Vienna`, look [here for possible values](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones "Timezones")  |
 |   `AUTODISCOVER`   |   is used to automatically run `vdirsyncer discover`   |   default to `false`, can be `true`   |
 |   `AUTOSYNC`   |   is used to automatically run `vdirsyncer metasync && vdirsyncer sync`   |   default to `false`, can be `true`   |
 |   `AUTOUPDATE`   |   is used to automatically update `Vdirsyncer` with all dependencies on container startup   |   default to `false`, can be `true`   |
-|   `CRON_TIME`   |   for `Supercronic`, you can adjust it to whatever time you want to   |   default to `*/15 * * * *`, look [here](https://crontab.guru/ "Crontab Generator") for crontab generator   |
+|   `CRON_TIME`   |   for `Supercronic`, you can adjust it to whatever time you want to   |   default to `*/15 * * * *`, look [here for crontab generator](https://crontab.guru/ "Crontab Generator")   |
 |   `PRE_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script before the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_before_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
 |   `POST_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script after the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_after_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
 |   `VDIRSYNCER_SYNC_FLAGS`   |   if you want to enable flags for the `vdirsyncer sync` command   |   optional, default to `nothing` <br> Example: --force-delete <br>   |
@@ -277,9 +282,9 @@ You can set eleven different environment variables if you want to:
 
 **Attention**: As I mentioned, don't use `AUTOSYNC=true` and `AUTODISCOVER=true` as default. If you are running *Vdirsyncer* for the first time, just try everything manually, before you enable `AUTOSYNC` and `AUTODISCOVER`!
 
-**Attention 2**: I recommend using this way for the pairs `collections = [["mytest", "test", "3b4c9995-5c67-4021-9fa0-be4633623e1c"]]` [LINK](http://vdirsyncer.pimutils.org/en/stable/tutorial.html#advanced-collection-configuration-server-to-server-sync)
+**Attention 2**: I recommend using this way for the pairs `collections = [["mytest", "test", "3b4c9995-5c67-4021-9fa0-be4633623e1c"]]` [Advanced collection configuration (server-to-server sync)](http://vdirsyncer.pimutils.org/en/stable/tutorial.html#advanced-collection-configuration-server-to-server-sync)
 
-**Attention 3**: Nextcloud fucks up the whole thing pretty much, if you try to sync contacts from Nextcloud to Google or Apple. I don't know why, maybe it's a bug in *vdirsyncer*, so I decided to pair Nextcloud with a [read_only](http://vdirsyncer.pimutils.org/en/stable/tutorial.html#advanced-collection-configuration-server-to-server-sync) storage. This way Nextcloud gets everything and does not fuck things up (Maybe also a problem with Owncloud, but I did not test it) 
+**Attention 3**: Nextcloud fucks up the whole thing pretty much, if you try to sync contacts from Nextcloud to Google or Apple. I don't know why, maybe it's a bug in *vdirsyncer*, so I decided to pair Nextcloud with a [read_only](http://vdirsyncer.pimutils.org/en/stable/tutorial.html#advanced-collection-configuration-server-to-server-sync) storage. This way Nextcloud gets everything and does not fuck things up (Maybe also a problem with Owncloud, but I did not test it).
 
 ---
 
@@ -294,17 +299,21 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 ---
 
 ## Versions
+
 **2.5.8 - 01.09.2025:**<br>
+
 * Added the `VDIRSYNCER_SYNC_FLAGS` variable, to set a flag for the `vdirsyncer sync` command. Fix for [Issue #54](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/54#issuecomment-2919516303 "Issue #54").<br>
 * Updated Alpine to Alpine 3.22.1, Python to 3.12.11 and Pip to 25.2.<br>
 
 **Current Versions:**<br>
+
 * Vdirsyncer 0.19.3, Alpine 3.22.1, Python 3.12.11, Pip 25.2, Pipx 1.7.1
 
 <details>
 <summary>Old Version History</summary><br>
 
 **2.5.7 - 17.05.2025:**<br>
+
 * Added the `PRE_SYNC_SCRIPT_FILE` variable, to automatically run a custom script before the cronjob `vdirsyncer` command(s). Fix for [Issue #40](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/40 "Issue #40").<br>
 * Changed crontab file to `666`. Fix for [Issue #20](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/20 "Issue #20").<br>
 * Fixed the `POST_SYNC_SCRIPT_FILE` not executed problem. Fix for [Issue #39](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/39 "Issue #39").<br>
@@ -363,5 +372,7 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 </details>
 
 ---
+
 ### Hope you enjoy it! :)
+
 ---
