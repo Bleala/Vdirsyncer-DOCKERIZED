@@ -11,7 +11,8 @@ on:
     inputs:
       source:
         description: 'Specify the branch/tag to checkout (default: main)'
-        required: true
+        required: false
+        default: 'main'
         type: string 
 
 concurrency:
