@@ -8,12 +8,12 @@ on:
     inputs:
       tag:
         description: 'Specify the version to build and tag (default: dev)'
-        required: true
+        required: false
         default: 'dev'
         type: string
       source:
         description: 'Specify the branch/tag to build from (default: dev)'
-        required: true
+        required: false
         default: 'dev'
         type: string 
 
@@ -23,13 +23,17 @@ concurrency:
 
 env:
   BUILDCACHE_NAME: ${{ vars.BUILDCACHE_NAME }}
+  DOCKERFILE_PATH: ${{ vars.DOCKERFILE_PATH }}
   IMAGE_NAME: ${{ vars.IMAGE_NAME }}
+  PLATFORMS_TO_BUILD: ${{ vars.PLATFORMS_TO_BUILD }}
   REGISTRY_DOCKERHUB: ${{ vars.REGISTRY_DOCKERHUB }}
   REGISTRY_GITHUB: ${{ vars.REGISTRY_GITHUB }}
-  REGISTRY_GITEA: ${{ secrets.REGISTRY_GITEA }}
+  REGISTRY_QUAY: ${{ vars.REGISTRY_QUAY }}
+  SHELLCHECK_EXCLUDE_PATHS: ${{ vars.SHELLCHECK_EXCLUDE_PATHS }}
   USERNAME_DOCKERHUB: ${{ vars.USERNAME_DOCKERHUB }}
   USERNAME_GITHUB: ${{ vars.USERNAME_GITHUB }}
   USERNAME_GITEA: ${{ vars.USERNAME_GITEA }}
+  USERNAME_QUAY: ${{ vars.USERNAME_QUAY }}
 
 jobs:
   Vdirsyncer-Deployment-Development:
@@ -52,14 +56,14 @@ jobs:
         id: dockerfile-linter
         uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
         with:
-          dockerfile: ./docker/Dockerfile
+          dockerfile: ${{ env.DOCKERFILE_PATH }}
 
       # https://github.com/marketplace/actions/shell-linter
       - name: Lint Shell Scripts 📜🔍
         id: shell-linter
         uses: Azbagheri/shell-linter@30a9cf3f6cf25c08fc98f10d7dc4167f7b5c0c00 # v0.8.0
         with:
-          exclude-paths: "LICENSE,docker/Dockerfile"
+          exclude-paths: ${{ env.SHELLCHECK_EXCLUDE_PATHS }}
 
       # https://github.com/marketplace/actions/docker-hub-description
       - name: Docker Hub Description 🐳📝
@@ -79,8 +83,9 @@ jobs:
           # list of Docker images to use as base name for tags
           images: |
             ${{ env.REGISTRY_DOCKERHUB }}/${{ env.USERNAME_DOCKERHUB }}/${{ env.IMAGE_NAME }}
+            ${{ secrets.REGISTRY_GITEA }}/${{ env.USERNAME_GITEA }}/${{ env.IMAGE_NAME }}
             ${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB }}/${{ env.IMAGE_NAME }}
-            ${{ env.REGISTRY_GITEA }}/${{ env.USERNAME_GITEA }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_QUAY }}/${{ env.USERNAME_QUAY }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=false
           # generate Docker tags based on the following events/attributes
@@ -113,6 +118,15 @@ jobs:
           password: ${{ secrets.TOKEN_DOCKERHUB }}
 
       # https://github.com/marketplace/actions/docker-login
+      - name: Login To Gitea 🔑🌐
+        id: docker-login-gitea
+        uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
+        with:
+          registry: ${{ secrets.REGISTRY_GITEA }}
+          username: ${{ env.USERNAME_GITEA }}
+          password: ${{ secrets.TOKEN_GITEA }}
+
+      # https://github.com/marketplace/actions/docker-login
       - name: Login To GitHub Container Registry 🔑📦
         id: docker-login-ghcr
         uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
@@ -122,21 +136,43 @@ jobs:
           password: ${{ secrets.TOKEN_GITHUB }}
 
       # https://github.com/marketplace/actions/docker-login
-      - name: Login To Gitea 🔑🌐
-        id: docker-login-gitea
+      - name: Login To Quay.io 🔑🌐
+        id: docker-login-quay
         uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
         with:
-          registry: ${{ env.REGISTRY_GITEA }}
-          username: ${{ env.USERNAME_GITEA }}
-          password: ${{ secrets.TOKEN_GITEA }}
+          registry: ${{ env.REGISTRY_QUAY }}
+          username: ${{ secrets.USERNAME_QUAY_ROBOT }}
+          password: ${{ secrets.TOKEN_QUAY }}
+
+      # Prepare build arguments, including a dynamic BUILD_DATE
+      - name: Prepare Build Arguments 🛠️
+        id: prepare-build-args
+        run: |
+          # Create dynamic timestamp for BUILD_DATE
+          BUILD_DATE_VALUE="UTC-$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          
+          # Get static build arguments from input
+          STATIC_ARGS="${{ env.BUILD_ARGS }}"
+          
+          # Combine static args with dynamic BUILD_DATE, if static args exist
+          if [ -n "$STATIC_ARGS" ]
+          then
+            # If static arguments exist, append BUILD_DATE
+            echo "final_build_args=BUILD_DATE=${BUILD_DATE_VALUE},${STATIC_ARGS}" >> "$GITHUB_OUTPUT"
+          # Just set BUILD_DATE if no static args exist
+          else
+            # If no static arguments, only set BUILD_DATE
+            echo "final_build_args=BUILD_DATE=${BUILD_DATE_VALUE}" >> "$GITHUB_OUTPUT"
+          fi
 
       # https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Build And Push Pre Release Dev Image For Scanning 🏗️🔬
         id: build-and-push-pre-release-dev
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         with:
+          build-args: ${{ steps.prepare-build-args.outputs.final_build_args }}
           context: ./docker
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ env.PLATFORMS_TO_BUILD }}
           push: true
           provenance: false
           sbom: false
@@ -174,8 +210,9 @@ jobs:
         id: build-and-push-final-dev
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         with:
+          build-args: ${{ steps.prepare-build-args.outputs.final_build_args }}
           context: ./docker
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ env.PLATFORMS_TO_BUILD }}
           push: true
           provenance: false
           sbom: false
