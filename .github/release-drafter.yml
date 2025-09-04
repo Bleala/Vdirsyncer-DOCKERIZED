@@ -44,6 +44,9 @@ template: |
   Download at Github Container Registry:
   https://github.com/Bleala/Vdirsyncer-DOCKERIZED/pkgs/container/vdirsyncer
 
+  Download at Quay.io:
+  https://quay.io/repository/bleala/vdirsyncer
+
   ## 🏷️ Versions
   * Vdirsyncer: 
   * Alpine: 
