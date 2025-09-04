@@ -3,7 +3,6 @@ FROM alpine:3.22.1
 
 # Build Arguments
 ARG ALPINE_VERSION="3.22.1" \
-        BUILD_DATE="2025-09-01T13:00:00Z" \
         IMAGE_VERSION="2.5.8" \
         PYTHON_VERSION="3.12.11" \
         PYTHON_VERSION_SHORT="3.12" \
@@ -113,13 +112,6 @@ RUN cp "/usr/share/zoneinfo/${TZ}" /etc/localtime \
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=1 \
   CMD ps -ef | grep -e "supercronic" | grep -v -e "grep" || exit 1
 
-# Labeling
-LABEL maintainer="Bleala" \
-        version="${IMAGE_VERSION}" \
-        description="Vdirsyncer ${VDIRSYNCER_VERSION} on Alpine ${ALPINE_VERSION}, Python ${PYTHON_VERSION}, Pip ${PIP_VERSION} and Pipx ${PIPX_VERSION}" \
-        org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED" \
-        org.opencontainers.image.url="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
-
 # Vdirsyncer installation
 RUN PIPX_HOME="${PIPX_HOME}" PIPX_BIN_DIR="${PIPX_BIN_DIR}" pipx install "vdirsyncer==${VDIRSYNCER_VERSION}" \
         # For Vdirsyncer 0.19.x (Pipx install)
@@ -136,6 +128,21 @@ RUN chmod -R +x /files/scripts \
         && chown "${UID}":"${GID}" "${CRON_FILE}" \
         && chmod 666 "${CRON_FILE}" \
         && chown -R "${VDIRSYNCER_USER}":"${VDIRSYNCER_USER}" "${PIPX_HOME}"
+
+# Set build date argument here, because caching would break otherwise
+# It is set during the build process in the reusable workflow
+ARG BUILD_DATE
+
+# Set labels
+LABEL org.opencontainers.image.authors="Bleala" \
+      org.opencontainers.image.vendor="Bleala" \
+      org.opencontainers.image.version="${IMAGE_VERSION}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.title="Vdirsyncer-DOCKERIZED" \
+      org.opencontainers.image.description="Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED!" \
+      org.opencontainers.image.documentation="https://vdirsyncer.pimutils.org/en/stable/index.html" \
+      org.opencontainers.image.url="https://hub.docker.com/r/bleala/vdirsyncer" \
+      org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
 
 # Switch User
 USER "${VDIRSYNCER_USER}"
