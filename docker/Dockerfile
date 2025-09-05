@@ -8,7 +8,7 @@ ARG ALPINE_VERSION="3.22.1" \
         PYTHON_VERSION_SHORT="3.12" \
         PIP_VERSION="25.2" \
         PIPX_VERSION="1.7.1" \
-        VDIRSYNCER_VERSION="0.19.3"
+        VDIRSYNCER_VERSION="0.20.0"
 
 # Set up Environment
     # Set Vdirsyncer config location
