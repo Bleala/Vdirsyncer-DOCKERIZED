@@ -1,12 +1,12 @@
 ---
-
 yaml-files:
   - '*.yaml'
   - '*.yml'
   - '.yamllint'
+  - 'docker-compose.yml'
 
 # ignore:
-#   - 
+#   -
 
 rules:
   anchors: enable
@@ -16,6 +16,9 @@ rules:
   commas: enable
   comments:
     level: warning
+    require-starting-space: true
+    ignore-shebangs: true
+    min-spaces-from-content: 1
   comments-indentation:
     level: warning
   document-end: disable
@@ -29,7 +32,7 @@ rules:
   key-duplicates: enable
   key-ordering: disable
   line-length:
-    max: 150
+    max: 250
     level: warning
     allow-non-breakable-inline-mappings: true
     allow-non-breakable-words: true
@@ -40,3 +43,6 @@ rules:
   trailing-spaces: enable
   truthy:
     level: warning
+    # Allow 'on' for compatibility with GitHub Actions
+    allowed-values: ['true', 'false', 'on']
+    check-keys: true

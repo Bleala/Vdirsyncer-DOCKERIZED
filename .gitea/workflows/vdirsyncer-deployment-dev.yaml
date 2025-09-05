@@ -1,3 +1,4 @@
+---
 name: Vdirsyncer Deployment Development ⚙️
 run-name: Vdirsyncer Deployment For Development Usage ⚙️
 on:
@@ -15,10 +16,10 @@ on:
         description: 'Specify the branch/tag to build from (default: dev)'
         required: false
         default: 'dev'
-        type: string 
+        type: string
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -150,10 +151,10 @@ jobs:
         run: |
           # Create dynamic timestamp for BUILD_DATE
           BUILD_DATE_VALUE="UTC-$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          
+
           # Get static build arguments from input
           STATIC_ARGS="${{ env.BUILD_ARGS }}"
-          
+
           # Combine static args with dynamic BUILD_DATE, if static args exist
           if [ -n "$STATIC_ARGS" ]
           then

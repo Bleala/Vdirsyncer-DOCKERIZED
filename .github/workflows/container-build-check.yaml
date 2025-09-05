@@ -1,3 +1,4 @@
+---
 name: Container Build Check 🐳✅
 run-name: Container Build Check 🐳✅
 
@@ -9,7 +10,7 @@ on:
       - 'docker/files/**'
       - 'docker/Dockerfile'
   pull_request:
-    branches: 
+    branches:
       - main
       - dev
     paths:
@@ -21,7 +22,7 @@ on:
         description: 'Specify the branch/tag to build (default: main)'
         required: false
         default: 'main'
-        type: string 
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -55,7 +56,7 @@ jobs:
     name: Lint Shell Scripts 📜🔍
     uses: Bleala/Reusable-Workflows/.github/workflows/reusable-shell-scripts-linter.yaml@main
     with:
-      exclude_paths:  ${{ vars.SHELLCHECK_EXCLUDE_PATHS }}
+      exclude_paths: ${{ vars.SHELLCHECK_EXCLUDE_PATHS }}
       ref: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.sha) || (github.event_name == 'workflow_dispatch' && github.event.inputs.source) || github.ref }}
     permissions:
       # for actions/checkout to fetch code
