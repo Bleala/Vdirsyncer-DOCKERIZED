@@ -302,17 +302,26 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 
 ## Versions
 
+**2.6.0 - 05.09.2025:**<br>
+
+* Updated Vdirsyncer to version 0.20.0.<br>
+* Reduced Dockerfile footprint, due to removal of unnecessary packages/dependencies.<br>
+* Moved start.sh script to /bin/sh instead of /bin/bash.<br>
+* Created a new healthcheck script.<br>
+* Removed log file, because of docker logs.<br>
+* New logging function in start.sh to reduce code duplication.<br>
+
+**Current Versions:**<br>
+
+* Vdirsyncer 0.20.0, Alpine 3.22.1, Python 3.12.11, Pip 25.2, Pipx 1.7.1
+
+<details>
+<summary>Old Version History</summary><br>
+
 **2.5.8 - 01.09.2025:**<br>
 
 * Added the `VDIRSYNCER_SYNC_FLAGS` variable, to set a flag for the `vdirsyncer sync` command. Fix for [Issue #54](https://github.com/Bleala/Vdirsyncer-DOCKERIZED/issues/54#issuecomment-2919516303 "Issue #54").<br>
 * Updated Alpine to Alpine 3.22.1, Python to 3.12.11 and Pip to 25.2.<br>
-
-**Current Versions:**<br>
-
-* Vdirsyncer 0.19.3, Alpine 3.22.1, Python 3.12.11, Pip 25.2, Pipx 1.7.1
-
-<details>
-<summary>Old Version History</summary><br>
 
 **2.5.7 - 17.05.2025:**<br>
 
