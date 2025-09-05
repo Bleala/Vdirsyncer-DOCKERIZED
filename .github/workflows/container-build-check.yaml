@@ -6,13 +6,15 @@ on:
     branches:
       - main
     paths:
-      - 'docker/**'
+      - 'docker/files/**'
+      - 'docker/Dockerfile'
   pull_request:
     branches: 
       - main
       - dev
     paths:
-      - 'docker/**'
+      - 'docker/files/**'
+      - 'docker/Dockerfile'
   workflow_dispatch:
     inputs:
       source:
