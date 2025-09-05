@@ -1,3 +1,4 @@
+---
 # https://github.com/marketplace/actions/release-drafter
 # https://github.com/release-drafter/release-drafter#configuration
 
@@ -18,16 +19,16 @@ autolabeler:
       - '/^(chore|build|ci|refactor|perf|style|test)(\(.*\))?!?:/i'
 categories:
   - title: '✨ Features'
-    labels: 
+    labels:
       - 'feature'
   - title: '🐛 Bug Fixes'
-    labels: 
+    labels:
       - 'bug'
   - title: '📝 Documentation'
-    labels: 
+    labels:
       - 'documentation'
   - title: '🛠️ Maintenance'
-    labels: 
+    labels:
       - 'maintenance'
 template: |
   # 🎉 Vdirsyncer-DOCKERIZED Release $RESOLVED_VERSION!
@@ -38,7 +39,7 @@ template: |
   $CHANGES
 
   ## 📦 Download
-  Download at Docker Hub: 
+  Download at Docker Hub:
   https://hub.docker.com/r/bleala/vdirsyncer
 
   Download at Github Container Registry:
@@ -48,8 +49,8 @@ template: |
   https://quay.io/repository/bleala/vdirsyncer
 
   ## 🏷️ Versions
-  * Vdirsyncer: 
-  * Alpine: 
-  * Python: 
-  * Pip: 
-  * Pipx: 
+  * Vdirsyncer:
+  * Alpine:
+  * Python:
+  * Pip:
+  * Pipx:

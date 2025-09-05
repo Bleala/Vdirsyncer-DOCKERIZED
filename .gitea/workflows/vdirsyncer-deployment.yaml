@@ -1,3 +1,4 @@
+---
 name: Vdirsyncer Deployment Production 🚀
 run-name: Vdirsyncer Deployment For Production Usage 🚀
 on:
@@ -15,7 +16,7 @@ on:
         description: 'Specify the branch/tag to build from (default: main)'
         required: false
         default: 'main'
-        type: string 
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -91,7 +92,7 @@ jobs:
           # generate Docker tags based on the following events/attributes
           # use custom tag on workflow_dispatch event or use pushed tag
           tags: |
-            type=semver,pattern={{version}},value=${{ github.event.inputs.tag || '' }} 
+            type=semver,pattern={{version}},value=${{ github.event.inputs.tag || '' }}
             type=semver,pattern={{major}}.{{minor}},value=${{ github.event.inputs.tag || '' }}
             type=semver,pattern={{major}},value=${{ github.event.inputs.tag || '' }}
 
@@ -152,10 +153,10 @@ jobs:
         run: |
           # Create dynamic timestamp for BUILD_DATE
           BUILD_DATE_VALUE="UTC-$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          
+
           # Get static build arguments from input
           STATIC_ARGS="${{ env.BUILD_ARGS }}"
-          
+
           # Combine static args with dynamic BUILD_DATE, if static args exist
           if [ -n "$STATIC_ARGS" ]
           then

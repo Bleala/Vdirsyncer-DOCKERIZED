@@ -1,3 +1,4 @@
+---
 name: Gitleaks Scan 🔑🔍
 run-name: Gitleaks Scan 🔑🔍
 
@@ -6,7 +7,7 @@ on:
     branches:
       - '**' # all branches
   pull_request:
-    branches: 
+    branches:
       - main
       - dev
   schedule:
@@ -17,7 +18,7 @@ on:
         description: 'Specify the branch/tag to check for secrets (default: main)'
         required: false
         default: 'main'
-        type: string 
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -40,4 +41,3 @@ jobs:
       actions: read
     secrets:
       GITHUB_WORKFLOW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
