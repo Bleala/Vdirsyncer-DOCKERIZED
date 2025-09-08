@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Function to log messages with timestamp, reduce code duplication
+# Function to log messages, reduce code duplication
 log_message() {
     {
         # Remove tabs and leading spaces from the message

@@ -60,6 +60,8 @@ RUN apk update && \
     apk add --no-cache \
         # For Scripts and Shell
         bash=~5.2.37 \
+        # Curl, for Google Auth (https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500)
+        curl=~8.14.1 \
         # File Command (Issue #40)
         file=~5.46 \
         # Install Python/Pip
@@ -68,7 +70,7 @@ RUN apk update && \
         supercronic=~0.2.33 \
         # For Timezone
         tzdata=~2025b \
-        # Tini as a minimal init system to handle signal processing
+        # Tini as a minimal init system to handle signal processing (for manual mode)
         tini=~0.19.0 && \
     # Update Pip
     pip install --upgrade --no-cache-dir --break-system-packages pip=="${PIP_VERSION}" && \
