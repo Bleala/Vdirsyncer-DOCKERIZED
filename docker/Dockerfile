@@ -68,7 +68,7 @@ RUN apk update && \
         supercronic=~0.2.33 \
         # For Timezone
         tzdata=~2025b \
-        # Tini as a minimal init system to handle signal processing
+        # Tini as a minimal init system to handle signal processing (for manual mode)
         tini=~0.19.0 && \
     # Update Pip
     pip install --upgrade --no-cache-dir --break-system-packages pip=="${PIP_VERSION}" && \
