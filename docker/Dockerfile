@@ -60,6 +60,8 @@ RUN apk update && \
     apk add --no-cache \
         # For Scripts and Shell
         bash=~5.2.37 \
+        # Curl, for Google Auth (https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500)
+        curl=~8.14.1 \
         # File Command (Issue #40)
         file=~5.46 \
         # Install Python/Pip
