@@ -139,6 +139,11 @@ then
         # User info
         log_message "Vdirsyncer update FAILED!"
     fi
+
+# If Autoupdate is disabled
+else
+    # User info
+    log_message "Autoupdate of Vdirsyncer is disabled."
 fi
 
 # Line
