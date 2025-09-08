@@ -240,8 +240,6 @@ jobs:
             "${{ secrets.REGISTRY_GITEA }}/${{ env.USERNAME_GITEA }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
           )
 
-          # Führe den sign-Befehl für alle Referenzen aus
-          # Cosign erstellt eine Signatur und lädt sie für jede Referenz hoch
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${IMAGES_TO_SIGN[@]}"
 
       # https://github.com/marketplace/actions/ghcr-io-cleanup-action
