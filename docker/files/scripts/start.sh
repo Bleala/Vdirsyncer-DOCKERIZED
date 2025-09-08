@@ -148,13 +148,26 @@ log_message "----------------------------------------"
 # Append to crontab file if autodiscover and autosync are true
 if [ "${AUTODISCOVER}" = "true" ] && [ "${AUTOSYNC}" = "true" ]
 then
-    # Write cronjob to file
-    echo "${CRON_TIME} yes | ${PRE_SYNC_SNIPPET} /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} discover \
-    && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} metasync \
-    && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync ${VDIRSYNCER_SYNC_FLAGS} ${POST_SYNC_SNIPPET}" > "${CRON_FILE}"
+    # Set Cronjob
+    CRONJOB_AUTODISCOVER_AUTOSYNC="${CRON_TIME} yes | ${PRE_SYNC_SNIPPET} ${VDIRSYNCER_EXECUTABLE_PATH} -c ${VDIRSYNCER_CONFIG} discover \
+    && ${VDIRSYNCER_EXECUTABLE_PATH} -c ${VDIRSYNCER_CONFIG} metasync \
+    && ${VDIRSYNCER_EXECUTABLE_PATH} -c ${VDIRSYNCER_CONFIG} sync ${VDIRSYNCER_SYNC_FLAGS} ${POST_SYNC_SNIPPET}"
 
     # User info
     log_message "Autodiscover and Autosync are enabled."
+
+    # Cronjob info
+    log_message "The following cronjob will be executed:
+                ${CRONJOB_AUTODISCOVER_AUTOSYNC}"
+
+    # Write cronjob to file
+    echo "${CRONJOB_AUTODISCOVER_AUTOSYNC}" > "${CRON_FILE}"
+
+    # Line
+    log_message "----------------------------------------"
+
+    # User info
+    log_message "Supercronic output:"
 
     # Check if LOG_LEVEL environment variable is empty
     if [ -z "${LOG_LEVEL}" ]
@@ -171,12 +184,25 @@ then
 # Append to crontab file if autosync is true
 elif [ "${AUTODISCOVER}" = "false" ] && [ "${AUTOSYNC}" = "true" ]
 then
-    # Write cronjob to file
-    echo "${CRON_TIME} ${PRE_SYNC_SNIPPET} /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} metasync \
-    && /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} sync ${VDIRSYNCER_SYNC_FLAGS} ${POST_SYNC_SNIPPET}" > "${CRON_FILE}"
+    # Set Cronjob
+    CRONJOB_AUTOSYNC="${CRON_TIME} ${PRE_SYNC_SNIPPET} ${VDIRSYNCER_EXECUTABLE_PATH} -c ${VDIRSYNCER_CONFIG} metasync \
+    && ${VDIRSYNCER_EXECUTABLE_PATH} -c ${VDIRSYNCER_CONFIG} sync ${VDIRSYNCER_SYNC_FLAGS} ${POST_SYNC_SNIPPET}"
 
     # User info
     log_message "Only Autosync is enabled."
+
+    # Cronjob info
+    log_message "The following cronjob will be executed:
+                ${CRONJOB_AUTOSYNC}"
+
+    # Write cronjob to file
+    echo "${CRONJOB_AUTOSYNC}" > "${CRON_FILE}"
+
+    # Line
+    log_message "----------------------------------------"
+
+    # User info
+    log_message "Supercronic output:"
 
     # Check if LOG_LEVEL environment variable is empty
     if [ -z "${LOG_LEVEL}" ]
@@ -193,11 +219,24 @@ then
 # Append to crontab file if autodiscover is true
 elif [ "${AUTODISCOVER}" = "true" ] && [ "${AUTOSYNC}" = "false" ]
 then
-    # Write cronjob to file
-    echo "${CRON_TIME} yes | ${PRE_SYNC_SNIPPET} /usr/local/bin/vdirsyncer -c ${VDIRSYNCER_CONFIG} discover ${POST_SYNC_SNIPPET}" > "${CRON_FILE}"
+    # Set Cronjob
+    CRONJOB_AUTODISCOVER="${CRON_TIME} yes | ${PRE_SYNC_SNIPPET} ${VDIRSYNCER_EXECUTABLE_PATH} -c ${VDIRSYNCER_CONFIG} discover ${POST_SYNC_SNIPPET}"
 
     # User info
     log_message "Only Autodiscover is enabled."
+
+    # Cronjob info
+    log_message "The following cronjob will be executed:
+                ${CRONJOB_AUTODISCOVER}"
+
+    # Write cronjob to file
+    echo "${CRONJOB_AUTODISCOVER}" > "${CRON_FILE}"
+
+    # Line
+    log_message "----------------------------------------"
+
+    # User info
+    log_message "Supercronic output:"
 
     # Check if LOG_LEVEL environment variable is empty
     if [ -z "${LOG_LEVEL}" ]
@@ -214,8 +253,12 @@ then
 # Append nothing, if both options are disabled
 else
     # User Info
-    log_message "Autodiscover and Autosync are disabled."
+    log_message "Autodiscover and Autosync are disabled.
+                Container is running in manual mode."
+
+    # Line
+    log_message "----------------------------------------"
 
     # Run Container
-    exec tail -f /dev/null
+    exec "${TINI_EXECUTABLE_PATH}" -- "${SLEEP_EXECUTABLE_PATH}" infinity
 fi
