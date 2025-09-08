@@ -152,18 +152,24 @@ services:
     networks:
       vdirsyncer: {}
     environment:
-      TZ: Europe/Vienna                     # set your timezone, for correct container and log time, default to Europe/Vienna
-      AUTODISCOVER: true                    # set to true for automatic discover, default to false
-      AUTOSYNC: true                        # set to true for automatic sync, default to false
-      AUTOUPDATE: true                      # set to true for automatic Vdirsyncer and dependencies updates on container startup, default to false
-      CRON_TIME: '*/15 * * * *'             # adjust autosync /-discover time, default to 15 minutes - */15 * * * *
+      # Optional: set your timezone, for correct container and log time, default to Europe/Vienna
+      TZ: Europe/Vienna
+      # Optional: # set to true for automatic discover, default to false
+      AUTODISCOVER: true
+      # Optional: # set to true for automatic sync, default to false
+      AUTOSYNC: true
+      # Optional: # set to true for automatic Vdirsyncer and dependencies updates on container startup, default to false
+      AUTOUPDATE: true
+      # Optional: # adjust autosync /-discover time, default to 15 minutes - */15 * * * *
       # Cron Time need to be set in Cron format - look here for generator https://crontab.guru/
       # Set CRON_TIME like that --> */15 * * * *
-      # Optional
-      PRE_SYNC_SCRIPT_FILE: ''              # optional,  set to script path to automatically run your custom script before the cronjob `vdirsyncer` command(s), default to nothing
-      POST_SYNC_SCRIPT_FILE: ''             # optional,  set to script path to automatically run your custom script after the cronjob `vdirsyncer` command(s), default to nothing
-      LOG: /vdirsyncer/vdirsyncer.log       # optional, default to /vdirsyncer/vdirsyncer.log
-      LOG_LEVEL: ''                         # optional, default is normal output from supercronic
+      CRON_TIME: '*/15 * * * *'
+      # Optional: set to script path to automatically run your custom script before the cronjob `vdirsyncer` command(s), default to nothing
+      PRE_SYNC_SCRIPT_FILE: ''
+      # Optional: set to script path to automatically run your custom script after the cronjob `vdirsyncer` command(s), default to nothing
+      POST_SYNC_SCRIPT_FILE: ''
+      # Optional: default is normal output from supercronic
+      LOG_LEVEL: ''
     volumes:
       - vdirsyncer:/vdirsyncer              # Docker Volume
       - /path/to/config:/vdirsyncer/config  # Vdirsyncer Config
@@ -227,18 +233,24 @@ services:
     networks:
       vdirsyncer: {}
     environment:
-      TZ: Europe/Vienna                     # set your timezone, for correct container and log time, default to Europe/Vienna
-      AUTODISCOVER: true                    # set to true for automatic discover, default to false
-      AUTOSYNC: true                        # set to true for automatic sync, default to false
-      AUTOUPDATE: true                      # set to true for automatic Vdirsyncer and dependencies updates on container startup, default to false
-      CRON_TIME: '*/15 * * * *'             # adjust autosync /-discover time, default to 15 minutes - */15 * * * *
+      # Optional: set your timezone, for correct container and log time, default to Europe/Vienna
+      TZ: Europe/Vienna
+      # Optional: # set to true for automatic discover, default to false
+      AUTODISCOVER: true
+      # Optional: # set to true for automatic sync, default to false
+      AUTOSYNC: true
+      # Optional: # set to true for automatic Vdirsyncer and dependencies updates on container startup, default to false
+      AUTOUPDATE: true
+      # Optional: # adjust autosync /-discover time, default to 15 minutes - */15 * * * *
       # Cron Time need to be set in Cron format - look here for generator https://crontab.guru/
       # Set CRON_TIME like that --> */15 * * * *
-      # Optional
-      PRE_SYNC_SCRIPT_FILE: ''              # optional,  set to script path to automatically run your custom script before the cronjob `vdirsyncer` command(s), default to nothing
-      POST_SYNC_SCRIPT_FILE: ''             # optional,  set to script path to automatically run your custom script after the cronjob `vdirsyncer` command(s), default to nothing
-      LOG: /vdirsyncer/vdirsyncer.log       # optional, default to /vdirsyncer/vdirsyncer.log
-      LOG_LEVEL: ''                         # optional, default is normal output from supercronic
+      CRON_TIME: '*/15 * * * *'
+      # Optional: set to script path to automatically run your custom script before the cronjob `vdirsyncer` command(s), default to nothing
+      PRE_SYNC_SCRIPT_FILE: ''
+      # Optional: set to script path to automatically run your custom script after the cronjob `vdirsyncer` command(s), default to nothing
+      POST_SYNC_SCRIPT_FILE: ''
+      # Optional: default is normal output from supercronic
+      LOG_LEVEL: ''
     volumes:
       - vdirsyncer:/vdirsyncer              # Docker Volume
       - /path/to/config:/vdirsyncer/config  # Vdirsyncer Config
@@ -257,14 +269,14 @@ services:
 The reason is, cron does not run the `vdirsyncer` command directly inside the `/vdirsyncer` folder, so if you use a relative path, `vdirsyncer` does not know where your google tokens are stored and the `AUTOSYNC` fails!
 
 **Even more attention for Google user:** Because Google is Google you have to follow this instruction to get the Google sync working again.<br>
-For `Vdirsyncer 0.19.x` you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500 "Google Instruction")<br>
-This has been tested and confirmed working for `Vdirsyncer 0.19.0`, `Vdirsyncer 0.19.1`, `Vdirsyncer 0.19.2` and `Vdirsyncer 0.19.3` from my side.<br>
+For `Vdirsyncer 0.20.x` you have to follow this instruction to get the Google sync working again: [Google Instruction](https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500 "Google Instruction")<br>
+This has been tested and confirmed working for `Vdirsyncer 0.20.0` from my side.<br>
 
 ---
 
 ## Environment Variables
 
-You can set eleven different environment variables if you want to:
+You can set a few different environment variables if you want to:
 
 | **Variable** | **Info** | **Value** |
 |:----:|:----:|:----:|
@@ -276,9 +288,8 @@ You can set eleven different environment variables if you want to:
 |   `PRE_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script before the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_before_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
 |   `POST_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script after the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_after_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
 |   `VDIRSYNCER_SYNC_FLAGS`   |   if you want to enable flags for the `vdirsyncer sync` command   |   optional, default to `nothing` <br> Example: --force-delete <br>   |
-|   `LOG`   |   if you want to adjust the log file destination   |   optional, default to `/vdirsyncer/vdirsyncer.log`   |
 |   `LOG_LEVEL`   |   if you want to adjust the log level   |   optional, default to `nothing` --> normal supercronic output <br> Can be `-passthrough-logs`, `-quiet`, `-debug` or `no value` --> leave variable empty   |
-|   `VDIRSYNCER_CONFIG`   |   location, where *Vdirsyncer* reads the config from   |   default to /vdirsyncer/config **DON'T CHANGE!**   |
+|   `VDIRSYNCER_CONFIG`   |   location, where `Vdirsyncer` reads the config from   |   default to /vdirsyncer/config **DON'T CHANGE!**   |
 
 ---
 
