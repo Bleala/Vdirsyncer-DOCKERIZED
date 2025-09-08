@@ -35,7 +35,7 @@ services:
       # Optional: set to script path to automatically run your custom script after the cronjob `vdirsyncer` command(s), default to nothing
       POST_SYNC_SCRIPT_FILE: ''
       # Optional: default is normal output from supercronic
-      LOG_LEVEL: ''
+      SUPERCRONIC_FLAGS: ''
     volumes:
       - vdirsyncer:/vdirsyncer              # Docker Volume
       - /path/to/config:/vdirsyncer/config  # Vdirsyncer Config

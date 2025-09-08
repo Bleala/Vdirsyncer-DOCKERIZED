@@ -22,8 +22,6 @@ ENV AUTODISCOVER=false \
     CRON_TIME='*/15 * * * *' \
     # Set GID
     GID="1000" \
-    # Supercronic log level
-    LOG_LEVEL="" \
     # Set Pipx bin dir
     PIPX_BIN_DIR="/usr/local/bin" \
     # Set Pipx home
@@ -36,6 +34,8 @@ ENV AUTODISCOVER=false \
     SLEEP_EXECUTABLE_PATH="/bin/sleep" \
     # Supercronic Path
     SUPERCRONIC_EXECUTABLE_PATH="/usr/bin/supercronic" \
+    # Supercronic flags
+    SUPERCRONIC_FLAGS="" \
     # Tini Path
     TINI_EXECUTABLE_PATH="/sbin/tini" \
     # Set Timezone

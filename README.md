@@ -168,8 +168,8 @@ services:
       PRE_SYNC_SCRIPT_FILE: ''
       # Optional: set to script path to automatically run your custom script after the cronjob `vdirsyncer` command(s), default to nothing
       POST_SYNC_SCRIPT_FILE: ''
-      # Optional: default is normal output from supercronic
-      LOG_LEVEL: ''
+      # Optional: set flags for supercronic, e.g. log level
+      SUPERCRONIC_FLAGS: ''
     volumes:
       - vdirsyncer:/vdirsyncer              # Docker Volume
       - /path/to/config:/vdirsyncer/config  # Vdirsyncer Config
@@ -249,8 +249,8 @@ services:
       PRE_SYNC_SCRIPT_FILE: ''
       # Optional: set to script path to automatically run your custom script after the cronjob `vdirsyncer` command(s), default to nothing
       POST_SYNC_SCRIPT_FILE: ''
-      # Optional: default is normal output from supercronic
-      LOG_LEVEL: ''
+      # Optional: set flags for supercronic, e.g. log level
+      SUPERCRONIC_FLAGS: ''
     volumes:
       - vdirsyncer:/vdirsyncer              # Docker Volume
       - /path/to/config:/vdirsyncer/config  # Vdirsyncer Config
@@ -287,8 +287,8 @@ You can set a few different environment variables if you want to:
 |   `CRON_TIME`   |   for `Supercronic`, you can adjust it to whatever time you want to   |   default to `*/15 * * * *`, look [here for crontab generator](https://crontab.guru/ "Crontab Generator")   |
 |   `PRE_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script before the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_before_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
 |   `POST_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script after the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_after_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
+|   `SUPERCRONIC_FLAGS`   |   if you want to set `Supercronic` flags, e.g. log level   |   optional, default to `nothing` --> normal supercronic output <br> For Logs: can be `-passthrough-logs`, `-quiet`, `-debug` or `no value` --> leave variable empty <br> For other flags see `Supercronic` help page   |
 |   `VDIRSYNCER_SYNC_FLAGS`   |   if you want to enable flags for the `vdirsyncer sync` command   |   optional, default to `nothing` <br> Example: --force-delete <br>   |
-|   `LOG_LEVEL`   |   if you want to adjust the log level   |   optional, default to `nothing` --> normal supercronic output <br> Can be `-passthrough-logs`, `-quiet`, `-debug` or `no value` --> leave variable empty   |
 |   `VDIRSYNCER_CONFIG`   |   location, where `Vdirsyncer` reads the config from   |   default to /vdirsyncer/config **DON'T CHANGE!**   |
 
 ---
@@ -315,12 +315,14 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 
 **2.6.0 - 05.09.2025:**<br>
 
+* BREAKING (Maybe): Renamed LOG_LEVEL variable to SUPERCRONIC_FLAGS.<br>
 * Updated Vdirsyncer to version 0.20.0.<br>
 * Reduced Dockerfile footprint, due to removal of unnecessary packages/dependencies.<br>
 * Moved start.sh script to /bin/sh instead of /bin/bash.<br>
 * Created a new healthcheck script.<br>
 * Removed log file, because of docker logs.<br>
 * New logging function in start.sh to reduce code duplication.<br>
+* Much faster start and stop for the container.<br>
 
 **Current Versions:**<br>
 
