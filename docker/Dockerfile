@@ -32,14 +32,20 @@ ENV AUTODISCOVER=false \
     POST_SYNC_SCRIPT_FILE="" \
     # Set script path to run before vdirsyncer commands
     PRE_SYNC_SCRIPT_FILE="" \
+    # Sleep Path
+    SLEEP_EXECUTABLE_PATH="/bin/sleep" \
     # Supercronic Path
     SUPERCRONIC_EXECUTABLE_PATH="/usr/bin/supercronic" \
+    # Tini Path
+    TINI_EXECUTABLE_PATH="/sbin/tini" \
     # Set Timezone
     TZ="Europe/Vienna" \
     # Set UID
     UID="1000" \
     # Set Vdirsyncer config location
     VDIRSYNCER_CONFIG="/vdirsyncer/config" \
+    # Vdirsyncer Path
+    VDIRSYNCER_EXECUTABLE_PATH="/usr/local/bin/vdirsyncer" \
     # Set Vdirsyncer user
     VDIRSYNCER_USER="vdirsyncer" \
     # Vdirsyncer sync flags
@@ -61,7 +67,9 @@ RUN apk update && \
         # Supercronic instead of Cron (for cronjobs)
         supercronic=~0.2.33 \
         # For Timezone
-        tzdata=~2025b && \
+        tzdata=~2025b \
+        # Tini as a minimal init system to handle signal processing
+        tini=~0.19.0 && \
     # Update Pip
     pip install --upgrade --no-cache-dir --break-system-packages pip=="${PIP_VERSION}" && \
     # Install Pipx
