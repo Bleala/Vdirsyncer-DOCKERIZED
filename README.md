@@ -321,6 +321,7 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 * Created a new healthcheck script.<br>
 * Removed log file, because of docker logs.<br>
 * New logging function in start.sh to reduce code duplication.<br>
+* Much faster start and stop for the container.<br>
 
 **Current Versions:**<br>
 
