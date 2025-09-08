@@ -46,9 +46,6 @@ log_message "Current time is $(date)."
 # Log current CRON_TIME
 log_message "Current CRON_TIME is ${CRON_TIME}."
 
-# Log current LOG_LEVEL
-log_message "Current LOG_LEVEL is ${LOG_LEVEL}."
-
 # Check, if POST_SYNC_SCRIPT_FILE is set
 if [ -z "${POST_SYNC_SCRIPT_FILE}" ]
 then
@@ -84,6 +81,9 @@ else
     # Set Post Sync Snippet to Post Sync File
     PRE_SYNC_SNIPPET="${PRE_SYNC_SCRIPT_FILE} &&"
 fi
+
+# Log current SUPERCRONIC_FLAGS
+log_message "Current SUPERCRONIC_FLAGS are ${SUPERCRONIC_FLAGS}."
 
 # Log current VDIRSYNCER_CONFIG
 log_message "Current VDIRSYNCER_CONFIG is ${VDIRSYNCER_CONFIG}."
@@ -174,16 +174,16 @@ then
     # User info
     log_message "Supercronic output:"
 
-    # Check if LOG_LEVEL environment variable is empty
-    if [ -z "${LOG_LEVEL}" ]
+    # Check if SUPERCRONIC_FLAGS environment variable is empty
+    if [ -z "${SUPERCRONIC_FLAGS}" ]
     then
         # Start the cronjob
         exec "${SUPERCRONIC_EXECUTABLE_PATH}" "${CRON_FILE}"
 
-    # If LOG_LEVEL environment variable is set
+    # If SUPERCRONIC_FLAGS environment variable is set
     else
         # Start the cronjob
-        exec "${SUPERCRONIC_EXECUTABLE_PATH}" "${LOG_LEVEL}" "${CRON_FILE}"
+        exec "${SUPERCRONIC_EXECUTABLE_PATH}" "${SUPERCRONIC_FLAGS}" "${CRON_FILE}"
     fi
 
 # Append to crontab file if autosync is true
@@ -209,16 +209,16 @@ then
     # User info
     log_message "Supercronic output:"
 
-    # Check if LOG_LEVEL environment variable is empty
-    if [ -z "${LOG_LEVEL}" ]
+    # Check if SUPERCRONIC_FLAGS environment variable is empty
+    if [ -z "${SUPERCRONIC_FLAGS}" ]
     then
         # Start the cronjob
         exec "${SUPERCRONIC_EXECUTABLE_PATH}" "${CRON_FILE}"
 
-    # If LOG_LEVEL environment variable is set
+    # If SUPERCRONIC_FLAGS environment variable is set
     else
         # Start the cronjob
-        exec "${SUPERCRONIC_EXECUTABLE_PATH}" "${LOG_LEVEL}" "${CRON_FILE}"
+        exec "${SUPERCRONIC_EXECUTABLE_PATH}" "${SUPERCRONIC_FLAGS}" "${CRON_FILE}"
     fi
 
 # Append to crontab file if autodiscover is true
@@ -243,16 +243,16 @@ then
     # User info
     log_message "Supercronic output:"
 
-    # Check if LOG_LEVEL environment variable is empty
-    if [ -z "${LOG_LEVEL}" ]
+    # Check if SUPERCRONIC_FLAGS environment variable is empty
+    if [ -z "${SUPERCRONIC_FLAGS}" ]
     then
         # Start the cronjob
         exec "${SUPERCRONIC_EXECUTABLE_PATH}" "${CRON_FILE}"
 
-    # If LOG_LEVEL environment variable is set
+    # If SUPERCRONIC_FLAGS environment variable is set
     else
         # Start the cronjob
-        exec "${SUPERCRONIC_EXECUTABLE_PATH}" "${LOG_LEVEL}" "${CRON_FILE}"
+        exec "${SUPERCRONIC_EXECUTABLE_PATH}" "${SUPERCRONIC_FLAGS}" "${CRON_FILE}"
     fi
 
 # Append nothing, if both options are disabled
