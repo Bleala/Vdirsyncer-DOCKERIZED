@@ -231,12 +231,7 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push-final-dev.outputs.digest }}
         run: |
-          images=()
-          for tag in ${TAGS}
-          do
-            images+=("${tag}@${DIGEST}")
-          done
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${images[@]}"
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${{ steps.build-and-push-final-dev.outputs.digest }}
 
       # https://github.com/marketplace/actions/ghcr-io-cleanup-action
       - name: GHCR Clean Up 'pre-release-dev' Image Tag 🧹🏷️
