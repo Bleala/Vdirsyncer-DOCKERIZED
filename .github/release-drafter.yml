@@ -32,7 +32,7 @@ categories:
       - 'maintenance'
 template: |
   # 🎉 Vdirsyncer-DOCKERIZED Release $RESOLVED_VERSION!
-  
+
   A new version of Vdirsyncer-DOCKERIZED is available!
 
   ## 📰 What's New/Changed
