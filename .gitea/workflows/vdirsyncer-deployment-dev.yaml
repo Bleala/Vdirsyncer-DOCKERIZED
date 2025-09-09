@@ -230,13 +230,27 @@ jobs:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push-final-dev.outputs.digest }}
+          METADATA_JSON: ${{ steps.metadata.outputs.json }}
         run: |
-          IMAGES_TO_SIGN=(
-            "${{ env.REGISTRY_DOCKERHUB }}/${{ env.USERNAME_DOCKERHUB }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
-            "${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
-            "${{ env.REGISTRY_QUAY }}/${{ env.USERNAME_QUAY }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
-            "${{ secrets.REGISTRY_GITEA }}/${{ env.USERNAME_GITEA }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
-          )
+          # IMAGES_TO_SIGN=(
+          #   "${{ env.REGISTRY_DOCKERHUB }}/${{ env.USERNAME_DOCKERHUB }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
+          #   "${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
+          #   "${{ env.REGISTRY_QUAY }}/${{ env.USERNAME_QUAY }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
+          #   "${{ secrets.REGISTRY_GITEA }}/${{ env.USERNAME_GITEA }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
+          # )
+
+          # cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${IMAGES_TO_SIGN[@]}"
+
+          # Extract unique base image names from JSON with jq
+          IMAGE_BASES=$(echo '${{ env.METADATA_JSON }}' | jq -r '[.tags[] | sub(":.*$"; "")] | unique | .[]')
+
+          IMAGES_TO_SIGN=()
+          while IFS= read -r base; do
+            IMAGES_TO_SIGN+=("${base}@${{ env.DIGEST }}")
+          done <<< "$IMAGE_BASES"
+
+          echo "The following images will be signed dynamically:"
+          printf '%s\n' "${IMAGES_TO_SIGN[@]}"
 
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${IMAGES_TO_SIGN[@]}"
 
