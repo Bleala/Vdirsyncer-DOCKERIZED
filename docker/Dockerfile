@@ -1,5 +1,5 @@
 # Alpine Image
-FROM alpine:3.22.1 AS vdirsyncer
+FROM alpine:3.22.2 AS vdirsyncer
 
 # Build Arguments
 ARG ALPINE_VERSION="3.22.1" \
