@@ -2,8 +2,8 @@
 FROM alpine:3.22.2 AS vdirsyncer
 
 # Build Arguments
-ARG ALPINE_VERSION="3.22.1" \
-    IMAGE_VERSION="2.6.0" \
+ARG ALPINE_VERSION="3.22.2" \
+    IMAGE_VERSION="2.6.1" \
     PYTHON_VERSION="3.12.11" \
     PIP_VERSION="25.2" \
     PIPX_VERSION="1.7.1" \
