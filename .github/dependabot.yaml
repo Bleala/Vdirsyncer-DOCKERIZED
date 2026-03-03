@@ -9,6 +9,8 @@ updates:
     schedule:
       # Options: "daily", "weekly", "monthly"
       interval: "weekly"
+    cooldown:
+      default-days: 7
     assignees:
       - "Bleala"
     target-branch: "main"
@@ -23,6 +25,8 @@ updates:
     schedule:
       # Options: "daily", "weekly", "monthly"
       interval: "weekly"
+    cooldown:
+      default-days: 7
     assignees:
       - "Bleala"
     groups:
@@ -45,6 +49,8 @@ updates:
     schedule:
       # Options: "daily", "weekly", "monthly"
       interval: "weekly"
+    cooldown:
+      default-days: 7
     assignees:
       - "Bleala"
     groups:
