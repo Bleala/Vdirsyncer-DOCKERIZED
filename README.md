@@ -313,7 +313,7 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 
 ## Versions
 
-**2.6.0 - 03.03.2026:**<br>
+**2.6.1 - 03.03.2026:**<br>
 
 * Update Alpine to 3.23.3.<br>
 * Update Python to 3.12.12.<br>
