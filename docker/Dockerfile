@@ -2,11 +2,11 @@
 FROM alpine:3.23.3 AS vdirsyncer
 
 # Build Arguments
-ARG ALPINE_VERSION="3.22.2" \
+ARG ALPINE_VERSION="3.23.3" \
     IMAGE_VERSION="2.6.1" \
-    PYTHON_VERSION="3.12.11" \
-    PIP_VERSION="25.2" \
-    PIPX_VERSION="1.7.1" \
+    PYTHON_VERSION="3.12.12" \
+    PIP_VERSION="26.0.1" \
+    PIPX_VERSION="1.8.0" \
     VDIRSYNCER_VERSION="0.20.0"
 
 # Set up Environment
@@ -59,19 +59,19 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=1 \
 RUN apk update && \
     apk add --no-cache \
         # For Scripts and Shell
-        bash=~5.2.37 \
+        bash=~5.3.3 \
         # Curl, for Google Auth (https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500)
-        curl=~8.14.1 \
+        curl=~8.17.0 \
         # File Command (Issue #40)
         file=~5.46 \
         # Install Python/Pip
         py3-pip=~25.1.1 \
         # Supercronic instead of Cron (for cronjobs)
-        supercronic=~0.2.33 \
-        # For Timezone
-        tzdata=~2025b \
+        supercronic=~0.2.39 \
         # Tini as a minimal init system to handle signal processing (for manual mode)
-        tini=~0.19.0 && \
+        tini=~0.19.0 \
+        # For Timezone
+        tzdata=~2025c && \
     # Update Pip
     pip install --upgrade --no-cache-dir --break-system-packages pip=="${PIP_VERSION}" && \
     # Install Pipx

@@ -60,9 +60,9 @@ I built this image based on [Alpine Linux](https://hub.docker.com/_/alpine "Alpi
 There will always be two different versions:
 
 | Tag | Content |
-| ------------- |:-------------:|
-| Latest    | Contains the latest stable version |
-| 2.x     | Contains the Vdirsyncer, Python and Alpine versions mentioned at the bottom of the page |
+| ------------- | :-------------: |
+| Latest | Contains the latest stable version |
+| 2.x | Contains the Vdirsyncer, Python and Alpine versions mentioned at the bottom of the page |
 
 There are also several platforms supported:
 
@@ -279,17 +279,17 @@ This has been tested and confirmed working for `Vdirsyncer 0.20.0` from my side.
 You can set a few different environment variables if you want to:
 
 | **Variable** | **Info** | **Value** |
-|:----:|:----:|:----:|
-|   `TZ`   |   to set the corrent container and log time   |   default to `Europe/Vienna`, look [here for possible values](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones "Timezones")  |
-|   `AUTODISCOVER`   |   is used to automatically run `vdirsyncer discover`   |   default to `false`, can be `true`   |
-|   `AUTOSYNC`   |   is used to automatically run `vdirsyncer metasync && vdirsyncer sync`   |   default to `false`, can be `true`   |
-|   `AUTOUPDATE`   |   is used to automatically update `Vdirsyncer` with all dependencies on container startup   |   default to `false`, can be `true`   |
-|   `CRON_TIME`   |   for `Supercronic`, you can adjust it to whatever time you want to   |   default to `*/15 * * * *`, look [here for crontab generator](https://crontab.guru/ "Crontab Generator")   |
-|   `PRE_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script before the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_before_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
-|   `POST_SYNC_SCRIPT_FILE`   |   Custom script file location, which can be used to automatically run a script after the cronjob `vdirsyncer` command(s)   |   optional, default to `nothing` <br> Example: /vdirsyncer/custom_after_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script!   |
-|   `SUPERCRONIC_FLAGS`   |   if you want to set `Supercronic` flags, e.g. log level   |   optional, default to `nothing` --> normal supercronic output <br> For Logs: can be `-passthrough-logs`, `-quiet`, `-debug` or `no value` --> leave variable empty <br> For other flags see `Supercronic` help page   |
-|   `VDIRSYNCER_SYNC_FLAGS`   |   if you want to enable flags for the `vdirsyncer sync` command   |   optional, default to `nothing` <br> Example: --force-delete <br>   |
-|   `VDIRSYNCER_CONFIG`   |   location, where `Vdirsyncer` reads the config from   |   default to /vdirsyncer/config **DON'T CHANGE!**   |
+| :----: | :----: | :----: |
+| `TZ` | to set the corrent container and log time | default to `Europe/Vienna`, look [here for possible values](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones "Timezones") |
+| `AUTODISCOVER` | is used to automatically run `vdirsyncer discover` | default to `false`, can be `true` |
+| `AUTOSYNC` | is used to automatically run `vdirsyncer metasync && vdirsyncer sync` | default to `false`, can be `true` |
+| `AUTOUPDATE` | is used to automatically update `Vdirsyncer` with all dependencies on container startup | default to `false`, can be `true` |
+| `CRON_TIME` | for `Supercronic`, you can adjust it to whatever time you want to | default to `*/15 * * * *`, look [here for crontab generator](https://crontab.guru/ "Crontab Generator") |
+| `PRE_SYNC_SCRIPT_FILE` | Custom script file location, which can be used to automatically run a script before the cronjob `vdirsyncer` command(s) | optional, default to `nothing` <br> Example: /vdirsyncer/custom_before_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script! |
+| `POST_SYNC_SCRIPT_FILE` | Custom script file location, which can be used to automatically run a script after the cronjob `vdirsyncer` command(s) | optional, default to `nothing` <br> Example: /vdirsyncer/custom_after_script.sh <br> You have to mount the file by yourself! <br> Needs to be a bash script! |
+| `SUPERCRONIC_FLAGS` | if you want to set `Supercronic` flags, e.g. log level | optional, default to `nothing` --> normal supercronic output <br> For Logs: can be `-passthrough-logs`, `-quiet`, `-debug` or `no value` --> leave variable empty <br> For other flags see `Supercronic` help page |
+| `VDIRSYNCER_SYNC_FLAGS` | if you want to enable flags for the `vdirsyncer sync` command | optional, default to `nothing` <br> Example: --force-delete <br> |
+| `VDIRSYNCER_CONFIG` | location, where `Vdirsyncer` reads the config from | default to /vdirsyncer/config **DON'T CHANGE!** |
 
 ---
 
@@ -313,6 +313,20 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 
 ## Versions
 
+**2.6.1 - 03.03.2026:**<br>
+
+* Update Alpine to 3.23.3.<br>
+* Update Python to 3.12.12.<br>
+* Update Pip to 26.0.1.<br>
+* Update Pipx to 1.8.0.<br>
+
+**Current Versions:**<br>
+
+* Vdirsyncer 0.20.0, Alpine 3.23.3, Python 3.12.12, Pip 26.0.1, Pipx 1.8.0
+
+<details>
+<summary>Old Version History</summary><br>
+
 **2.6.0 - 05.09.2025:**<br>
 
 * BREAKING (Maybe): Renamed LOG_LEVEL variable to SUPERCRONIC_FLAGS.<br>
@@ -323,13 +337,6 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 * Removed log file, because of docker logs.<br>
 * New logging function in start.sh to reduce code duplication.<br>
 * Much faster start and stop of the container.<br>
-
-**Current Versions:**<br>
-
-* Vdirsyncer 0.20.0, Alpine 3.22.1, Python 3.12.11, Pip 25.2, Pipx 1.7.1
-
-<details>
-<summary>Old Version History</summary><br>
 
 **2.5.8 - 01.09.2025:**<br>
 
