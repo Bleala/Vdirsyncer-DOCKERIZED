@@ -313,6 +313,20 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 
 ## Versions
 
+**2.6.0 - 03.03.2026:**<br>
+
+* Update Alpine to 3.23.3.<br>
+* Update Python to 3.12.12.<br>
+* Update Pip to 26.0.1.<br>
+* Update Pipx to 1.8.0.<br>
+
+**Current Versions:**<br>
+
+* Vdirsyncer 0.20.0, Alpine 3.23.3, Python 3.12.12, Pip 26.0.1, Pipx 1.8.0
+
+<details>
+<summary>Old Version History</summary><br>
+
 **2.6.0 - 05.09.2025:**<br>
 
 * BREAKING (Maybe): Renamed LOG_LEVEL variable to SUPERCRONIC_FLAGS.<br>
@@ -323,13 +337,6 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 * Removed log file, because of docker logs.<br>
 * New logging function in start.sh to reduce code duplication.<br>
 * Much faster start and stop of the container.<br>
-
-**Current Versions:**<br>
-
-* Vdirsyncer 0.20.0, Alpine 3.22.1, Python 3.12.11, Pip 25.2, Pipx 1.7.1
-
-<details>
-<summary>Old Version History</summary><br>
 
 **2.5.8 - 01.09.2025:**<br>
 
