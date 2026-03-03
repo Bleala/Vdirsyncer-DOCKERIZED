@@ -107,7 +107,7 @@ jobs:
       # https://github.com/marketplace/actions/cosign-installer
       - name: Set Up Cosign ✍️
         id: setup-cosign
-        uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0
+        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
 
       # https://github.com/marketplace/actions/docker-login
       - name: Login To Docker Hub 🔑🐳
@@ -169,7 +169,7 @@ jobs:
       # https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Build And Push Pre Release Dev Image For Scanning 🏗️🔬
         id: build-and-push-pre-release-dev
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         with:
           build-args: ${{ steps.prepare-build-args.outputs.final_build_args }}
           context: ./docker
@@ -209,7 +209,7 @@ jobs:
       # https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Build And Push Final Dev Image ✅🐳
         id: build-and-push-final-dev
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         with:
           build-args: ${{ steps.prepare-build-args.outputs.final_build_args }}
           context: ./docker
