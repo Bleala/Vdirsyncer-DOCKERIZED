@@ -60,7 +60,7 @@ I built this image based on [Alpine Linux](https://hub.docker.com/_/alpine "Alpi
 There will always be two different versions:
 
 | Tag | Content |
-| ------------- |:-------------:|
+| ------------- | :-------------: |
 | Latest | Contains the latest stable version |
 | 2.x | Contains the Vdirsyncer, Python and Alpine versions mentioned at the bottom of the page |
 

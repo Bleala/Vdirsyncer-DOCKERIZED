@@ -8,10 +8,10 @@ Please note, this policy applies to the **Docker packaging, configuration, and b
 
 Security updates are provided for the latest minor release of each major version. You are encouraged to use the latest version to ensure you have the most recent security patches.
 
-| Version           | Supported          |
+| Version | Supported |
 | :---------------- | :----------------- |
 | **Latest Release** | :white_check_mark: |
-| Older Versions    | :x:                |
+| Older Versions | :x: |
 
 The base image (Alpine Linux) and the CI/CD actions are kept up-to-date with weekly scans by Dependabot.
 
