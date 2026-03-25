@@ -106,6 +106,12 @@ jobs:
         id: setup-buildx
         uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
 
+      # Install cosign dependency
+      - name: Install gettext-base (envsubst) as Cosign dependency 📦🧩
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gettext-base
+
       # https://github.com/marketplace/actions/cosign-installer
       - name: Set Up Cosign ✍️
         id: setup-cosign
@@ -183,22 +189,44 @@ jobs:
           cache-from: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.BUILDCACHE_NAME}}:buildcache
           cache-to: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.BUILDCACHE_NAME}}:buildcache,mode=max
 
-      # Set up Tricy and scan pre-release-dev image from Registry
+      # Set up Trivy and scan pre-release-dev image from Registry
       # Normal GitHub Action does not work with Gitea Actions, because Trivy wants to login to GitHub
       # https://github.com/marketplace/actions/aqua-security-trivy
       - name: Install Trivy And Scan Image For Vulnerabilities 🛡️🔍
         id: trivy-scan
         run: |
-          # Schritt 1: Trivy-Binary installieren
-          # Wir laden die neueste Version direkt herunter
-          TRIVY_VERSION=$(curl -s "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
-          export TRIVY_VERSION
-          echo "Installing Trivy version: $TRIVY_VERSION"
-          curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.deb" -o trivy.deb
+          # Pin Trivy Version
+          TRIVY_VERSION="0.69.3"
+
+          # Pin Trivy Version SHA
+          # create with "sha256sum $FILENAME"
+          EXPECTED_HASH="a484057aafde31089cf2558ca0f79a4bc835125a5ee6834183a5bcf0735af358"
+          FILE_NAME="trivy_${TRIVY_VERSION}_Linux-64bit.deb"
+          DOWNLOAD_URL="https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/${FILE_NAME}"
+
+          # Download Trivy
+          echo "Download Trivy Version v${TRIVY_VERSION}."
+          curl -sL "$DOWNLOAD_URL" -o trivy.deb
+
+          # Check SHA
+          echo "Compare SHA checksum."
+          ACTUAL_HASH=$(sha256sum trivy.deb | awk '{print $1}')
+
+          if [ "$ACTUAL_HASH" != "$EXPECTED_HASH" ]
+          then
+            echo "🚨 ERROR: Trivy SHA checksum does NOT match!"
+            echo "Expected: $EXPECTED_HASH"
+            echo "Actual: $ACTUAL_HASH"
+            exit 1
+          fi
+
+          echo "✅ Checksum verified."
+
+          # Install Trivy
+          echo "Installing Trivy."
           sudo dpkg -i trivy.deb
 
-          # Schritt 2: Trivy-Scan mit exakt deinen gewünschten Parametern ausführen
-          # Der Befehl ist: trivy image [optionen] [image-name]
+          # Execute Trivy
           trivy image \
             --format table \
             --exit-code 1 \
@@ -233,14 +261,12 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push-final.outputs.digest }}
         run: |
-          IMAGES_TO_SIGN=(
-            "${{ env.REGISTRY_DOCKERHUB }}/${{ env.USERNAME_DOCKERHUB }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
-            "${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
-            "${{ env.REGISTRY_QUAY }}/${{ env.USERNAME_QUAY }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
-            "${{ secrets.REGISTRY_GITEA }}/${{ env.USERNAME_GITEA }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}"
-          )
-
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${IMAGES_TO_SIGN[@]}"
+          images=()
+          for tag in ${TAGS}
+          do
+            images+=("${tag}@${DIGEST}")
+          done
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${images[@]}"
 
       # https://github.com/marketplace/actions/ghcr-io-cleanup-action
       - name: GHCR Clean Up 'pre-release' Image Tag 🧹🏷️
