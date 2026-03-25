@@ -79,7 +79,7 @@ jobs:
       # https://github.com/marketplace/actions/docker-metadata-action
       - name: Docker Metadata (Tagging) 🏷️
         id: metadata
-        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
+        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
         with:
           # list of Docker images to use as base name for tags
           images: |
@@ -99,22 +99,22 @@ jobs:
       # https://github.com/marketplace/actions/docker-setup-qemu
       - name: Set Up QEMU 🛠️
         id: setup-qemu
-        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
+        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
 
       # https://github.com/marketplace/actions/docker-setup-buildx
       - name: Set Up Docker Buildx 🐳🧱
         id: setup-buildx
-        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
 
       # https://github.com/marketplace/actions/cosign-installer
       - name: Set Up Cosign ✍️
         id: setup-cosign
-        uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0
+        uses: sigstore/cosign-installer@ba7bc0a3fef59531c69a25acd34668d6d3fe6f22 # v4.1.0
 
       # https://github.com/marketplace/actions/docker-login
       - name: Login To Docker Hub 🔑🐳
         id: docker-login-dockerhub
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
         with:
           registry: ${{ env.REGISTRY_DOCKERHUB }}
           username: ${{ env.USERNAME_DOCKERHUB }}
@@ -123,7 +123,7 @@ jobs:
       # https://github.com/marketplace/actions/docker-login
       - name: Login To Gitea 🔑🌐
         id: docker-login-gitea
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
         with:
           registry: ${{ secrets.REGISTRY_GITEA }}
           username: ${{ env.USERNAME_GITEA }}
@@ -132,7 +132,7 @@ jobs:
       # https://github.com/marketplace/actions/docker-login
       - name: Login To GitHub Container Registry 🔑📦
         id: docker-login-ghcr
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
         with:
           registry: ${{ env.REGISTRY_GITHUB }}
           username: ${{ env.USERNAME_GITHUB }}
@@ -141,7 +141,7 @@ jobs:
       # https://github.com/marketplace/actions/docker-login
       - name: Login To Quay.io 🔑🌐
         id: docker-login-quay
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
         with:
           registry: ${{ env.REGISTRY_QUAY }}
           username: ${{ secrets.USERNAME_QUAY_ROBOT }}
@@ -171,7 +171,7 @@ jobs:
       # https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Build And Push Pre Release Image For Scanning 🏗️🔬
         id: build-and-push-pre-release
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
         with:
           build-args: ${{ steps.prepare-build-args.outputs.final_build_args }}
           context: ./docker
@@ -211,7 +211,7 @@ jobs:
       # https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Build And Push Final Image ✅🐳
         id: build-and-push-final
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
         with:
           build-args: ${{ steps.prepare-build-args.outputs.final_build_args }}
           context: ./docker
