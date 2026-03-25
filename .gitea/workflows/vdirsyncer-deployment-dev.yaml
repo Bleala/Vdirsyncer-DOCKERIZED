@@ -66,16 +66,6 @@ jobs:
         with:
           exclude-paths: ${{ env.SHELLCHECK_EXCLUDE_PATHS }}
 
-      # https://github.com/marketplace/actions/docker-hub-description
-      - name: Docker Hub Description 🐳📝
-        id: dockerhub-description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5.0.0
-        with:
-          username: ${{ env.USERNAME_DOCKERHUB }}
-          password: ${{ secrets.TOKEN_DOCKERHUB }}
-          repository: ${{ env.USERNAME_DOCKERHUB }}/${{ env.IMAGE_NAME }}
-          short-description: "Vdirsyncer - sync calendars and addressbooks between servers and the local filesystem. DOCKERIZED!"
-
       # https://github.com/marketplace/actions/docker-metadata-action
       - name: Docker Metadata (Tagging) 🏷️
         id: metadata
