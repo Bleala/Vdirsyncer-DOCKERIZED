@@ -115,12 +115,12 @@ jobs:
       # https://github.com/marketplace/actions/cosign-installer
       - name: Set Up Cosign ✍️
         id: setup-cosign
-        uses: sigstore/cosign-installer@ba7bc0a3fef59531c69a25acd34668d6d3fe6f22 # v4.1.0
+        uses: sigstore/cosign-installer@cad07c2e89fa2edd6e2d7bab4c1aa38e53f76003 # v4.1.1
 
       # https://github.com/marketplace/actions/docker-login
       - name: Login To Docker Hub 🔑🐳
         id: docker-login-dockerhub
-        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
           registry: ${{ env.REGISTRY_DOCKERHUB }}
           username: ${{ env.USERNAME_DOCKERHUB }}
@@ -129,7 +129,7 @@ jobs:
       # https://github.com/marketplace/actions/docker-login
       - name: Login To Gitea 🔑🌐
         id: docker-login-gitea
-        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
           registry: ${{ secrets.REGISTRY_GITEA }}
           username: ${{ env.USERNAME_GITEA }}
@@ -138,7 +138,7 @@ jobs:
       # https://github.com/marketplace/actions/docker-login
       - name: Login To GitHub Container Registry 🔑📦
         id: docker-login-ghcr
-        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
           registry: ${{ env.REGISTRY_GITHUB }}
           username: ${{ env.USERNAME_GITHUB }}
@@ -147,7 +147,7 @@ jobs:
       # https://github.com/marketplace/actions/docker-login
       - name: Login To Quay.io 🔑🌐
         id: docker-login-quay
-        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
           registry: ${{ env.REGISTRY_QUAY }}
           username: ${{ secrets.USERNAME_QUAY_ROBOT }}
@@ -177,7 +177,7 @@ jobs:
       # https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Build And Push Pre Release Image For Scanning 🏗️🔬
         id: build-and-push-pre-release
-        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
         with:
           build-args: ${{ steps.prepare-build-args.outputs.final_build_args }}
           context: ./docker
@@ -239,7 +239,7 @@ jobs:
       # https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Build And Push Final Image ✅🐳
         id: build-and-push-final
-        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
         with:
           build-args: ${{ steps.prepare-build-args.outputs.final_build_args }}
           context: ./docker
