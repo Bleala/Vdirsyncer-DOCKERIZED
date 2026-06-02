@@ -59,8 +59,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=1 \
   CMD ["/files/scripts/healthcheck.sh"]
 
 # Install packages and dependencies
-RUN apk update && \
-    apk add --no-cache \
+RUN apk add --no-cache \
         # For Scripts and Shell
         bash \
         # Curl, for Google Auth (https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500)
