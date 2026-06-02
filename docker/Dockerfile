@@ -1,13 +1,16 @@
 # Alpine Image
-FROM alpine:3.23.3 AS vdirsyncer
+FROM alpine:3.23.4 AS vdirsyncer
 
 # Build Arguments
-ARG ALPINE_VERSION="3.23.3" \
-    IMAGE_VERSION="2.6.1" \
-    PYTHON_VERSION="3.12.12" \
-    PIP_VERSION="26.0.1" \
-    PIPX_VERSION="1.8.0" \
+ARG ALPINE_VERSION="3.23.4" \
+    IMAGE_VERSION="2.6.2" \
+    PYTHON_VERSION="3.12.13" \
+    PIP_VERSION="26.1.2" \
+    PIPX_VERSION="1.13.0" \
     VDIRSYNCER_VERSION="0.20.0"
+
+# Set shell options
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 
 # Set up Environment
     # Set Autodiscover
@@ -56,22 +59,21 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=1 \
   CMD ["/files/scripts/healthcheck.sh"]
 
 # Install packages and dependencies
-RUN apk update && \
-    apk add --no-cache \
+RUN apk add --no-cache \
         # For Scripts and Shell
-        bash=~5.3.3 \
+        bash \
         # Curl, for Google Auth (https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500)
-        curl=~8.17.0 \
+        curl \
         # File Command (Issue #40)
-        file=~5.46 \
+        file \
         # Install Python/Pip
-        py3-pip=~25.1.1 \
+        py3-pip \
         # Supercronic instead of Cron (for cronjobs)
-        supercronic=~0.2.39 \
+        supercronic \
         # Tini as a minimal init system to handle signal processing (for manual mode)
-        tini=~0.19.0 \
+        tini \
         # For Timezone
-        tzdata=~2025c && \
+        tzdata && \
     # Update Pip
     pip install --upgrade --no-cache-dir --break-system-packages pip=="${PIP_VERSION}" && \
     # Install Pipx
