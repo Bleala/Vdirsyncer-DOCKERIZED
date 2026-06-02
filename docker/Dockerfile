@@ -9,6 +9,9 @@ ARG ALPINE_VERSION="3.23.3" \
     PIPX_VERSION="1.8.0" \
     VDIRSYNCER_VERSION="0.20.0"
 
+# Set shell options
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+
 # Set up Environment
     # Set Autodiscover
 ENV AUTODISCOVER=false \
@@ -59,19 +62,19 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=1 \
 RUN apk update && \
     apk add --no-cache \
         # For Scripts and Shell
-        bash=~5.3.3 \
+        bash \
         # Curl, for Google Auth (https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500)
-        curl=~8.17.0 \
+        curl \
         # File Command (Issue #40)
-        file=~5.46 \
+        file \
         # Install Python/Pip
-        py3-pip=~25.1.1 \
+        py3-pip \
         # Supercronic instead of Cron (for cronjobs)
-        supercronic=~0.2.39 \
+        supercronic \
         # Tini as a minimal init system to handle signal processing (for manual mode)
-        tini=~0.19.0 \
+        tini \
         # For Timezone
-        tzdata=~2025c && \
+        tzdata && \
     # Update Pip
     pip install --upgrade --no-cache-dir --break-system-packages pip=="${PIP_VERSION}" && \
     # Install Pipx
