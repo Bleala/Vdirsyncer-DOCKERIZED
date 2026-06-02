@@ -1,9 +1,9 @@
 # Alpine Image
-FROM alpine:3.23.3 AS vdirsyncer
+FROM alpine:3.23.4 AS vdirsyncer
 
 # Build Arguments
-ARG ALPINE_VERSION="3.23.3" \
-    IMAGE_VERSION="2.6.1" \
+ARG ALPINE_VERSION="3.23.4" \
+    IMAGE_VERSION="2.6.2" \
     PYTHON_VERSION="3.12.13" \
     PIP_VERSION="26.1.2" \
     PIPX_VERSION="1.13.0" \
