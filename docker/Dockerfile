@@ -4,6 +4,9 @@ FROM alpine:3.23.3 AS vdirsyncer
 # Build Arguments
 ARG ALPINE_VERSION="3.23.3" \
     IMAGE_VERSION="2.6.1" \
+    PYTHON_VERSION="3.12.13" \
+    PIP_VERSION="26.1.2" \
+    PIPX_VERSION="1.13.0" \
     VDIRSYNCER_VERSION="0.20.0"
 
 # Set shell options
@@ -72,9 +75,9 @@ RUN apk add --no-cache \
         # For Timezone
         tzdata && \
     # Update Pip
-    pip install --upgrade --no-cache-dir --break-system-packages pip && \
+    pip install --upgrade --no-cache-dir --break-system-packages pip=="${PIP_VERSION}" && \
     # Install Pipx
-    pip install --upgrade --no-cache-dir --break-system-packages pipx
+    pip install --upgrade --no-cache-dir --break-system-packages pipx=="${PIPX_VERSION}"
 
 # Set up User and Group
 RUN addgroup -g "${GID}" "${VDIRSYNCER_USER}" && \
