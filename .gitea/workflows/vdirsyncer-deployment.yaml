@@ -47,7 +47,7 @@ jobs:
       # https://github.com/marketplace/actions/checkout
       - name: Check Out Repository Code 🛒
         id: checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           # use custom branch/tag on workflow_dispatch event, otherwise use github.ref
           ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.source || github.ref }}
@@ -271,7 +271,7 @@ jobs:
       # https://github.com/marketplace/actions/ghcr-io-cleanup-action
       - name: GHCR Clean Up 'pre-release' Image Tag 🧹🏷️
         id: ghcr-clean-up-pre-release
-        uses: dataaxiom/ghcr-cleanup-action@f092b48ba3b604b2a83690dc4b2bbb3392e1045f # v1.2.1
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         if: always()
         with:
           token: ${{ secrets.TOKEN_GITHUB }}
@@ -283,7 +283,7 @@ jobs:
       # https://github.com/marketplace/actions/ghcr-io-cleanup-action
       - name: GHCR Clean Up 'buildcache' Image Tag 🧹🏷️
         id: ghcr-clean-up-buildcache
-        uses: dataaxiom/ghcr-cleanup-action@f092b48ba3b604b2a83690dc4b2bbb3392e1045f # v1.2.1
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         if: always()
         with:
           token: ${{ secrets.TOKEN_GITHUB }}
