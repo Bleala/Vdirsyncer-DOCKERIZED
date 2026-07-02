@@ -1,0 +1,6 @@
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        "Bleala/Reusable-Workflows/*": any
+        "*": hash-pin
