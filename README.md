@@ -314,19 +314,26 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 
 ## Versions
 
+**2.6.2 - 21.07.2026:**<br>
+
+* Update Alpine to 3.24.1<br>
+* Update Python to 3.14.5<br>
+* Update Pip to 26.1.2<br>
+* Update Pipx to 1.16.1<br>
+
+**Current Versions:**<br>
+
+* Vdirsyncer 0.20.0, Alpine 3.24.1, Python 3.14.5, Pip 26.1.2, Pipx 1.16.1
+
+<details>
+<summary>Old Version History</summary><br>
+
 **2.6.1 - 03.03.2026:**<br>
 
 * Update Alpine to 3.23.3.<br>
 * Update Python to 3.12.12.<br>
 * Update Pip to 26.0.1.<br>
 * Update Pipx to 1.8.0.<br>
-
-**Current Versions:**<br>
-
-* Vdirsyncer 0.20.0, Alpine 3.23.3, Python 3.12.12, Pip 26.0.1, Pipx 1.8.0
-
-<details>
-<summary>Old Version History</summary><br>
 
 **2.6.0 - 05.09.2025:**<br>
 
