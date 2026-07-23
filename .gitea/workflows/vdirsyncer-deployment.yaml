@@ -187,7 +187,7 @@ jobs:
           sbom: false
           tags: ${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.IMAGE_NAME}}:pre-release
           cache-from: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.BUILDCACHE_NAME}}:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.BUILDCACHE_NAME}}:buildcache,mode=max
+          cache-to: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.BUILDCACHE_NAME}}:buildcache,mode=max,image-manifest=true,oci-mediatypes=true,compression=zstd
 
       # Set up Trivy and scan pre-release-dev image from Registry
       # Normal GitHub Action does not work with Gitea Actions, because Trivy wants to login to GitHub
@@ -196,11 +196,11 @@ jobs:
         id: trivy-scan
         run: |
           # Pin Trivy Version
-          TRIVY_VERSION="0.69.3"
+          TRIVY_VERSION="0.72.0"
 
           # Pin Trivy Version SHA
           # create with "sha256sum $FILENAME"
-          EXPECTED_HASH="a484057aafde31089cf2558ca0f79a4bc835125a5ee6834183a5bcf0735af358"
+          EXPECTED_HASH="9bf8aba92f524b74f8e83d53b298a7dfc6b4d60aca779217e7817e5433c73eeb"
           FILE_NAME="trivy_${TRIVY_VERSION}_Linux-64bit.deb"
           DOWNLOAD_URL="https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/${FILE_NAME}"
 
@@ -250,7 +250,7 @@ jobs:
           tags: |
             ${{ steps.metadata.outputs.tags }}
           cache-from: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.BUILDCACHE_NAME}}:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.BUILDCACHE_NAME}}:buildcache,mode=max
+          cache-to: type=registry,ref=${{ env.REGISTRY_GITHUB }}/${{ env.USERNAME_GITHUB}}/${{ env.BUILDCACHE_NAME}}:buildcache,mode=max,image-manifest=true,oci-mediatypes=true,compression=zstd
 
       # https://github.com/marketplace/actions/cosign-installer
       - name: Sign The Final Docker Prod Image (Static Key) ✍️🔒
