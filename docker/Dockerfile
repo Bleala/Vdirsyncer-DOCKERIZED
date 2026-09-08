@@ -1,4 +1,5 @@
 # Alpine Image
+# Currently no new alpine image available --> some vulnerabilities are not fixed yet
 FROM alpine:3.24.1 AS vdirsyncer
 
 # Build Arguments
