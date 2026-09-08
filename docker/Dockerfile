@@ -59,10 +59,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=1 \
   CMD ["/files/scripts/healthcheck.sh"]
 
 # Install packages and dependencies
-# Base layer packages like libcrypto3 are not updated right now --> trivy scan problem with 3.24.1
-# hadolint ignore=DL3017
-RUN apk upgrade --no-cache && \
-    apk add --no-cache \
+RUN apk add --no-cache \
         # For Scripts and Shell
         bash \
         # Curl, for Google Auth (https://github.com/pimutils/vdirsyncer/issues/1063#issuecomment-1910758500)
