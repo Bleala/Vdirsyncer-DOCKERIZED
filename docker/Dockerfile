@@ -3,11 +3,11 @@ FROM alpine:3.24.1 AS vdirsyncer
 
 # Build Arguments
 ARG ALPINE_VERSION="3.24.1" \
-    IMAGE_VERSION="2.6.2" \
-    PYTHON_VERSION="3.14.5" \
+    IMAGE_VERSION="2.7.0" \
+    PYTHON_VERSION="3.14.7" \
     PIP_VERSION="26.1.2" \
-    PIPX_VERSION="1.16.1" \
-    VDIRSYNCER_VERSION="0.20.0"
+    PIPX_VERSION="1.17.2" \
+    VDIRSYNCER_VERSION="0.21.0"
 
 # Set shell options
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
