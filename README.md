@@ -314,16 +314,18 @@ Feel free to create a PR with your changes and I will merge it, if it's ok.
 
 ## Versions
 
-**2.6.2 - 21.07.2026:**<br>
+**2.7.0 - 08.09.2026:**<br>
 
+* Thanks for over 100K Docker Hub (and over 30K GHCR) pulls!
+* Update Vdirsyncer to 0.21.0<br>
 * Update Alpine to 3.24.1<br>
-* Update Python to 3.14.5<br>
+* Update Python to 3.14.7<br>
 * Update Pip to 26.1.2<br>
-* Update Pipx to 1.16.1<br>
+* Update Pipx to 1.17.1<br>
 
 **Current Versions:**<br>
 
-* Vdirsyncer 0.20.0, Alpine 3.24.1, Python 3.14.5, Pip 26.1.2, Pipx 1.16.1
+* Vdirsyncer 0.21.0, Alpine 3.24.1, Python 3.14.7, Pip 26.1.2, Pipx 1.17.2
 
 <details>
 <summary>Old Version History</summary><br>
