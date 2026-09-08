@@ -134,7 +134,7 @@ LABEL org.opencontainers.image.authors="Bleala" \
       org.opencontainers.image.source="https://github.com/Bleala/Vdirsyncer-DOCKERIZED"
 
 # Switch User
-USER "${UID}"
+USER "${VDIRSYNCER_USER}"
 
 # Entrypoint
 ENTRYPOINT ["/bin/sh","/files/scripts/start.sh"]
