@@ -54,3 +54,5 @@ template: |
   * Python:
   * Pip:
   * Pipx:
+
+  **Full Changelog**: https://github.com/Bleala/Vdirsyncer-DOCKERIZED/compare/$PREVIOUS_TAG...$RESOLVED_VERSION
